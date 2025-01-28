@@ -9,13 +9,9 @@
 
     <body>
     <div class="container">
-        <div class="login-title">
-            <h1>Welcome</h1>
-            <h2>Log in to your account</h2>
-        </div>
-        
+        <h1>Pronote</h1>
         <form action="/soumettre" method="POST"></form>
-            <div class="choice container">
+            <div class="choice-container">
                 <div class="input-container">
                     <input type="text" name="username" placeholder="Username" class="input-field">
                 </div>
@@ -23,7 +19,9 @@
                     <input type="password" name="choix" placeholder="Password" class="input-field">
                 </div>
             </div>
-            <input type="submit" value="Valider" class="btn-valider">
+            <div class="sumbit-container">
+                <input type="submit" value="Login" class="btn-valider">
+            </div>
         </form>
     </div>
     </body>
