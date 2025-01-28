@@ -14,75 +14,21 @@
   }
   
   .container {
-    width: 400px;            /* Largeur du carré */
-    height: 400px;           /* Hauteur du carré */
     background-color: #ffffff;  /* Couleur de fond du carré */
     border-radius: 5%;
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
-    border-color: #2c3e50;
-    border-width: 10%;
-    padding: 10% 5% 5% 5%
+    padding: 5%;
   }
 
-  .input-container {
-    display: flex;
-    align-items: center;
-    border: 2px solid #2c3e50;  /* Spécifie la largeur, le style, et la couleur de la bordure */
-    width: 100%;
-    height: 40%;
-    margin-bottom: 5%;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-  
-
-  /* Style général du bouton */
-    .btn-valider {
-    background-color: #3498db;  /* Couleur de fond bleu */
-    color: white;               /* Couleur du texte */
-    padding: 10px 20px;         /* Espacement interne */
-    border: none;               /* Supprimer les bordures par défaut */
-    border-radius: 5px;         /* Bords arrondis */
-    font-size: 16px;            /* Taille du texte */
-    cursor: pointer;           /* Curseur en forme de main */
-    transition: background-color 0.3s;  /* Transition pour le changement de couleur */
-  }
-  
-  /* Effet au survol */
-  .btn-valider:hover {
-    background-color: #2980b9;  /* Couleur de fond plus foncée au survol */
+  .input-field {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #4dacec;
+    padding: 1% 0;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease;
   }
 
-  /* Style de l'input pour une barre moderne */
-  input[type="text"] {
-    background: transparent;          /* Fond transparent */
-    border: none;                     /* Pas de bordure visible */
-    border-bottom: 2px solid #4dacec; /* Bordure inférieure bleue */
-    padding: 10px 0;                  /* Espacement vertical */
-    font-size: 16px;                   /* Taille du texte */
-    color: #333;                      /* Couleur du texte */
-    width: 250px;                     /* Largeur du champ */
-    outline: none;                    /* Supprimer le contour au focus */
-    transition: border-color 0.3s ease; /* Animation pour la bordure au focus */
-  }
-  
-  /* Style du champ lorsqu'il est sélectionné (focus) */
-  input[type="text"]:focus {
-    border-bottom-color: #2980b9; /* Bordure bleue plus foncée au focus */
-  }
-  
-  /* Optionnel : un léger effet au survol */
-  input[type="text"]:hover {
-    border-bottom-color: #2980b9; /* Bordure bleue au survol */
-  }
-
-  .h1 {
-    font-weight: bold;
-  }
-
-  .label {
-    font-weight: bold;
-  }
