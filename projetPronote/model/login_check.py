@@ -33,11 +33,11 @@ def process():
             expected_username = result['generated_username']
             if username == expected_username:
                 session['username'] = username
-                session['status'] = result['status']  # Stocke le statut de l'utilisateur
+                session['status'] = result['status']
                 
-                if result['status'] == 1:  # 1 = Professeur
+                if result['status'] == 1:
                     return redirect(url_for('dashboard_prof_bp.dashboard_prof'))
-                else:  # 0 = Étudiant
+                else:
                     return redirect(url_for('dashboard_bp.dashboard'))
             else:
                 message = "Nom d'utilisateur incorrect."

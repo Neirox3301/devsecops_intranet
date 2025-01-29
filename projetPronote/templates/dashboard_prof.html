@@ -1,27 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Professeur</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
-</head>
-<body>
-    <div class="general-div">
-        <div class="menu">
-            <h2>{{ user.prenom }} {{ user.nom }} (Professeur)</h2>
-            <button><a href="{{ url_for('dashboard_prof_bp.dashboard_prof') }}">Accueil</a></button>
-            <button><a href="{{ url_for('login_bp.home') }}">Déconnexion</a></button>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard Professeur</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
+    </head>
+    <body>
+        <div class="general-div">
+            <div class="menu">
+                <h2>{{ user.prenom }} {{ user.nom }}</h2>
+                <button onclick="changeContent('notes')">
+                    <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
+                    Notes
+                </button>
+                <button onclick="changeContent('messagerie')">
+                    <img src="{{ url_for('static', filename='svg/message.svg') }}" alt="Messagerie">
+                    Messagerie
+                </button>
+                <button onclick="changeContent('eleves')">
+                    <img src="{{ url_for('static', filename='svg/teachers.svg') }}" alt="Élèves">
+                    Mes élèves
+                </button>
+                <button onclick="changeContent('parametres')">
+                    <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Paramètres">
+                    Paramètres
+                </button>
+                <button>
+                    <img src="{{ url_for('static', filename='svg/logout.svg') }}" alt="Déconnexion">
+                    <a href="{{ url_for('login_bp.home') }}">Déconnexion</a>
+                </button>
+            </div>
+
+            <div class="main-div" id="content_prof">
+                <h1 style="font-size: 48px; margin: 20px 0 10px 0;">Bienvenue, professeur {{ user.prenom }} {{ user.nom }}</h1>
+                <h3 style="font-size: 24px;">Sélectionnez une option dans le menu.</h3>
+            </div>
         </div>
-        <div class="main-div">
-            <h1>Bienvenue, Professeur {{ user.prenom }} {{ user.nom }}</h1>
-            <p>Accédez aux fonctionnalités de votre tableau de bord.</p>
-            <ul>
-                <li>Consulter les classes</li>
-                <li>Gérer les notes</li>
-                <li>Envoyer des messages</li>
-            </ul>
-        </div>
-    </div>
-</body>
+
+        <script>
+            function changeContent(section) {
+                const contentDiv = document.getElementById("content_prof");
+
+                let contentHTML = "";
+
+                if (section === "notes") {
+                    contentHTML = `<h2 class='onglet-title'>Ajouter une note</h2><p>Ajouter une note...</p>`;
+                } else if (section === "bulletins") {
+                    contentHTML = "<h2 class='onglet-title'>Bulletins</h2><p>Affichage des bulletins...</p>";
+                } else if (section === "messagerie") {
+                    contentHTML = "<h2 class='onglet-title'>Messagerie</h2><p>Votre boîte de messagerie...</p>";
+                } else if (section === "eleves") {
+                    contentHTML = "<h2 class='onglet-title'>Élèves</h2><p>Liste de mes élèves...</p>";
+                } else if (section === "parametres") {
+                    contentHTML = "<h2 class='onglet-title'>Paramètres</h2><p>Réglages du compte...</p>";
+                }
+                contentDiv.innerHTML = contentHTML;
+            }
+        </script>
+    </body>
 </html>
