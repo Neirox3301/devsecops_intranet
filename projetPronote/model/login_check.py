@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from db_connection import get_db_connection
+from model.db_connection import get_db_connection  # Import correct
 
 login_bp = Blueprint('login_bp', __name__)
 
