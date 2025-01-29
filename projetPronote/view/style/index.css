@@ -17,6 +17,11 @@
     background-repeat: no-repeat;
     background-attachment: fixed;  /* L'image de fond reste fixe lors du défilement */
   }
+
+  h1 {
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
   
   .container {
     display: flex;
@@ -60,17 +65,27 @@
     border-bottom: 2px solid #c48220;
   }
 
-  .btn-valider {
-    background-color: #3498db;  /* Couleur de fond bleu */
-    color: white;               /* Couleur du texte */
-    padding: 10px 20px;         /* Espacement interne */
-    border: none;               /* Supprimer les bordures par défaut */
-    border-radius: 5px;         /* Bords arrondis */
-    font-size: 16px;            /* Taille du texte */
-    cursor: pointer;           /* Curseur en forme de main */
-    transition: background-color 0.3s;  /* Transition pour le changement de couleur */
+  .submit-button {
+    background: linear-gradient(90deg, orange, red);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 70px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    width: 200px;
   }
-
-  .btn-valider:hover {
-    background-color: #236896;  /* Couleur de fond bleu */
+  
+  .submit-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);  /* reduire la width de base */
   }
+  
+  .submit-button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
