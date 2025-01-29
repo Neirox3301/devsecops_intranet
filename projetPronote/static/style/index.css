@@ -1,4 +1,3 @@
-/* Appliquer une marge à 0 pour éviter les espaces par défaut */
 * {
     margin: 0;
     padding: 0;
@@ -9,13 +8,13 @@
   html, body {
     height: 100%;
     display: flex;
-    justify-content: center;  /* Centrer horizontalement */
-    align-items: center;      /* Centrer verticalement */
-    background-image: url('/projetPronote/view/images/peakpx.jpg');
+    justify-content: center;
+    align-items: center;
+    background-image: url('/static/images/peakpx.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;  /* L'image de fond reste fixe lors du défilement */
+    background-attachment: fixed;
   }
 
   h1 {
@@ -25,13 +24,13 @@
   
   .container {
     display: flex;
-    background-color: rgba(0, 0, 0, 0.5);  /* Couleur de fond du carré */
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 5%;
     padding: 15% 5% 10% 5%;
     width: 325px;
     height: 350px;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     color: white;
     text-align: center;
     font-weight: bold;
@@ -81,7 +80,7 @@
   
   .submit-button:hover {
     transform: scale(1.1);
-    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);  /* reduire la width de base */
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
   }
   
   .submit-button:active {
@@ -89,3 +88,9 @@
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   }
   
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 70%;
+  }
