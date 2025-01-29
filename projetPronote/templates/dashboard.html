@@ -8,27 +8,51 @@
     </head>
     <body>
         <div class="general-div">
-            <h1>Bienvenue, {{ user.prenom }} {{ user.nom }}</h1>
-            
-            <h2>Vos notes</h2>
-            <table border="1">
-                <tr>
-                    <th>Matière 1</th>
-                    <th>Matière 2</th>
-                    <th>Matière 3</th>
-                    <th>Matière 4</th>
-                    <th>Matière 5</th>
-                </tr>
-                <tr>
-                    <td>{{ user.notes_matiere1 }}</td>
-                    <td>{{ user.notes_matiere2 }}</td>
-                    <td>{{ user.notes_matiere3 }}</td>
-                    <td>{{ user.notes_matiere4 }}</td>
-                    <td>{{ user.notes_matiere5 }}</td>
-                </tr>
-            </table>
-
-            <a href="{{ url_for('login_bp.home') }}">Déconnexion</a>
+            <div class="menu">
+                <button>
+                    Vos notes
+                </button>
+                <button>
+                    Vos bulletins
+                </button>
+                <button>
+                    Votre messagerie
+                </button>
+                <button>
+                    Vos professeurs
+                </button>
+                <button>
+                    Paramètres
+                </button>
+                <button>
+                    <a href="{{ url_for('login_bp.home') }}">Déconnexion</a>
+                </button>
+            </div>
+            <div class="main-div">
+                <h1>Bienvenue, {{ user.prenom }} {{ user.nom }}</h1>
+                
+                <h2>Vos notes</h2>
+                <table border="1" class="tableau-notes">
+                    <tr>
+                        <th>Notes n°</th>
+                        <th>Maths</th>
+                        <th>Français</th>
+                        <th>SVT</th>
+                        <th>Physique / Chimie</th>
+                        <th>Histoire</th>
+                        <th>Moyenne générale</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>{{ user.notes_matiere1 }}</td>
+                        <td>{{ user.notes_matiere2 }}</td>
+                        <td>{{ user.notes_matiere3 }}</td>
+                        <td>{{ user.notes_matiere4 }}</td>
+                        <td>{{ user.notes_matiere5 }}</td>
+                        <td>Moyenne générale</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </body>
 </html>

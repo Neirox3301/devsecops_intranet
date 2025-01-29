@@ -1,3 +1,10 @@
+* {
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
 html, body {
     align-items: center;
     background-attachment: fixed;
@@ -11,9 +18,54 @@ html, body {
     width: 100%;
 }
 
+body {
+    padding: 50px;
+}
+
 .general-div {
+    align-items: center;
     background-color: rgba(255, 255, 255, 0.85);
     border-radius: 15px;
-    height: 92vh;
-    width: 96vw;
+    display: flex;
+    height: 100%;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.menu, .main-div  {
+    height: 95%;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.menu {
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-right: 0;
+    width: 15%;
+}
+
+.menu > button {
+    border: none;
+    border-radius: 10px 0 0 10px;
+    opacity: 0.85;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    width: 100%;
+}
+
+.main-div {
+    background-color: blue;
+    width: 80%;
+}
+
+.tableau-notes {
+    width: 100%;
+}
+
+th, td {
+    text-align: center;
 }
