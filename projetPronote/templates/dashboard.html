@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
-        <title>Dashboard</title>
-    </head>
-    <body>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Date de naissance</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in students %}
-                    <tr>
-                        <td>{{ student.id }}</td>
-                        <td>{{ student.nom }}</td>
-                        <td>{{ student.prenom }}</td>
-                        <td>{{ student.date_naissance }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
+</head>
+<body>
+    <h1>Bienvenue, {{ user.prenom }} {{ user.nom }}</h1>
+    
+    <h2>Vos notes</h2>
+    <table border="1">
+        <tr>
+            <th>Matière 1</th>
+            <th>Matière 2</th>
+            <th>Matière 3</th>
+            <th>Matière 4</th>
+            <th>Matière 5</th>
+        </tr>
+        <tr>
+            <td>{{ user.notes_matiere1 }}</td>
+            <td>{{ user.notes_matiere2 }}</td>
+            <td>{{ user.notes_matiere3 }}</td>
+            <td>{{ user.notes_matiere4 }}</td>
+            <td>{{ user.notes_matiere5 }}</td>
+        </tr>
+    </table>
+
+    <a href="{{ url_for('login_bp.home') }}">Déconnexion</a>
+</body>
 </html>
