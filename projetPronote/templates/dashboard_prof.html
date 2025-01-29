@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Professeur</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
+</head>
+<body>
+    <div class="general-div">
+        <div class="menu">
+            <h2>{{ user.prenom }} {{ user.nom }} (Professeur)</h2>
+            <button><a href="{{ url_for('dashboard_prof_bp.dashboard_prof') }}">Accueil</a></button>
+            <button><a href="{{ url_for('login_bp.home') }}">Déconnexion</a></button>
+        </div>
+        <div class="main-div">
+            <h1>Bienvenue, Professeur {{ user.prenom }} {{ user.nom }}</h1>
+            <p>Accédez aux fonctionnalités de votre tableau de bord.</p>
+            <ul>
+                <li>Consulter les classes</li>
+                <li>Gérer les notes</li>
+                <li>Envoyer des messages</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -33,11 +33,19 @@ def process():
             expected_username = result['generated_username']
             if username == expected_username:
                 session['username'] = username
-                return redirect(url_for('dashboard_bp.dashboard'))
+                session['status'] = result['status']  # Stocke le statut de l'utilisateur
+                
+                if result['status'] == 1:  # 1 = Professeur
+                    return redirect(url_for('dashboard_prof_bp.dashboard_prof'))
+                else:  # 0 = Étudiant
+                    return redirect(url_for('dashboard_bp.dashboard'))
             else:
                 message = "Nom d'utilisateur incorrect."
         else:
             message = "Mot de passe incorrect ou utilisateur non trouvé."
+
+    except Exception as e:
+        message = f"Erreur de connexion à la base de données : {e}"
 
     finally:
         if conn and conn.is_connected():

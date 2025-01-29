@@ -1,5 +1,7 @@
+/* IMPORTS */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+/* BODY & GENERAL */
 * {
     box-sizing: border-box;
     font-family: "Roboto", serif;
@@ -34,10 +36,11 @@ body {padding: 50px;}
     width: 100%;
 }
 
+/* MENU */
 .menu, .main-div  {
     height: 95%;
     border-radius: 15px;
-    padding: 20px;
+    padding: 0 20px 20px 20px;
 }
 
 .menu {
@@ -51,8 +54,8 @@ body {padding: 50px;}
 .menu > button {
     background: none;
     border-radius: 10px;
-    border: solid 2px white;
-    color: white;
+    border: solid 2px black;
+    color: black;
     display: flex;
     font-size: 16px;
     font-weight: bold;
@@ -62,25 +65,45 @@ body {padding: 50px;}
 }
 
 .menu > button > img {
+    filter: invert(1);
     height: 75%;
     margin-right: 10%;
 }
 
 .menu > button:hover {
-    background: white;
-    color: black;
+    background: black;
+    color: white;
 }
 
-.menu > button:hover img {filter: invert(1);}
+.menu > button:hover img {filter: invert(0);}
 
+/* MAIN DIV */
 .main-div {
     background: linear-gradient(225deg, rgb(10, 20, 50), rgb(25, 60, 150));
     width: 80%;
 }
 
-.main-div > h1, .onglet-title {font-size: 48px;}
-.main-div > h3 {font-size: 24px;}
+.onglet-title {
+    font-size: 48px;
+    margin: 20px 0;
+}
 
-.tableau-notes {width: 100%;}
+/* MAIN DIV ----- NOTES */
+.tableau-notes {
+    border-radius: 10px;
+    border: solid 1px black;
+    font-size: 24px;
+    width: 100%;
+}
 
+td {border-top: solid 1px black;}
+th {font-size: 26px;}
 th, td {text-align: center;}
+
+/* MAIN DIV ----- BULLETIN */
+
+/* MAIN DIV ----- MESSAGERIE */
+
+/* MAIN DIV ----- PROFESSEURS */
+
+/* MAIN DIV ----- PARAMETRES */

@@ -37,8 +37,8 @@
         </div>
 
         <div class="main-div" id="content">
-            <h1>Bienvenue, {{ user.prenom }} {{ user.nom }}</h1>
-            <h3>Sélectionnez une option dans le menu.</h3>
+            <h1 style="font-size: 48px; margin: 20px 0 10px 0;" >Bienvenue, {{ user.prenom }} {{ user.nom }}</h1>
+            <h3 style="font-size: 24px;">Sélectionnez une option dans le menu.</h3>
         </div>
     </div>
 
@@ -51,7 +51,7 @@
             if (section === "notes") {
                 contentHTML = `
                     <h2 class='onglet-title'>Vos notes</h2>
-                    <table border="1" class="tableau-notes">
+                    <table class="tableau-notes">
                         <tr>
                             <th>Notes n°</th>
                             <th>Maths</th>
@@ -59,7 +59,6 @@
                             <th>SVT</th>
                             <th>Physique / Chimie</th>
                             <th>Histoire</th>
-                            <th>Moyenne générale</th>
                         </tr>
                         <tr>
                             <td>1</td>
@@ -68,9 +67,19 @@
                             <td>{{ user.notes_matiere3 }}</td>
                             <td>{{ user.notes_matiere4 }}</td>
                             <td>{{ user.notes_matiere5 }}</td>
-                            <td>Moyenne générale</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>{{ user.notes_matiere1 }}</td>
+                            <td>{{ user.notes_matiere2 }}</td>
+                            <td>{{ user.notes_matiere3 }}</td>
+                            <td>{{ user.notes_matiere4 }}</td>
+                            <td>{{ user.notes_matiere5 }}</td>
                         </tr>
                     </table>
+                    <div style="margin: 10px 0">
+                        <h3>Moyenne générale : {{ user.notes_matiere5 }}</h3>
+                    </div>
                 `;
             } else if (section === "bulletins") {
                 contentHTML = "<h2 class='onglet-title'>Bulletins</h2><p>Affichage des bulletins...</p>";
