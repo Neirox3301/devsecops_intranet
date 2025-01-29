@@ -1,58 +1,88 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
-    </head>
-    <body>
-        <div class="general-div">
-            <div class="menu">
-                <button>
-                    Vos notes
-                </button>
-                <button>
-                    Vos bulletins
-                </button>
-                <button>
-                    Votre messagerie
-                </button>
-                <button>
-                    Vos professeurs
-                </button>
-                <button>
-                    Paramètres
-                </button>
-                <button>
-                    <a href="{{ url_for('login_bp.home') }}">Déconnexion</a>
-                </button>
-            </div>
-            <div class="main-div">
-                <h1>Bienvenue, {{ user.prenom }} {{ user.nom }}</h1>
-                
-                <h2>Vos notes</h2>
-                <table border="1" class="tableau-notes">
-                    <tr>
-                        <th>Notes n°</th>
-                        <th>Maths</th>
-                        <th>Français</th>
-                        <th>SVT</th>
-                        <th>Physique / Chimie</th>
-                        <th>Histoire</th>
-                        <th>Moyenne générale</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>{{ user.notes_matiere1 }}</td>
-                        <td>{{ user.notes_matiere2 }}</td>
-                        <td>{{ user.notes_matiere3 }}</td>
-                        <td>{{ user.notes_matiere4 }}</td>
-                        <td>{{ user.notes_matiere5 }}</td>
-                        <td>Moyenne générale</td>
-                    </tr>
-                </table>
-            </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
+</head>
+<body>
+    <div class="general-div">
+        <div class="menu">
+            <h2>{{ user.prenom }} {{ user.nom }}</h2>
+            <button onclick="changeContent('notes')">
+                <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
+                Notes
+            </button>
+            <button onclick="changeContent('bulletins')">
+                <img src="{{ url_for('static', filename='svg/bulletin.svg') }}" alt="Bulletins">
+                Bulletins
+            </button>
+            <button onclick="changeContent('messagerie')">
+                <img src="{{ url_for('static', filename='svg/message.svg') }}" alt="Messagerie">
+                Messagerie
+            </button>
+            <button onclick="changeContent('professeurs')">
+                <img src="{{ url_for('static', filename='svg/teachers.svg') }}" alt="Professeurs">
+                Professeurs
+            </button>
+            <button onclick="changeContent('parametres')">
+                <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Paramètres">
+                Paramètres
+            </button>
+            <button>
+                <img src="{{ url_for('static', filename='svg/logout.svg') }}" alt="Déconnexion">
+                <a href="{{ url_for('login_bp.home') }}">Déconnexion</a>
+            </button>
         </div>
-    </body>
+
+        <div class="main-div" id="content">
+            <h1>Bienvenue, {{ user.prenom }} {{ user.nom }}</h1>
+            <h3>Sélectionnez une option dans le menu.</h3>
+        </div>
+    </div>
+
+    <script>
+        function changeContent(section) {
+            const contentDiv = document.getElementById("content");
+
+            let contentHTML = "";
+
+            if (section === "notes") {
+                contentHTML = `
+                    <h2 class='onglet-title'>Vos notes</h2>
+                    <table border="1" class="tableau-notes">
+                        <tr>
+                            <th>Notes n°</th>
+                            <th>Maths</th>
+                            <th>Français</th>
+                            <th>SVT</th>
+                            <th>Physique / Chimie</th>
+                            <th>Histoire</th>
+                            <th>Moyenne générale</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>{{ user.notes_matiere1 }}</td>
+                            <td>{{ user.notes_matiere2 }}</td>
+                            <td>{{ user.notes_matiere3 }}</td>
+                            <td>{{ user.notes_matiere4 }}</td>
+                            <td>{{ user.notes_matiere5 }}</td>
+                            <td>Moyenne générale</td>
+                        </tr>
+                    </table>
+                `;
+            } else if (section === "bulletins") {
+                contentHTML = "<h2 class='onglet-title'>Bulletins</h2><p>Affichage des bulletins...</p>";
+            } else if (section === "messagerie") {
+                contentHTML = "<h2 class='onglet-title'>Messagerie</h2><p>Votre boîte de messagerie...</p>";
+            } else if (section === "professeurs") {
+                contentHTML = "<h2 class='onglet-title'>Professeurs</h2><p>Liste des professeurs...</p>";
+            } else if (section === "parametres") {
+                contentHTML = "<h2 class='onglet-title'>Paramètres</h2><p>Réglages du compte...</p>";
+            }
+            contentDiv.innerHTML = contentHTML;
+        }
+    </script>
+</body>
 </html>
