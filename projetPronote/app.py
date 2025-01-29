@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 
 app = Flask(__name__)
@@ -13,6 +13,10 @@ config = {
 @app.route('/')
 def home():
     return render_template('index.html', message="")
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/process', methods=['POST'])
 def process():
@@ -41,8 +45,7 @@ def process():
             expected_username = result['generated_username']
             
             if username == expected_username:
-                user_type = "Professeur" if result['status'] else "Étudiant"
-                message = f"Bienvenue, {user_type} {username}!"
+                return redirect(url_for('dashboard'))
             else:
                 message = "Nom d'utilisateur incorrect."
         else:
