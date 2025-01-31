@@ -12,4 +12,4 @@ app.register_blueprint(dashboard_bp)
 app.register_blueprint(dashboard_prof_bp)  # Nouveau blueprint pour les professeurs
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)

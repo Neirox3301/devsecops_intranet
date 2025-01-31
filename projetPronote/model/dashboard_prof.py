@@ -16,15 +16,25 @@ def dashboard_prof():
     try:
         cursor = conn.cursor(dictionary=True)
         query = """
-        SELECT prenom, nom, status
+        SELECT prenom, nom, status, classroom
         FROM users
         WHERE CONCAT(LEFT(prenom, 1), nom) = %s
         """
         cursor.execute(query, (username,))
         user_data = cursor.fetchone()
+                
+        classroom_query = """
+        SELECT prenom, nom, notes_matiere1, notes_matiere2, notes_matiere3, notes_matiere4, notes_matiere5
+        FROM users
+        WHERE classroom = %s AND status = 0;
+        """
+        cursor2 = conn.cursor(dictionary=True)
+        cursor2.execute(classroom_query, (user_data['classroom'],))
+        class_data = cursor2.fetchall()
+        
     finally:
         if conn.is_connected():
             cursor.close()
             conn.close()
 
-    return render_template('dashboard_prof.html', user=user_data)
+    return render_template('dashboard_prof.html', user=user_data, class_data=class_data)
