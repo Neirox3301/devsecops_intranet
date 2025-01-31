@@ -1,15 +1,14 @@
 from flask import Flask
 from model.login_check import login_bp
 from model.dashboard import dashboard_bp
-from model.dashboard_prof import dashboard_prof_bp  # Import du dashboard prof
+from model.dashboard_prof import dashboard_prof_bp
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = 'a'
 
-# Enregistrement des Blueprints
 app.register_blueprint(login_bp)
 app.register_blueprint(dashboard_bp)
-app.register_blueprint(dashboard_prof_bp)  # Nouveau blueprint pour les professeurs
+app.register_blueprint(dashboard_prof_bp)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)

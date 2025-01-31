@@ -51,33 +51,7 @@
                 } else if (section === "messagerie") {
                     contentHTML = "<h2 class='onglet-title'>Messagerie</h2><p>Votre boîte de messagerie...</p>";
                 } else if (section === "eleves") {
-                    contentHTML = `
-                        <h2 class='onglet-title'>Élèves</h2>
-                        <!-- <p> {{ class_data }} </p>-->
-                        <table class="tableau-notes">
-                            <tr>
-                                <th class="header">Nom</th>
-                                <th class="header">Prenom</th>
-                                <th class="header">Matiere 1</th>
-                                <th class="header">Matiere 2</th>
-                                <th class="header">Matiere 3</th>
-                                <th class="header">Matiere 4</th>
-                                <th class="header">Matiere 5</th>
-                            </tr>
-                            {% for student in class_data %}
-                                <tr>
-                                    <th class="content">{{student.nom}}</th>
-                                    <th class="content">{{student.prenom}}</th>
-                                    <th class="content">{{student.notes_matiere1}}</th>
-                                    <th class="content">{{student.notes_matiere2}}</th>
-                                    <th class="content">{{student.notes_matiere3}}</th>
-                                    <th class="content">{{student.notes_matiere4}}</th>
-                                    <th class="content">{{student.notes_matiere5}}</th>
-                                </tr>
-                            {% endfor %}
-                        </table>
-
-                        `;
+                    contentHTML = "<h2 class='onglet-title'>Élèves</h2><p>Liste de mes élèves...</p>";
                 } else if (section === "parametres") {
                     contentHTML = "<h2 class='onglet-title'>Paramètres</h2><p>Réglages du compte...</p>";
                 }

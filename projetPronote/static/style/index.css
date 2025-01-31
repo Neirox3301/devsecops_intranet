@@ -39,38 +39,29 @@ h1 {
 .choice-container {
   height: 60%;
   padding: 5%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 .input-container {
   align-items: center;
   color: white;
   display: flex;
-  align-items: center;
-  justify-content: center;
   height: 50%;
 }
 
 .input-field {
   background: transparent;
-  border: none;
   border-bottom: 2px solid #e4b622;
+  border: none;
   color: #333;
   color: white;
   outline: none;
   padding: 1% 0;
   transition: border-color 0.3s ease;
-  transition: width 0.3s ease;
-  width: 60%;
-  text-align: center; /* Centre le texte et le placeholder */
+  width: 100%;
 }
 
 .input-field:focus {
   border-bottom: 2px solid #c48220;
-  width: 100%;
 }
 
 .submit-button {
