@@ -93,6 +93,7 @@ h2 {
 .onglet-title {
     font-size: 48px;
     margin: 20px 0;
+    height: 10%;
 }
 
 /* MAIN DIV ----- NOTES */
@@ -114,6 +115,22 @@ td {
 th, td {
     text-align: center;
 }
+
+.grade {
+    background: transparent;
+    outline: none;
+    border: none;
+    color: white;
+    margin-left: 15%;
+}
+
+.grade::placeholder {
+    color: white;
+    font-weight: bold;
+}
+
+
+
 
 /* MAIN DIV ----- BULLETIN */
 

@@ -54,21 +54,25 @@
                                 <th class="header">{{ subject }}</th>
                             {% endfor %}
                         </tr>
-                        {% for student in students %}
-                            <tr>
-                                <th class="content">{{ student.last_name }}</th>
-                                <th class="content">{{ student.first_name }}</th>
-                                {% for subject in subjects %}
-                                    <th class="content">
-                                        {% for grade in grades %}
-                                            {% if grade.student_id == student.id and grade.subject_name == subject %}
-                                                {{ grade.grade }}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </th>
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
+
+                            {% for student in students %}
+                            <form>
+                                <tr>
+                                    <th class="content">{{ student.last_name }}</th>
+                                    <th class="content">{{ student.first_name }}</th>
+                                    {% for subject in subjects %}
+                                        <th class="content">
+                                            {% for grade in grades %}
+                                                {% if grade.student_id == student.id and grade.subject_name == subject %}
+                                                    {{ grade.grade }}
+                                                {% endif %}
+                                            {% endfor %}
+                                            <button><img src="{{ url_for('static', filename='images/stylo.png') }}" alt="Enregistrer" style="width: 16px; height: 16px;">
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                            </form>
+                            {% endfor %}
                     </table>
                     `;
                 } else if (section === "bulletins") {

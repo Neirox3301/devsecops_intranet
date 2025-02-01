@@ -1,4 +1,5 @@
 -- Suppression des tables si elles existent déjà
+DROP TABLE IF EXISTS grades;
 DROP TABLE IF EXISTS teacher_subjects;
 DROP TABLE IF EXISTS teacher_classes;
 DROP TABLE IF EXISTS subjects;
@@ -160,4 +161,3 @@ VALUES
 (18, 4, 3),  -- Claire Favre en Histoire-Géographie
 (16, 4, 5),  -- Claire Favre en Sciences
 (15, 4, 8);  -- Claire Favre en Arts Plastiques
-
