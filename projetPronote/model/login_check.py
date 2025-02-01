@@ -9,9 +9,11 @@ def home():
 
 @login_bp.route('/process', methods=['POST'])
 def process():
+    # Get the username and password from the form
     username = request.form.get('username')
     password = request.form.get('password')
 
+    # Check if the username and password are not empty
     if not username or not password:
         return render_template('index.html', message="Veuillez remplir tous les champs.")
 
@@ -19,37 +21,33 @@ def process():
     if conn is None:
         return render_template('index.html', message="Erreur de connexion à la base de données.")
 
-    try:
-        cursor = conn.cursor(dictionary=True)
-        query = """
-        SELECT CONCAT(LEFT(prenom, 1), nom) AS generated_username, status
-        FROM users
-        WHERE password = %s
-        """
-        cursor.execute(query, (password,))
-        result = cursor.fetchone()
+    # Get the user from the database
+    cursor = conn.cursor(dictionary=True)
+    query = """
+    SELECT id, username, role
+    FROM users
+    WHERE username = %s AND password = %s;
+    """
+    cursor.execute(query, (username,password))
+    result = cursor.fetchone()
 
-        if result:
-            expected_username = result['generated_username']
-            if username == expected_username:
-                session['username'] = username
-                session['status'] = result['status']
-                
-                if result['status'] == 1:
-                    return redirect(url_for('dashboard_prof_bp.dashboard_prof'))
-                else:
-                    return redirect(url_for('dashboard_bp.dashboard'))
-            else:
-                message = "Nom d'utilisateur incorrect."
+    # If the user is found, store the username and role in the session
+    if result:
+        session['username'] = username
+        session['role'] = result['role']
+        session['id'] = result['id']
+        
+        if result['role'] == 'teacher':
+            return redirect(url_for('dashboard_prof_bp.dashboard_prof'))
         else:
-            message = "Mot de passe incorrect ou utilisateur non trouvé."
+            return redirect(url_for('dashboard_bp.dashboard'))
+        
+    else:
+        message = "Mot de passe incorrect ou utilisateur non trouvé."
 
-    except Exception as e:
-        message = f"Erreur de connexion à la base de données : {e}"
-
-    finally:
-        if conn and conn.is_connected():
-            cursor.close()
-            conn.close()
+    # Close the cursor and the connection
+    if conn and conn.is_connected():
+        cursor.close()
+        conn.close()
 
     return render_template('index.html', message=message)

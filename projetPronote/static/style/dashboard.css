@@ -38,6 +38,10 @@ body {
     width: 100%;
 }
 
+h2 {
+    text-align: center;
+}
+
 /* MENU */
 .menu, .main-div  {
     height: 95%;

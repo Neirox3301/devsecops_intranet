@@ -45,7 +45,32 @@
                 let contentHTML = "";
 
                 if (section === "notes") {
-                    contentHTML = `<h2 class='onglet-title'>Ajouter une note</h2><p>Ajouter une note...</p>`;
+                    contentHTML = `<h2 class='onglet-title'>Notes</h2>
+                    <table class="tableau-notes">
+                        <tr>
+                            <th class="header">Nom</th>
+                            <th class="header">Prenom</th>
+                            {% for subject in subjects %}
+                                <th class="header">{{ subject }}</th>
+                            {% endfor %}
+                        </tr>
+                        {% for student in students %}
+                            <tr>
+                                <th class="content">{{ student.last_name }}</th>
+                                <th class="content">{{ student.first_name }}</th>
+                                {% for subject in subjects %}
+                                    <th class="content">
+                                        {% for grade in grades %}
+                                            {% if grade.student_id == student.id and grade.subject_name == subject %}
+                                                {{ grade.grade }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    `;
                 } else if (section === "bulletins") {
                     contentHTML = "<h2 class='onglet-title'>Bulletins</h2><p>Affichage des bulletins...</p>";
                 } else if (section === "messagerie") {
@@ -53,7 +78,6 @@
                 } else if (section === "eleves") {
                     contentHTML = `
                         <h2 class='onglet-title'>Élèves</h2>
-                        <!-- <p> {{ class_data }} </p>-->
                         <table class="tableau-notes">
                             <tr>
                                 <th class="header">Nom</th>
@@ -64,7 +88,7 @@
                                 <th class="header">Matiere 4</th>
                                 <th class="header">Matiere 5</th>
                             </tr>
-                            {% for student in class_data %}
+                            {% for student in students %}
                                 <tr>
                                     <th class="content">{{student.nom}}</th>
                                     <th class="content">{{student.prenom}}</th>
@@ -76,7 +100,6 @@
                                 </tr>
                             {% endfor %}
                         </table>
-
                         `;
                 } else if (section === "parametres") {
                     contentHTML = "<h2 class='onglet-title'>Paramètres</h2><p>Réglages du compte...</p>";

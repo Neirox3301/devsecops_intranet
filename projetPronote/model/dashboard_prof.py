@@ -9,32 +9,80 @@ def dashboard_prof():
         return redirect(url_for('login_bp.home'))
 
     username = session['username']
+    id = session['id']
+    
     conn = get_db_connection()
     if conn is None:
         return redirect(url_for('login_bp.home'))
 
-    try:
-        cursor = conn.cursor(dictionary=True)
-        query = """
-        SELECT prenom, nom, status, classroom
-        FROM users
-        WHERE CONCAT(LEFT(prenom, 1), nom) = %s
-        """
-        cursor.execute(query, (username,))
-        user_data = cursor.fetchone()
-                
-        classroom_query = """
-        SELECT prenom, nom, notes_matiere1, notes_matiere2, notes_matiere3, notes_matiere4, notes_matiere5
-        FROM users
-        WHERE classroom = %s AND status = 0;
-        """
-        cursor2 = conn.cursor(dictionary=True)
-        cursor2.execute(classroom_query, (user_data['classroom'],))
-        class_data = cursor2.fetchall()
-        
-    finally:
-        if conn.is_connected():
-            cursor.close()
-            conn.close()
+    # Get the teacher's data
+    cursor = conn.cursor(dictionary=True)
+    user_info_query = """
+    SELECT first_name, last_name
+    FROM teachers
+    WHERE user_id = %s;
+    """
+    cursor.execute(user_info_query, (id,))
+    user_data = cursor.fetchone()
+            
+    # Get the teacher's classrooms
+    get_classes_id_query = """
+    SELECT class_id
+    FROM teacher_classes
+    WHERE teacher_id = %s;
+    """
+    cursor2 = conn.cursor(dictionary=True)
+    cursor2.execute(get_classes_id_query, (id,))
+    classes_id = cursor2.fetchall()
+    classes_id = [classes_id[i]['class_id'] for i in range(len(classes_id))] # Convert dict to list of class_ids
+    classes_id = tuple(classes_id) # Convert list to tuple
+    
+    # Get the teacher's subjects
+    get_subjects_id_query = """
+    SELECT subject_id
+    FROM teacher_subjects
+    WHERE teacher_id = %s;
+    """
+    cursor3 = conn.cursor(dictionary=True)
+    cursor3.execute(get_subjects_id_query, (id,))
+    subjects_id = cursor3.fetchall()
+    subjects_id = [subjects_id[i]['subject_id'] for i in range(len(subjects_id))] # Convert dict to list of subjects_ids
+    subjects_id = tuple(subjects_id) # Convert list to tuple
+    
+    # Get the teacher's students
+    placeholders = ', '.join(['%s'] * len(classes_id))
+    get_students_query = f"""
+    SELECT id, first_name, last_name
+    FROM students
+    WHERE class_id IN ({placeholders});
+    """
+    cursor3 = conn.cursor(dictionary=True)
+    cursor3.execute(get_students_query, tuple(classes_id))
+    students_data = cursor3.fetchall()  
+    
+    # Get the students' grades
+    students_id = [students_data[i]['id'] for i in range(len(students_data))]
+    students_id = tuple(students_id)
+    students_placeholders = ', '.join(['%s'] * len(students_id))
+    subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
+    get_grades_query = f"""
+    SELECT (SELECT name FROM subjects where ID = subject_id) AS subject_name, subject_id, student_id, grade
+    FROM grades
+    WHERE student_id IN ({students_placeholders}) AND subject_id IN ({subjects_placeholders});
+    """
+    cursor4 = conn.cursor(dictionary=True)
+    cursor4.execute(get_grades_query, students_id + subjects_id)
+    grades_data = cursor4.fetchall()
+    
+    # Only keep the grades of the students of the teacher
+    grades_data = [grades_data[i] for i in range(len(grades_data)) if grades_data[i]['student_id'] in students_id]
+    
+    # Only keep one of each subjects (to avoid duplicates in the table)
+    subjects_data = tuple(set([grades_data[i]['subject_name'] for i in range(len(grades_data))]))
+    
+    # Close the cursor and the connection
+    if conn.is_connected():
+        cursor.close()
+        conn.close()
 
-    return render_template('dashboard_prof.html', user=user_data, class_data=class_data)
+    return render_template('dashboard_prof.html', user=user_data, classes=classes_id, students=students_data, grades=grades_data, subjects=subjects_data)

@@ -1,4 +1,5 @@
 .env
+.sql
 brouillon.txt
 db/
 __pycache__/
