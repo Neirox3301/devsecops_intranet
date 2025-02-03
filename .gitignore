@@ -1,7 +1,7 @@
 .env
 .sql
 brouillon.txt
-db_connection.py
+model/db_connection.py
 db/
 __pycache__/
 *.pyc
