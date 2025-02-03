@@ -9,7 +9,7 @@
     <body>
         <div class="general-div">
             <div class="menu">
-                <h2>{{ user.prenom }} {{ user.nom }}</h2>
+                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
                 <button onclick="changeContent('notes')">
                     <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
                     Notes
@@ -37,7 +37,7 @@
             </div>
 
             <div class="main-div" id="content">
-                <h1 style="font-size: 48px; margin: 20px 0 10px 0;" >Bienvenue, élève {{ user.prenom }} {{ user.nom }}</h1>
+                <h1 style="font-size: 48px; margin: 20px 0 10px 0;">Bienvenue, élève {{ user.first_name }} {{ user.last_name }}</h1>
                 <h3 style="font-size: 24px;">Sélectionnez une option dans le menu.</h3>
             </div>
         </div>
@@ -53,32 +53,18 @@
                         <h2 class='onglet-title'>Vos notes</h2>
                         <table class="tableau-notes">
                             <tr>
-                                <th>Notes n°</th>
-                                <th>Maths</th>
-                                <th>Français</th>
-                                <th>SVT</th>
-                                <th>Physique / Chimie</th>
-                                <th>Histoire</th>
+                                <th>Matière</th>
+                                <th>Note</th>
                             </tr>
+                            {% for grade in grades %}
                             <tr>
-                                <td>1</td>
-                                <td>{{ user.notes_matiere1 }}</td>
-                                <td>{{ user.notes_matiere2 }}</td>
-                                <td>{{ user.notes_matiere3 }}</td>
-                                <td>{{ user.notes_matiere4 }}</td>
-                                <td>{{ user.notes_matiere5 }}</td>
+                                <td>{{ grade.subject_id }}</td>
+                                <td>{{ grade.grade }}</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>{{ user.notes_matiere1 }}</td>
-                                <td>{{ user.notes_matiere2 }}</td>
-                                <td>{{ user.notes_matiere3 }}</td>
-                                <td>{{ user.notes_matiere4 }}</td>
-                                <td>{{ user.notes_matiere5 }}</td>
-                            </tr>
+                            {% endfor %}
                         </table>
                         <div style="margin: 10px 0">
-                            <h3>Moyenne générale : {{ user.notes_matiere5 }}</h3>
+                            <h3>Moyenne générale : moyenne generale</h3>
                         </div>
                     `;
                 } else if (section === "bulletins") {
