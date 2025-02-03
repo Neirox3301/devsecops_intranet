@@ -14,21 +14,19 @@ app.config['SECURITY_PASSWORD_SALT'] = 'some_salt'  # Ajoute un sel pour le hach
 # Initialisation de la base de données
 db = SQLAlchemy(app)
 
-# Modèle User adapté à ta table
 class User(db.Model, UserMixin):
-    __tablename__ = 'users'  # Nom de ta table
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.Enum('teacher', 'student', name='role_enum'), nullable=False)  # Utilisation de l'ENUM pour les rôles
-    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)  # Ajout du champ fs_uniquifier
+    role = db.Column(db.Enum('teacher', 'student', name='role_enum'), nullable=False)
+    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
 
 # Initialisation de Flask-Security
-user_datastore = SQLAlchemyUserDatastore(db, User, None)  # On passe None pour les rôles, on n'en a pas de table à gérer
+user_datastore = SQLAlchemyUserDatastore(db, User, None)
 security = Security(app, user_datastore)
 
-# Si tu as des blueprints à enregistrer, fais-le ici
 from model.login_check import login_bp
 from model.dashboard import dashboard_bp
 from model.dashboard_prof import dashboard_prof_bp
