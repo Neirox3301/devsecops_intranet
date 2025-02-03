@@ -64,7 +64,7 @@
                                         <th class="content">
                                             {% for grade in grades %}
                                                 {% if grade.student_id == student.id and grade.subject_name == subject %}
-                                                    <input class="grade" placeholder="{{ grade.grade }}">
+                                                    <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2">
                                                 {% endif %}
                                             {% endfor %}
                                         </th>

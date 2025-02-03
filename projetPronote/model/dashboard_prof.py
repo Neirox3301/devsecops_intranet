@@ -51,11 +51,10 @@ def dashboard_prof():
     # Get the students' grades
     students_id = [student['id'] for student in students_data]
     
-    subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
     grades_data = []
     if students_id and subjects_id:
         students_placeholders = ', '.join(['%s'] * len(students_id))
-
+        subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
         
         get_grades_query = f"""
         SELECT (SELECT name FROM subjects WHERE ID = subject_id) AS subject_name, subject_id, student_id, grade
@@ -90,8 +89,6 @@ def dashboard_prof():
                     'student_id': student['id'],
                     'grade': '--'
                 })
-    
-    
     
     # Only keep one of each subjects (to avoid duplicates in the table)
     subjects_data = tuple(set(grade['subject_name'] for grade in grades_data))
