@@ -97,6 +97,12 @@ h2 {
 }
 
 /* MAIN DIV ----- NOTES */
+.notes {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
 .tableau-notes {
     border-radius: 10px;
     border: solid 1px rgb(255, 255, 255);

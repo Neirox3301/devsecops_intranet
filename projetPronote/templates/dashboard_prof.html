@@ -45,17 +45,19 @@
                 let contentHTML = "";
 
                 if (section === "notes") {
-                    contentHTML = `<h2 class='onglet-title'>Notes</h2>
-                    <table class="tableau-notes">
-                        <thead>
-                            <th class="header">Nom</th>
-                            <th class="header">Prenom</th>
-                            {% for subject in subjects %}
-                                <th class="header">{{ subject }}</th>
-                            {% endfor %}
-                        </thead>
-                        <tbody>
+                    contentHTML = `
+                    <div class=notes>
+                        <h2 class='onglet-title'>Notes</h2>
+                        <table class="tableau-notes">
+                            <thead>
+                                <th class="header">Nom</th>
+                                <th class="header">Prenom</th>
+                                {% for subject in subjects %}
+                                    <th class="header">{{ subject }}</th>
+                                {% endfor %}
+                            </thead>
                             <form method="POST" action="{{ url_for('grade_handler_bp.submit_grades') }}">
+                            <tbody>
                                 {% for student in students %}
                                     <tr>
                                         <th class="content">{{ student.last_name }}</th>
@@ -71,10 +73,11 @@
                                         {% endfor %}
                                     </tr>
                                 {% endfor %}
-                                <button type="submit">Enregistrer</button>
-                            </form>
-                        </tbody>
-                    </table>
+                            </tbody>   
+                        </table>
+                        <button type="submit">Enregistrer</button>
+                        </form>
+                    </div>
                     `;
                 } else if (section === "bulletins") {
                     contentHTML = "<h2 class='onglet-title'>Bulletins</h2><p>Affichage des bulletins...</p>";
