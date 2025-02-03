@@ -47,31 +47,33 @@
                 if (section === "notes") {
                     contentHTML = `<h2 class='onglet-title'>Notes</h2>
                     <table class="tableau-notes">
-                        <tr>
+                        <thead>
                             <th class="header">Nom</th>
                             <th class="header">Prenom</th>
                             {% for subject in subjects %}
                                 <th class="header">{{ subject }}</th>
                             {% endfor %}
-                        </tr>
-
-                            {% for student in students %}
-                            <form>
-                                <tr>
-                                    <th class="content">{{ student.last_name }}</th>
-                                    <th class="content">{{ student.first_name }}</th>
-                                    {% for subject in subjects %}
-                                        <th class="content">
-                                            {% for grade in grades %}
-                                                {% if grade.student_id == student.id and grade.subject_name == subject %}
-                                                    <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2">
-                                                {% endif %}
-                                            {% endfor %}
-                                        </th>
-                                    {% endfor %}
-                                </tr>
+                        </thead>
+                        <tbody>
+                            <form method="POST" action="{{ url_for('grade_handler_bp.submit_grades') }}">
+                                {% for student in students %}
+                                    <tr>
+                                        <th class="content">{{ student.last_name }}</th>
+                                        <th class="content">{{ student.first_name }}</th>
+                                        {% for subject in subjects %}
+                                            <th class="content">
+                                                {% for grade in grades %}
+                                                    {% if grade.student_id == student.id and grade.subject_name == subject %}
+                                                        <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="grades[{{ student.id }}][{{ subject.id }}]">
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </th>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                <button type="submit">Enregistrer</button>
                             </form>
-                            {% endfor %}
+                        </tbody>
                     </table>
                     `;
                 } else if (section === "bulletins") {

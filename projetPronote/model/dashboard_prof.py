@@ -14,6 +14,7 @@ def dashboard_prof():
     if conn is None:
         return redirect(url_for('login_bp.home'))
 
+
     # Get the teacher's data
     user_info_query = """
     SELECT first_name, last_name
@@ -23,6 +24,7 @@ def dashboard_prof():
     cursor = conn.cursor(dictionary=True)
     cursor.execute(user_info_query, (user_id,))
     user_data = cursor.fetchone()
+    
     
     # Get the teacher's subjects and classes
     get_all_id_query = """
@@ -38,6 +40,7 @@ def dashboard_prof():
     # For testing purposes
     classes_id = (1, 2)
     
+    
     # Get the teacher's students
     placeholders = ', '.join(['%s'] * len(classes_id))
     get_students_query = f"""
@@ -47,10 +50,10 @@ def dashboard_prof():
     """
     cursor.execute(get_students_query, tuple(classes_id))
     students_data = cursor.fetchall()
-    
+
+
     # Get the students' grades
     students_id = [student['id'] for student in students_data]
-    
     grades_data = []
     if students_id and subjects_id:
         students_placeholders = ', '.join(['%s'] * len(students_id))
@@ -67,6 +70,7 @@ def dashboard_prof():
     
     # Only keep the grades of the students of the teacher
     grades_data = [grade for grade in grades_data if grade['student_id'] in students_id]
+
 
     # Get the subjects names
     subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
@@ -89,9 +93,10 @@ def dashboard_prof():
                     'student_id': student['id'],
                     'grade': '--'
                 })
-    
+
     # Only keep one of each subjects (to avoid duplicates in the table)
     subjects_data = tuple(set(grade['subject_name'] for grade in grades_data))
+    
     
     # Close the cursor and the connection
     cursor.close()

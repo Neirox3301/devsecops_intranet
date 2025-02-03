@@ -30,10 +30,13 @@ security = Security(app, user_datastore)
 from model.login_check import login_bp
 from model.dashboard import dashboard_bp
 from model.dashboard_prof import dashboard_prof_bp
+from model.grade_handler import grade_handler_bp
 
 app.register_blueprint(login_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(dashboard_prof_bp)
+app.register_blueprint(grade_handler_bp)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
