@@ -108,25 +108,26 @@ h2 {
     border-top: solid 1px rgb(255, 255, 255);
 }
 
-td {
-    border-top: solid 1px rgb(255, 255, 255);
+th {
+    text-align: center;
 }
 
-th, td {
+td {
     text-align: center;
+    border-top: solid 1px rgb(255, 255, 255);
 }
 
 .grade {
     background: transparent;
     outline: none;
     border: none;
-    color: white;
-    margin-left: 15%;
+    color: orange;
+    font-weight: bold;
+    width: 5%;
 }
 
 .grade::placeholder {
     color: white;
-    font-weight: bold;
 }
 
 

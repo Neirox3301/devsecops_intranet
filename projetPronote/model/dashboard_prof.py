@@ -8,21 +8,19 @@ def dashboard_prof():
     if 'username' not in session:
         return redirect(url_for('login_bp.home'))
 
-    username = session['username']
     user_id = session['id']
     
     conn = get_db_connection()
     if conn is None:
         return redirect(url_for('login_bp.home'))
 
-    cursor = conn.cursor(dictionary=True)
-    
     # Get the teacher's data
     user_info_query = """
     SELECT first_name, last_name
     FROM teachers
     WHERE user_id = %s;
     """
+    cursor = conn.cursor(dictionary=True)
     cursor.execute(user_info_query, (user_id,))
     user_data = cursor.fetchone()
     
@@ -53,10 +51,11 @@ def dashboard_prof():
     # Get the students' grades
     students_id = [student['id'] for student in students_data]
     
+    subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
     grades_data = []
     if students_id and subjects_id:
         students_placeholders = ', '.join(['%s'] * len(students_id))
-        subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
+
         
         get_grades_query = f"""
         SELECT (SELECT name FROM subjects WHERE ID = subject_id) AS subject_name, subject_id, student_id, grade
@@ -69,6 +68,30 @@ def dashboard_prof():
     
     # Only keep the grades of the students of the teacher
     grades_data = [grade for grade in grades_data if grade['student_id'] in students_id]
+
+    # Get the subjects names
+    subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
+    get_students_query = f"""
+    SELECT id, name
+    FROM subjects
+    WHERE id IN ({subjects_placeholders});
+    """
+    cursor.execute(get_students_query, tuple(subjects_id))
+    subjects = cursor.fetchall()
+
+
+    # Add rows for students without grades and set their grade to "--"
+    for student in students_data:
+        for subject in subjects:
+            if not any(grade['student_id'] == student['id'] and grade['subject_id'] == subject['id'] for grade in grades_data):
+                grades_data.append({
+                    'subject_name': next(subject['name'] for grade in grades_data if grade['subject_id'] == subject['id']),
+                    'subject_id': subject['id'],
+                    'student_id': student['id'],
+                    'grade': '--'
+                })
+    
+    
     
     # Only keep one of each subjects (to avoid duplicates in the table)
     subjects_data = tuple(set(grade['subject_name'] for grade in grades_data))
