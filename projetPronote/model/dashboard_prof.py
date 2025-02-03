@@ -24,30 +24,19 @@ def dashboard_prof():
     """
     cursor.execute(user_info_query, (id,))
     user_data = cursor.fetchone()
-            
-    # Get the teacher's classrooms
-    get_classes_id_query = """
-    SELECT class_id
+    
+    # Get the teacher's subjects and classes
+    get_all_id_query = """
+    SELECT subject_id, class_id
     FROM teacher_classes
     WHERE teacher_id = %s;
     """
     cursor2 = conn.cursor(dictionary=True)
-    cursor2.execute(get_classes_id_query, (id,))
-    classes_id = cursor2.fetchall()
-    classes_id = [classes_id[i]['class_id'] for i in range(len(classes_id))] # Convert dict to list of class_ids
-    classes_id = tuple(classes_id) # Convert list to tuple
-    
-    # Get the teacher's subjects
-    get_subjects_id_query = """
-    SELECT subject_id
-    FROM teacher_subjects
-    WHERE teacher_id = %s;
-    """
-    cursor3 = conn.cursor(dictionary=True)
-    cursor3.execute(get_subjects_id_query, (id,))
-    subjects_id = cursor3.fetchall()
-    subjects_id = [subjects_id[i]['subject_id'] for i in range(len(subjects_id))] # Convert dict to list of subjects_ids
-    subjects_id = tuple(subjects_id) # Convert list to tuple
+    cursor2.execute(get_all_id_query, (id,))
+    all_id = cursor2.fetchall()
+    subjects_id = [all_id[i]['subject_id'] for i in range(len(all_id))] # Convert dict to list of subject_ids
+    classes_id = [all_id[i]['class_id'] for i in range(len(all_id))] # Convert dict to list of class_ids
+    classes_id = (1, 2) # For testing purposes
     
     # Get the teacher's students
     placeholders = ', '.join(['%s'] * len(classes_id))
@@ -62,17 +51,20 @@ def dashboard_prof():
     
     # Get the students' grades
     students_id = [students_data[i]['id'] for i in range(len(students_data))]
-    students_id = tuple(students_id)
-    students_placeholders = ', '.join(['%s'] * len(students_id))
-    subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
-    get_grades_query = f"""
-    SELECT (SELECT name FROM subjects where ID = subject_id) AS subject_name, subject_id, student_id, grade
-    FROM grades
-    WHERE student_id IN ({students_placeholders}) AND subject_id IN ({subjects_placeholders});
-    """
-    cursor4 = conn.cursor(dictionary=True)
-    cursor4.execute(get_grades_query, students_id + subjects_id)
-    grades_data = cursor4.fetchall()
+    
+    if students_id and subjects_id:
+        students_placeholders = ', '.join(['%s'] * len(students_id))
+        subjects_placeholders = ', '.join(['%s'] * len(subjects_id))
+        
+        get_grades_query = f"""
+        SELECT (SELECT name FROM subjects where ID = subject_id) AS subject_name, subject_id, student_id, grade
+        FROM grades
+        WHERE student_id IN ({students_placeholders}) 
+        AND subject_id IN ({subjects_placeholders});
+        """
+        cursor4 = conn.cursor(dictionary=True)
+        cursor4.execute(get_grades_query, students_id + subjects_id)
+        grades_data = cursor4.fetchall()
     
     # Only keep the grades of the students of the teacher
     grades_data = [grades_data[i] for i in range(len(grades_data)) if grades_data[i]['student_id'] in students_id]
