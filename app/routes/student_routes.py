@@ -1,26 +1,34 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
+from sqlalchemy.orm import joinedload
 
-from models import Grade, Subject, Class
+from models import Grade, Class, Student
 
 student_dashboard_blueprint = Blueprint('student_dashboard', __name__)
 
-# Fonction pour afficher les notes de l'élève
 @student_dashboard_blueprint.route('/student_dashboard/grades')
 @login_required 
 def display_grades():
-    student_grades = Grade.query.filter_by(student_id=current_user.id).all()
+    # Étape 1 : Récupérer l'étudiant lié à l'utilisateur connecté
+    student = Student.query.filter_by(user_id=current_user.id).first()
+
+    if not student:
+        return redirect(url_for('student_dashboard.no_grades'))
+
+    # Étape 2 : Récupérer les notes de l'étudiant avec les matières associées en une seule requête
+    student_grades = Grade.query.options(joinedload(Grade.subject)).filter_by(student_id=student.id).all()
 
     if not student_grades:
-        return redirect(url_for('student_dashboard.'))
+        return redirect(url_for('student_dashboard.no_grades'))
 
-    # Récupérer les matières associées aux notes
-    subjects = [{'id': grade.subject_id, 'name': Subject.query.filter_by(id=grade.subject_id).first().name, 'grade': grade.grade} for grade in student_grades]
+    # Étape 3 : Créer une liste des matières et des notes
+    subjects = [{'id': grade.subject.id, 'name': grade.subject.name, 'grade': grade.grade} for grade in student_grades]
 
-    # Récupérer les informations sur la classe de l'élève
-    student_class = Class.query.filter_by(id=current_user.class_id).first()
+    # Étape 4 : Récupérer les informations sur la classe de l'étudiant
+    student_class = Class.query.filter_by(id=student.class_id).first()
 
-    return render_template('student_templates/student_grades.html', subjects=subjects, student_class=student_class)
+    return render_template('student_templates/student_grades.html', subjects=subjects, student_class=student_class, student=student)
+
 
 @student_dashboard_blueprint.route('/student_dashboard/bulletins')
 @login_required

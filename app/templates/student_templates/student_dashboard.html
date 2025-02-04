@@ -9,7 +9,6 @@
     <body>
         <div class="general-div">
             <div class="menu">
-                <h2>{{ current_user.first_name }} {{ current_user.last_name }}</h2>
                 <a href="{{ url_for('student_dashboard.display_grades') }}">
                     <button>
                         <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
@@ -49,9 +48,10 @@
             </div>
 
             <div class="main-div">
-                <h1 style="font-size: 48px; margin: 20px 0 10px 0;">Bienvenue, élève {{ current_user.first_name }} {{ current_user.last_name }}</h1>
+                <h1 style="font-size: 48px; margin: 20px 0 10px 0;">Bienvenue, élève</h1>
                 <h3 style="font-size: 24px;">Sélectionnez une option dans le menu.</h3>
             </div>
+            
         </div>
     </body>
 </html>
