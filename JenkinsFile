@@ -1,13 +1,13 @@
 pipeline {
   agent any
-  
+
   tools {
     maven 'Maven'  // Assure-toi que l'installation Maven est configurée sur Jenkins
-    sonarQube 'Academis_sonar'  // Le nom de l'installation de SonarQube que tu as configurée sur Jenkins
   }
-  
+
   environment {
     SONARQUBE_TOKEN = credentials('squ_c15393289f9a840f841cecdd6ef1acb89affa726')  // Utiliser le token SonarQube créé précédemment
+    SONARQUBE_HOST = 'http://localhost:9000'  // URL de ton serveur SonarQube
   }
 
   stages {
@@ -21,7 +21,7 @@ pipeline {
       steps {
         script {
           // Lancer l'analyse SonarQube après le build
-          sh 'mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONARQUBE_TOKEN'
+          sh "mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.login=$SONARQUBE_TOKEN"
         }
       }
     }
