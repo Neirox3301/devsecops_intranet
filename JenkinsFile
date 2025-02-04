@@ -1,23 +1,52 @@
 pipeline {
   agent any
+
   tools {
-    maven 'Maven'
+    maven 'Maven'  // Assure-toi que l'installation Maven est configurée sur Jenkins
   }
+
+  environment {
+    SONARQUBE_TOKEN = credentials('squ_c15393289f9a840f841cecdd6ef1acb89affa726')  // Utiliser le token SonarQube créé précédemment
+    SONARQUBE_HOST = 'http://localhost:9000'  // URL de ton serveur SonarQube
+  }
+
   stages {
-    stage("build") {
+    stage("Build") {
       steps {
-        sh 'mvn -v'
-      }
-    } 
-    stage("test") {
-      steps {
-        echo 'Running tests'
+        sh 'mvn clean install'  // Commande pour construire le projet
       }
     }
-    stage("deploy") {
+
+    stage("SonarQube Analysis") {
       steps {
-        echo 'Deploying application'
+        script {
+          // Lancer l'analyse SonarQube après le build
+          sh "mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.login=$SONARQUBE_TOKEN"
+        }
       }
+    }
+
+    stage("Test") {
+      steps {
+        echo 'Running tests'  // Remplace par les commandes réelles pour lancer tes tests
+        sh 'mvn test'  // Si tu veux exécuter des tests avec Maven
+      }
+    }
+
+    stage("Deploy") {
+      steps {
+        echo 'Deploying application'  // Remplace par les commandes réelles pour déployer ton application
+        // Par exemple : sh './deploy.sh'
+      }
+    }
+  }
+
+  post {
+    success {
+      echo 'Build et analyse réussis!'
+    }
+    failure {
+      echo 'La build a échoué.'
     }
   }
 }
