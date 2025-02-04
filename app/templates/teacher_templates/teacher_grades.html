@@ -7,12 +7,6 @@
     <title>Grade Section</title>
 </head>
 <body>
-    <p>{{ classes }}</p>
-    {% for student in students %}
-        <p>{{ student.last_name }}</p>
-        <p>{{ student.first_name }}</p>
-    {% endfor %}
-
     <table>
         <thead>
             <th>Last name</th>
@@ -21,9 +15,10 @@
                 <th class="header">{{ subject.name }}</th>
             {% endfor %}
         </thead>
+        <form action="{{ url_for('.update_grades') }}" method="POST">
         <tbody>
             {% for student in students %}
-            {% set grade_attributed = False %}
+                {% set grade_attributed = False %}
                 <tr>
                     <th class="content">{{ student.last_name }}</th>
                     <th class="content">{{ student.first_name }}</th>
@@ -31,19 +26,18 @@
                         <th class="content">
                             {% for grade in grades %}
                                 {% if grade.student_id == student.id and grade.subject_id == subject.id %}
-                                    <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="grades[{{ student.id }}][{{ subject.id }}]">
+                                    <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="{{ student.id }}|{{ subject.id }}">
                                     {% set grade_attributed = True %}
                                 {% endif %}
                             {% endfor %}
-                            {% if not grade_attributed %}
-                                <input type="text" class="grade" placeholder="--" maxlength="2" name="grades[{{ student.id }}][{{ subject.id }}]">
-                            {% endif %}
                         </th>
                     {% endfor %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    <button type="submit">Save</button>
+    </form>
 
 
     <!-- <div class=notes>
