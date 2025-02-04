@@ -56,7 +56,7 @@ class Class(db.Model):
     __tablename__ = 'classes'
 
     id = db.Column(db.Integer, primary_key=True)
-    name_class = db.Column(db.String(20), nullable=False)  # Correction ici
+    name_class = db.Column(db.String(20), nullable=False)
     head_teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=True)
 
     # Relations avec les autres tables

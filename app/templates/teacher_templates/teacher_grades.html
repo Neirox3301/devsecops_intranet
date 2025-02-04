@@ -22,7 +22,7 @@
                 <tr>
                     <th class="content">{{ student.last_name }}</th>
                     <th class="content">{{ student.first_name }}</th>
-                    {% for subject in subjects %}
+                    {% for subject in subjects %} <!-- TODO : Mauvais ordre des sujets -->
                         <th class="content">
                             {% for grade in grades %}
                                 {% if grade.student_id == student.id and grade.subject_id == subject.id %}

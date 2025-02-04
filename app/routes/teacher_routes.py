@@ -16,7 +16,7 @@ def display_grades():
     
     # Classes
     classes_id: tuple[int] = tuple(set([tc.class_id for tc in teacherClasses]))
-    classes_names: tuple[str] = tuple(set([Class.query.filter_by(id=id).first().class_name for id in classes_id]))
+    classes_names: tuple[str] = tuple(set([Class.query.filter_by(id=id).first().name_class for id in classes_id]))
     classes: dict = [{'id' : classes_id[i], 'name': classes_names[i]} for i in range(len(classes_id))]
     classes_id = (1, 2, 3)
 
