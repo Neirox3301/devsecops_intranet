@@ -4,39 +4,52 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Dashboard</title>
-        <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}"> -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
     </head>
     <body>
         <div class="general-div">
             <div class="menu">
-                <button onclick="changeContent('notes')">
-                    <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
-                    Notes
-                </button>
-                <button onclick="changeContent('bulletins')">
-                    <img src="{{ url_for('static', filename='svg/bulletin.svg') }}" alt="Bulletins">
-                    Bulletins
-                </button>
-                <button onclick="changeContent('messagerie')">
-                    <img src="{{ url_for('static', filename='svg/message.svg') }}" alt="Messagerie">
-                    Messagerie
-                </button>
-                <button onclick="changeContent('professeurs')">
-                    <img src="{{ url_for('static', filename='svg/teachers.svg') }}" alt="Professeurs">
-                    Professeurs
-                </button>
-                <button onclick="changeContent('parametres')">
-                    <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Paramètres">
-                    Paramètres
-                </button>
-                <button>
-                    <img src="{{ url_for('static', filename='svg/logout.svg') }}" alt="Déconnexion">
-                    <a href="{{ url_for('auth.logout') }}">Déconnexion</a>
-                </button>
+                <h2>{{ current_user.first_name }} {{ current_user.last_name }}</h2>
+                <a href="{{ url_for('student_dashboard.display_grades') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
+                        Notes
+                    </button>
+                </a>
+                <a href="{{ url_for('student_dashboard.display_bulletins') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/bulletin.svg') }}" alt="Bulletins">
+                        Bulletins
+                    </button>
+                </a>
+                <a href="{{ url_for('student_dashboard.display_messagerie') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/message.svg') }}" alt="Messagerie">
+                        Messagerie
+                    </button>
+                </a>
+                <a href="{{ url_for('student_dashboard.display_professeurs') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/teachers.svg') }}" alt="Professeurs">
+                        Professeurs
+                    </button>
+                </a>
+                <a href="{{ url_for('student_dashboard.display_parametres') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Paramètres">
+                        Paramètres
+                    </button>
+                </a>
+                <a href="{{ url_for('auth.logout') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/logout.svg') }}" alt="Déconnexion">
+                        Déconnexion
+                    </button>
+                </a>
             </div>
 
-            <div class="main-div" id="content">
-                <h1 style="font-size: 48px; margin: 20px 0 10px 0;">Bienvenue, élève</h1>
+            <div class="main-div">
+                <h1 style="font-size: 48px; margin: 20px 0 10px 0;">Bienvenue, élève {{ current_user.first_name }} {{ current_user.last_name }}</h1>
                 <h3 style="font-size: 24px;">Sélectionnez une option dans le menu.</h3>
             </div>
         </div>
