@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash
-from models import db, User
+from models import User
 
 auth_blueprint = Blueprint('auth', __name__)
 
@@ -23,7 +23,7 @@ def login():
             else:
                 flash('Role inconnu', 'danger')
         else:
-            flash(f'Username or password incorrect {user.username} {type(pwhash)} mdp : {password} verif : {check_password_hash(pwhash, password)}', 'danger')
+            flash(f'Username or password incorrect ', 'danger')
     return render_template('login.html')
 
 @auth_blueprint.route('/logout')

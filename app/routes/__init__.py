@@ -1,2 +1,4 @@
 from .auth_routes import auth_blueprint
 from .dashboard_routes import dashboard_blueprint
+from .student_routes import student_dashboard_blueprint
+from .teacher_routes import teacher_dashboard_blueprint

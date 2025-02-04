@@ -3,27 +3,36 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Connexion</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/login.css') }}">
+        <title>Login</title>
     </head>
     <body>
-        <h1>Se connecter</h1>
-        <form method="POST" action="{{ url_for('auth.login') }}">
-            <label for="username">Nom d'utilisateur :</label>
-            <input type="text" id="username" name="username" required>
-            <br>
-            <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" required>
-            <br>
-            <button type="submit">Se connecter</button>
-        </form>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul>
-                    {% for category, message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+        <div class="container">
+            <h1>Academis</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul>
+                        {% for category, message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}   
+
+            <form form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="choice-container">
+                    <div class="input-container">
+                        <input type="text" id="username" name="username" placeholder="Username" class="input-field" required>
+                    </div>
+                    <div class="input-container">
+                        <input type="password" id="password" name="password" placeholder="Password" class="input-field" required>
+                    </div>
+                </div>
+                <div class="submit-container">
+                    <input type="submit" value="Login" class="submit-button">
+                </div>
+            </form>
+        </div>
     </body>
 </html>

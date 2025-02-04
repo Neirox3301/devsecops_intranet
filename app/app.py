@@ -3,7 +3,6 @@ from flask_login import LoginManager
 from models.hashing_machine import hash_user_passwords
 from models import db
 
-
 # Création de l'instance de LoginManager
 login_manager = LoginManager()
 
