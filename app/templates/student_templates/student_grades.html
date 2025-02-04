@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Notes de {{ student.first_name }} {{ student.last_name }}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboard.css') }}">
+    </head>
+    <body>
+        <div class="main-div">
+            <h1>Bienvenue, {{ student.first_name }} {{ student.last_name }}</h1>
+            <h3>Classe : {{ student_class.name_class }}</h3>
+
+            <h2>Vos Notes :</h2>
+            {% if subjects %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Matière</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subject in subjects %}
+                            <tr>
+                                <td>{{ subject.name }}</td>
+                                <td>{{ subject.grade }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Aucune note disponible pour le moment.</p>
+            {% endif %}
+        </div>
+    </body>
+</html>
