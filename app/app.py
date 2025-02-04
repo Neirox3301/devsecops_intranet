@@ -9,6 +9,8 @@ login_manager = LoginManager()
 # Importation des blueprints
 from routes.auth_routes import auth_blueprint
 from routes.dashboard_routes import dashboard_blueprint
+from routes.teacher_routes import teacher_dashboard_blueprint
+from routes.student_routes import student_dashboard_blueprint
 from models import User  # Importation du modèle User
 
 def create_app():
@@ -26,13 +28,15 @@ def create_app():
     # Enregistrement des blueprints
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(dashboard_blueprint)
+    app.register_blueprint(teacher_dashboard_blueprint)
+    app.register_blueprint(student_dashboard_blueprint)
 
     return app
 
 app = create_app()
 
+# Hashage des mots de passe
 with app.app_context():
-    # Hashage des mots de passe
     hash_user_passwords()
 
 
