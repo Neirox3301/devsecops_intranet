@@ -6,7 +6,7 @@ pipeline {
   }
 
   environment {
-    SONARQUBE_TOKEN = credentials('squ_c15393289f9a840f841cecdd6ef1acb89affa726')  // Utiliser le token SonarQube créé précédemment
+    SONARQUBE_TOKEN = credentials('squ_8a75e35b92bb0cebddcafd126c20ef5eecc8cb61')  // Utiliser le token SonarQube créé précédemment
     SONARQUBE_HOST = 'http://localhost:9000'  // URL de ton serveur SonarQube
   }
 

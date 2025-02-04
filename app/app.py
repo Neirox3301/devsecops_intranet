@@ -19,7 +19,7 @@ def create_app():
     # Configuration de l'application
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin@localhost/academis' # Changer root:mdp par son propre mdp
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.secret_key = 'mon_secret_key'
+    app.secret_key = 'a'
 
     # Initialisation des extensions avec l'application
     db.init_app(app)  # Initialisation de SQLAlchemy
