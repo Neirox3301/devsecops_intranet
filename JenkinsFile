@@ -3,7 +3,7 @@ pipeline {
   
   tools {
     maven 'Maven'  // Assure-toi que l'installation Maven est configurée sur Jenkins
-    sonarQube 'sonar'  // Le nom de l'installation de SonarQube que tu as configurée sur Jenkins
+    sonarQube 'Academis_sonar'  // Le nom de l'installation de SonarQube que tu as configurée sur Jenkins
   }
   
   environment {
