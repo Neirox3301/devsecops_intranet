@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- put the syle sheet -->
+    <title>Grade Section</title>
+</head>
+<body>
+    <p>{{ classes }}</p>
+    {% for student in students %}
+        <p>{{ student.last_name }}</p>
+        <p>{{ student.first_name }}</p>
+    {% endfor %}
+
+    <table>
+        <thead>
+            <th>Last name</th>
+            <th>First name</th>
+            {% for subject in subjects %}
+                <th class="header">{{ subject.name }}</th>
+            {% endfor %}
+        </thead>
+        <tbody>
+            {% for student in students %}
+            {% set grade_attributed = False %}
+                <tr>
+                    <th class="content">{{ student.last_name }}</th>
+                    <th class="content">{{ student.first_name }}</th>
+                    {% for subject in subjects %}
+                        <th class="content">
+                            {% for grade in grades %}
+                                {% if grade.student_id == student.id and grade.subject_id == subject.id %}
+                                    <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="grades[{{ student.id }}][{{ subject.id }}]">
+                                    {% set grade_attributed = True %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if not grade_attributed %}
+                                <input type="text" class="grade" placeholder="--" maxlength="2" name="grades[{{ student.id }}][{{ subject.id }}]">
+                            {% endif %}
+                        </th>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <!-- <div class=notes>
+        <h2 class='onglet-title'>Notes</h2>
+        <table class="tableau-notes">
+            <thead>
+                <th class="header">Nom</th>
+                <th class="header">Prenom</th>
+                {% for subject in subjects %}
+                    <th class="header">{{ subject }}</th>
+                {% endfor %}
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <th class="content">{{ student.last_name }}</th>
+                        <th class="content">{{ student.first_name }}</th>
+                        {% for subject in subjects %}
+                            <th class="content">
+                                {% for grade in grades %}
+                                    {% if grade.student_id == student.id and grade.subject_name == subject %}
+                                        <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="grades[{{ student.id }}][{{ subject.id }}]">
+                                    {% endif %}
+                                {% endfor %}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>   
+        </table>
+        <button type="submit">Enregistrer</button>
+        </form> -->
+</body>
+</html>

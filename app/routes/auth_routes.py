@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
-from flask_login import login_user, login_required, logout_user, current_user
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from flask_login import login_user, login_required, logout_user
 from werkzeug.security import check_password_hash
-from models import User
+from models import User, Teacher, Student
 
 auth_blueprint = Blueprint('auth', __name__)
 
@@ -17,8 +17,10 @@ def login():
         if user and check_password_hash(pwhash, password):
             login_user(user)
             if user.role == 'student':
+                session['student_id'] = Student.query.filter_by(user_id=user.id).first().id
                 return redirect(url_for('dashboard.student_dashboard'))
             elif user.role == 'teacher':
+                session['teacher_id'] = Teacher.query.filter_by(user_id=user.id).first().id
                 return redirect(url_for('dashboard.teacher_dashboard'))
             else:
                 flash('Role inconnu', 'danger')
