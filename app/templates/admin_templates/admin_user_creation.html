@@ -6,14 +6,9 @@
     <title>Document</title>
 </head>
 <body>
-
-       <!-- TODO : Hash the password before sending it to the database -->
-
-
-
-    <form>
+    <!-- TODO : Hash the password before sending it to the database -->
+    <form action="{{ url_for('.create_user') }}" method="POST">
         <input type="text" placeholder="First Name" name="first_name">
-        
         <input type="text" placeholder="Last Name" name="last_name">
 
         <label for="role">Role</label>
@@ -27,14 +22,6 @@
         <input type="text" placeholder="Username" name="username">
         <input type="password" placeholder="Password" name="password">
         <input type="password" placeholder="Confirm Password" name="confirm_password">
-
-        <label for="class">Class</label>
-        <select name="class" id="class">
-            <option value="">-- Select a Class --</option>
-            {% for assignment in assignments %}
-                <option value="{{ class.id }}">{{ class['name'] }}</option>
-            {% endfor %}
-        </select>
 
         <button type="submit">Display</button>
     </form>
