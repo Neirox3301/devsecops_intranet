@@ -5,13 +5,11 @@
     padding: 0;
 }
 
-html, body, .body-login {
-    align-items: center;
+html, body {
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    display: flex;
     height: 100%;
-    justify-content: center;
+    width: 100%;
 }

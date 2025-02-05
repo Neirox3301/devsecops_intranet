@@ -1,5 +1,8 @@
 .body-login {
+    align-items: center;
     background-image: url('/static/images/login_bg.jpg');
+    display: flex;
+    justify-content: center;
 
     .container {
         background-color: rgba(0, 0, 0, 0.5);
@@ -8,47 +11,43 @@
         display: flex;
         flex-direction: column;
         font-weight: bold;
-        height: 350px;
         justify-content: space-around;
-        padding: 15% 5% 10% 5%;
+        padding: 50px 40px;
         text-align: center;
-        width: 325px;
-
-        h1 {
-            font-size: 2rem;
-            letter-spacing: 1px;
-        }
 
         form {
             display: flex;
             flex-direction: column;
-            height: 70%;
             justify-content: space-between;
+
+            h1 {
+                font-size: 2rem;
+                letter-spacing: 1px;
+                width: 100%;
+            }
 
             .choice-container {
                 align-items: center;
                 display: flex;
                 flex-direction: column;
-                height: 60%;
                 justify-content: center;
+                margin: 30px 0;
                 padding: 5%;
     
                 .input-container {
                     align-items: center;
-                    align-items: center;
                     color: white;
                     display: flex;
-                    height: 50%;
                     justify-content: center;
     
                     .input-field {
                         background: transparent;
                         border: none;
                         border-bottom: 2px solid #e4b622;
-                        color: #333;
                         color: white;
+                        font-size: 1rem;
+                        margin: 5px 0;
                         outline: none;
-                        padding: 1% 0;
                         text-align: center;
                         transition: border-color 0.3s ease;
                         transition: width 0.3s ease;

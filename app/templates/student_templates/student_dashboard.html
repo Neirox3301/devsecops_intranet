@@ -7,48 +7,48 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
     </head>
     <body>
-        <div class="main-div">
+        <div class="dashboard">
             <h1 style="font-size: 48px; margin: 20px 0 10px 0;">Bienvenue</h1>
             <h3 style="font-size: 24px;">Sélectionnez une option dans le menu.</h3>
-        </div>
 
-        <div class="menu">
-            <a href="{{ url_for('student_dashboard.display_grades') }}">
-                <button>
-                    <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
-                    Notes
-                </button>
-            </a>
-            <a href="{{ url_for('student_dashboard.display_bulletins') }}">
-                <button>
-                    <img src="{{ url_for('static', filename='svg/bulletin.svg') }}" alt="Bulletins">
-                    Bulletins
-                </button>
-            </a>
-            <a href="{{ url_for('student_dashboard.display_messagerie') }}">
-                <button>
-                    <img src="{{ url_for('static', filename='svg/message.svg') }}" alt="Messagerie">
-                    Messagerie
-                </button>
-            </a>
-            <a href="{{ url_for('student_dashboard.display_professeurs') }}">
-                <button>
-                    <img src="{{ url_for('static', filename='svg/teachers.svg') }}" alt="Professeurs">
-                    Professeurs
-                </button>
-            </a>
-            <a href="{{ url_for('student_dashboard.display_parametres') }}">
-                <button>
-                    <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Paramètres">
-                    Paramètres
-                </button>
-            </a>
-            <a href="{{ url_for('auth.logout') }}">
-                <button>
-                    <img src="{{ url_for('static', filename='svg/logout.svg') }}" alt="Déconnexion">
-                    Déconnexion
-                </button>
-            </a>
+            <div class="menu">
+                <a href="{{ url_for('student_dashboard.display_grades') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
+                        Notes
+                    </button>
+                </a>
+                <a href="{{ url_for('student_dashboard.display_bulletins') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/bulletin.svg') }}" alt="Bulletins">
+                        Bulletins
+                    </button>
+                </a>
+                <a href="{{ url_for('student_dashboard.display_messagerie') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/message.svg') }}" alt="Messagerie">
+                        Messagerie
+                    </button>
+                </a>
+                <a href="{{ url_for('student_dashboard.display_professeurs') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/teachers.svg') }}" alt="Professeurs">
+                        Professeurs
+                    </button>
+                </a>
+                <a href="{{ url_for('student_dashboard.display_parametres') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Paramètres">
+                        Paramètres
+                    </button>
+                </a>
+                <a href="{{ url_for('auth.logout') }}">
+                    <button>
+                        <img src="{{ url_for('static', filename='svg/logout.svg') }}" alt="Déconnexion">
+                        Déconnexion
+                    </button>
+                </a>
+            </div>
         </div>
     </body>
 </html>
