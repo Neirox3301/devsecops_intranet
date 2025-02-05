@@ -11,7 +11,33 @@
             <h1>Bienvenue, {{ student.first_name }} {{ student.last_name }}</h1>
             <h3>Classe : {{ student_class.name_class }}</h3>
 
-            <h2>Vos Notes :</h2>
+            <p>{{ grades }}</p>
+            <p>{{ assignments}}</p>
+
+            <table>>
+                <thead>
+                    <th>//////</th>
+                    {% for assignment in assignments %}
+                        <th>{{ assignment.type }}</th>
+                    {% endfor %}
+                    
+                </thead>
+                <tbody>
+                    {% for subject in subjects %}
+                        <tr>
+                            <td>{{ subject.name }}</td>
+                            {% for assignment in assignments %}
+                                <td>{{ grades[subject.id][assignment.type] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                <tbody>
+</table>
+
+
+
+
+            <!-- <h2>Vos Notes :</h2>
             {% if subjects %}
                 <table>
                     <thead>
@@ -32,6 +58,6 @@
             {% else %}
                 <p>Aucune note disponible pour le moment.</p>
             {% endif %}
-        </div>
+        </div> -->
     </body>
 </html>

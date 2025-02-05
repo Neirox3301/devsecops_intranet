@@ -77,6 +77,12 @@ class Student(db.Model):
     # Relations avec les autres tables
     grades = db.relationship('Grade', backref='student')
 
+class Assignment(db.Model):
+    __tablename__ = 'assignments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.Enum('oral', 'test', 'homework', name='type_enum'), nullable=False)  # Définir le type ENUM
+
 
 # Modèle pour les notes
 class Grade(db.Model):
@@ -85,6 +91,7 @@ class Grade(db.Model):
     grade = db.Column(db.Integer, nullable=False)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), primary_key=True)
     subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'), primary_key=True)
+    assignment_type_id = db.Column(db.Integer, db.ForeignKey('assignments.id'), primary_key=True)
 
 
 # Modèle pour la liaison entre les enseignants et les matières

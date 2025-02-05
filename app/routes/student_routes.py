@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
 
-from models import Grade, Class, Student
+from models import Grade, Class, Student, Subject, Assignment
 
 student_dashboard_blueprint = Blueprint('student_dashboard', __name__)
 
@@ -24,7 +24,33 @@ def display_grades():
 
     student_class = Class.query.filter_by(id=student.class_id).first()
 
-    return render_template('student_templates/student_grades.html', subjects=subjects, student_class=student_class, student=student)
+
+    temp_grades = Grade.query.all()
+    temp_subjects = Subject.query.all()
+    temp_assignments = Assignment.query.all()
+
+    grades = [{'student_id': grade.student_id, 'subject_id': grade.subject_id, 'assignment_type_id': grade.assignment_type_id, 'grade': grade.grade} for grade in temp_grades if grade.student_id == student.id]
+    assignments = [{'id': assignment.id, 'type': assignment.type} for assignment in temp_assignments]
+    from typing import Dict, Any
+
+    grade_dict: Dict[int, Dict[str, Any]] = {
+        subject.id: {
+            assignment['type']: grade['grade']
+            for grade in grades
+            if grade['subject_id'] == subject.id
+            for assignment in assignments
+            if grade['assignment_type_id'] == assignment['id']
+        }
+        for subject in temp_subjects
+    }
+    # Fill empty values with default grades
+    for subject_id, assignments_dict in grade_dict.items():
+        for assignment in assignments:
+            if assignment['type'] not in assignments_dict:
+                assignments_dict[assignment['type']] = '--'
+    
+
+    return render_template('student_templates/student_grades.html', subjects=subjects, student_class=student_class, student=student, grades=grade_dict, assignments=assignments)
 
 
 @student_dashboard_blueprint.route('/student_dashboard/bulletins')
@@ -56,3 +82,6 @@ def display_parametres():
 @login_required
 def no_grades():
     return render_template('student_templates/no_grades.html', message="Aucune note disponible pour le moment.")
+
+
+
