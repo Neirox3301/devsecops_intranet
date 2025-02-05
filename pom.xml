@@ -29,9 +29,9 @@
 
   <properties>
     <sonar.projectKey>mon-projet</sonar.projectKey>
-    <sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
+    <sonar.host.url>http://172.17.0.2:9000</sonar.host.url>
     <sonar.sources>.</sonar.sources>
     <sonar.inclusions>**/*.*</sonar.inclusions>
     <sonar.verbose>true</sonar.verbose> <!-- Ajoute cette ligne -->
-  </properties> <!-- Balise fermante manquante ici -->
+  </properties> <!-- Balise fermante ajoutée ici -->
 </project>
