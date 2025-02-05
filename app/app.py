@@ -11,13 +11,14 @@ from routes.auth_routes import auth_blueprint
 from routes.dashboard_routes import dashboard_blueprint
 from routes.teacher_routes import teacher_dashboard_blueprint
 from routes.student_routes import student_dashboard_blueprint
+from routes.admin_routes import admin_dashboard_blueprint
 from models import User  # Importation du modèle User
 
 def create_app():
     app = Flask(__name__)
 
     # Configuration de l'application
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin@localhost/academis' # Changer root:mdp par son propre mdp
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/academis' # Changer root:mdp par son propre mdp
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = 'a'
 
@@ -30,6 +31,7 @@ def create_app():
     app.register_blueprint(dashboard_blueprint)
     app.register_blueprint(teacher_dashboard_blueprint)
     app.register_blueprint(student_dashboard_blueprint)
+    app.register_blueprint(admin_dashboard_blueprint)
 
     return app
 

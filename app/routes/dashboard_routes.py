@@ -22,4 +22,4 @@ def teacher_dashboard():
 def admin_dashboard():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
-    return render_template('teacher_templates/admin_dashboard.html')
+    return render_template('admin_templates/admin_dashboard.html')
