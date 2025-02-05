@@ -4,6 +4,7 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 
+
 # Modèle pour l'utilisateur
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -11,16 +12,25 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.Enum('teacher', 'student', name='role_enum'), nullable=False)  # Définir le type ENUM
+    role = db.Column(db.Enum('teacher', 'student', 'admin', name='role_enum'), nullable=False)  # Définir le type ENUM
 
     # Relations avec les autres tables
     teacher = db.relationship('Teacher', backref='user', uselist=False)  # Un utilisateur peut être un enseignant
     student = db.relationship('Student', backref='user', uselist=False)  # Un utilisateur peut être un élève
+    admin = db.relationship('Admin', backref='user', uselist=False)  # Un utilisateur peut être un admin
     
     @property
     def is_active(self):
         return True  # Tu peux ajouter une logique ici si tu veux plus de contrôle
-    
+
+# Modèle pour l'admin
+class Admin(db.Model):
+    __tablename__ = 'admins'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
 # Modèle pour la matière

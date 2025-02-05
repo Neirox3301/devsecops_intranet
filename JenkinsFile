@@ -7,7 +7,7 @@ pipeline {
 
   environment {
     SONARQUBE_TOKEN = credentials('academis_token')  // Utiliser le token SonarQube créé précédemment
-    SONARQUBE_HOST = 'http://127.0.0.1:9000'  // URL de ton serveur SonarQube
+    SONARQUBE_HOST = 'http://172.17.0.2:9000'  // URL de ton serveur SonarQube
   }
 
   stages {
@@ -21,7 +21,7 @@ pipeline {
       steps {
         script {
           // Lancer l'analyse SonarQube après le build
-          sh "mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.login=$SONARQUBE_TOKEN"
+          sh "mvn sonar:sonar -Dsonar.host.url=${env.SONARQUBE_HOST} -Dsonar.login=${env.SONARQUBE_TOKEN}"
         }
       }
     }

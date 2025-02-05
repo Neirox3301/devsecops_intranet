@@ -1,1 +1,1 @@
-from .models import db, User, Teacher, Student, Subject, Grade, TeacherSubject, TeacherClass, Class, Assignment
+from .models import db, User, Admin, Teacher, Student, Subject, Grade, TeacherSubject, TeacherClass, Class, Assignment
