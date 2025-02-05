@@ -33,4 +33,5 @@
     <sonar.sources>.</sonar.sources>
     <sonar.inclusions>**/*.*</sonar.inclusions>
     <sonar.verbose>true</sonar.verbose> <!-- Ajoute cette ligne -->
-</properties>
+  </properties> <!-- Balise fermante manquante ici -->
+</project>
