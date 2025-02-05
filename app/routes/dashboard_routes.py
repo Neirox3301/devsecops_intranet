@@ -8,7 +8,6 @@ dashboard_blueprint = Blueprint('dashboard', __name__)
 def student_dashboard():
     if current_user.role != 'student':
         return redirect(url_for('auth.login'))
-    # Ajouter des informations spécifiques à l'élève
     return render_template('student_templates/student_dashboard.html')
 
 @dashboard_blueprint.route('/teacher_dashboard')
@@ -16,5 +15,11 @@ def student_dashboard():
 def teacher_dashboard():
     if current_user.role != 'teacher':
         return redirect(url_for('auth.login'))
-    # Ajouter des informations spécifiques au professeur
     return render_template('teacher_templates/teacher_dashboard.html')
+
+@dashboard_blueprint.route('/admin_dashboard')
+@login_required
+def admin_dashboard():
+    if current_user.role != 'admin':
+        return redirect(url_for('auth.login'))
+    return render_template('teacher_templates/admin_dashboard.html')
