@@ -7,7 +7,7 @@
     <title>Grade Section</title>
 </head>
 <body>
-    <!-- Grade display configuration section-->
+    <!-- Grade filter section-->
     <form action="{{ url_for('.grades') }}" method="POST">
         <label for="subject">Subject</label>
             <select name="subject" id="subject">
@@ -23,11 +23,15 @@
                     <option value="{{ class.id }}">{{ class['name'] }}</option>
                 {% endfor %}
             </select>
+        <label for="subject">Subject</label>
+            <select name="assignment" id="assignment">
+                <option value="">-- Select Assignment --</option>
+                {% for assignment in assignments %}
+                    <option value="{{ assignment.id }}">{{ assignment['type'] }}</option>
+                {% endfor %}
+            </select>
         <button type="submit">Display</button>
-
-
-
-
+    </form>
 
     <!-- Grade display section-->
     {% if display_table %}
@@ -36,6 +40,7 @@
                 <th>Last name</th>
                 <th>First name</th>
                 <th class="header">{{ chosen_subject['name'] }}</th>
+                <th class="header">{{ chosen_assignment['type'] }}</th>
             </thead>
             <form action="{{ url_for('.update_grades') }}" method="POST">
             <tbody>

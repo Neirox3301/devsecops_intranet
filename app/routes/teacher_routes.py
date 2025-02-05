@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 
-from models import TeacherClass, Class, Student, Subject, Grade, db
+from models import TeacherClass, Class, Student, Subject, Grade, Assignment, db
 
 teacher_dashboard_blueprint = Blueprint('teacher_dashboard', __name__)
 
@@ -26,20 +26,27 @@ def grades():
     subjects = tuple(set([Subject.query.filter_by(id=id).first() for id in subjects_id]))
     subjects_dict = sorted([{'id': subject.id, 'name': subject.name} for subject in subjects], key=lambda x: x['name'])
     
+    # Assignments
+    assignments = Assignment.query.all()
+    assignments_dict = sorted([{'id': assignment.id, 'type': assignment.type} for assignment in assignments], key=lambda x: x['id'])
+    
+    
     # Initialize variables
     display_table = False
     students = []
     grades = []
     chosen_class = None
     chosen_subject = None
+    chosen_assignment = None
 
     
     if request.method == 'POST':
         requested_class = request.form.get('class')
         requested_subject = request.form.get('subject')
+        requested_assignment = request.form.get('assignment')
         
         # If the "filter" form is submitted
-        if requested_class and requested_subject:
+        if requested_class and requested_subject and requested_assignment:
             for class_dict in classes_dict:
                 if class_dict['id'] == int(requested_class):
                     chosen_class = class_dict
@@ -48,6 +55,11 @@ def grades():
             for subject_dict in subjects_dict:
                 if subject_dict['id'] == int(requested_subject):
                     chosen_subject = subject_dict
+                    break
+                
+            for assignment_dict in assignments_dict:
+                if assignment_dict['id'] == int(requested_assignment):
+                    chosen_assignment = assignment_dict
                     break
                 
             display_table = True
@@ -62,20 +74,25 @@ def grades():
             for grade in grades_list:
                 grades.append({'grade': grade.grade, 
                                'student_id': grade.student_id, 
-                               'subject_id': grade.subject_id})
+                               'subject_id': grade.subject_id,
+                               'assignment_type_id': grade.assignment_type_id
+                               })
 
             # Add missing grades
             for student in students:
                 grade_found = False
                 for grade in grades:
-                    if grade['student_id'] == student.id and grade['subject_id'] == chosen_subject['id']:
+                    if grade['student_id'] == student.id and grade['subject_id'] == chosen_subject['id'] and grade['assignment_type_id'] == chosen_assignment['id']:
                         grade_found = True
                         break
                 if not grade_found:
-                    grades.append({'grade': '--', 'student_id': student.id, 'subject_id': chosen_subject['id']})
+                    grades.append({'grade': '--', 'student_id': student.id, 'subject_id': chosen_subject['id'], 'assignment_type_id': chosen_assignment['id']})
+                    
+            # Filter with the assignment
+            grades = [grade for grade in grades if grade['assignment_type_id'] == chosen_assignment['id']]
 
-    return render_template('teacher_templates/teacher_grades.html', display_table=display_table, subjects=subjects_dict, classes=classes_dict, students=students, grades=grades, 
-                           chosen_classe=chosen_class, chosen_subject=chosen_subject, grade_attributed=False)
+    return render_template('teacher_templates/teacher_grades.html', display_table=display_table, subjects=subjects_dict, classes=classes_dict, assignments=assignments_dict, students=students, grades=grades, 
+                           chosen_classe=chosen_class, chosen_subject=chosen_subject, chosen_assignment=chosen_assignment, grade_attributed=False)
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/update_grades', methods=['GET', 'POST'])
