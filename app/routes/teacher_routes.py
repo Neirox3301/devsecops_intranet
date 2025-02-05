@@ -19,7 +19,7 @@ def grades():
     classes_id: tuple[int] = tuple(set([tc.class_id for tc in teacherClasses]))
     classes_id = (1, 2, 3)
     classes = tuple(set([Class.query.filter_by(id=id).first() for id in classes_id]))
-    classes_dict = sorted([{'id': class_.id, 'name': class_.name_class} for class_ in classes], key=lambda x: x['name'])
+    classes_dict = sorted([{'id': class_.id, 'name': class_.class_name} for class_ in classes], key=lambda x: x['name'])
 
     # Subjects
     subjects_id = tuple(set([tc.subject_id for tc in teacherClasses]))
