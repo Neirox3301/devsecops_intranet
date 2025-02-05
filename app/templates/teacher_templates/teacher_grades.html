@@ -7,68 +7,57 @@
     <title>Grade Section</title>
 </head>
 <body>
-    <table>
-        <thead>
-            <th>Last name</th>
-            <th>First name</th>
-            {% for subject in subjects %}
-                <th class="header">{{ subject.name }}</th>
-            {% endfor %}
-        </thead>
-        <form action="{{ url_for('.update_grades') }}" method="POST">
-        <tbody>
-            {% for student in students %}
-                {% set grade_attributed = False %}
-                <tr>
-                    <th class="content">{{ student.last_name }}</th>
-                    <th class="content">{{ student.first_name }}</th>
-                    {% for subject in subjects %} <!-- TODO : Mauvais ordre des sujets -->
+    <!-- Grade display configuration section-->
+    <form action="{{ url_for('.grades') }}" method="POST">
+        <label for="subject">Subject</label>
+            <select name="subject" id="subject">
+                <option value="">-- Select Subject --</option>
+                {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject['name'] }}</option>
+                {% endfor %}
+            </select>
+        <label for="class">Class</label>
+            <select name="class" id="class">
+                <option value="">-- Select Class --</option>
+                {% for class in classes %}
+                    <option value="{{ class.id }}">{{ class['name'] }}</option>
+                {% endfor %}
+            </select>
+        <button type="submit">Display</button>
+
+
+
+
+
+    <!-- Grade display section-->
+    {% if display_table %}
+        <table>
+            <thead>
+                <th>Last name</th>
+                <th>First name</th>
+                <th class="header">{{ chosen_subject['name'] }}</th>
+            </thead>
+            <form action="{{ url_for('.update_grades') }}" method="POST">
+            <tbody>
+                {% for student in students %}
+                    {% set grade_attributed = False %}
+                    <tr>
+                        <th class="content">{{ student.last_name }}</th>
+                        <th class="content">{{ student.first_name }}</th>
                         <th class="content">
                             {% for grade in grades %}
-                                {% if grade.student_id == student.id and grade.subject_id == subject.id %}
-                                    <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="{{ student.id }}|{{ subject.id }}">
+                                {% if grade.student_id == student.id and grade.subject_id == chosen_subject['id'] %}
+                                    <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="{{ student.id }}|{{ chosen_subject.id }}">
                                     {% set grade_attributed = True %}
                                 {% endif %}
                             {% endfor %}
                         </th>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <button type="submit">Save</button>
-    </form>
-
-
-    <!-- <div class=notes>
-        <h2 class='onglet-title'>Notes</h2>
-        <table class="tableau-notes">
-            <thead>
-                <th class="header">Nom</th>
-                <th class="header">Prenom</th>
-                {% for subject in subjects %}
-                    <th class="header">{{ subject }}</th>
-                {% endfor %}
-            </thead>
-            <tbody>
-                {% for student in students %}
-                    <tr>
-                        <th class="content">{{ student.last_name }}</th>
-                        <th class="content">{{ student.first_name }}</th>
-                        {% for subject in subjects %}
-                            <th class="content">
-                                {% for grade in grades %}
-                                    {% if grade.student_id == student.id and grade.subject_name == subject %}
-                                        <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="grades[{{ student.id }}][{{ subject.id }}]">
-                                    {% endif %}
-                                {% endfor %}
-                            </th>
-                        {% endfor %}
                     </tr>
                 {% endfor %}
-            </tbody>   
+            </tbody>
         </table>
-        <button type="submit">Enregistrer</button>
-        </form> -->
+        <button type="submit">Save</button>
+        </form>
+    {% endif %}
 </body>
 </html>
