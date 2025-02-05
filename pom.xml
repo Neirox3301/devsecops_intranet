@@ -32,5 +32,5 @@
     <sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
     <sonar.sources>.</sonar.sources>
     <sonar.inclusions>**/*.*</sonar.inclusions>
-  </properties>
-</project>
+    <sonar.verbose>true</sonar.verbose> <!-- Ajoute cette ligne -->
+</properties>
