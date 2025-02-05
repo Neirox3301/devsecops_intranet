@@ -7,29 +7,31 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
     </head>
     <body>
-        <div class="main-div">
+        <div class="dashboard">
             <h1>Voici vos notes, {{ student.first_name }} {{ student.last_name }}</h1>
-            <h3>Classe : {{ student_class.class_name }}</h3>
+            
+            <div class="dashboard-part-1">
+                <h2>Classe : {{ student_class.class_name }}</h2>
 
-            <table>
-                <thead>
-                    <th>//////</th>
-                    {% for assignment in assignments %}
-                        <th>{{ assignment.type }}</th>
-                    {% endfor %}
-                    
-                </thead>
-                <tbody>
-                    {% for subject in subjects %}
-                        <tr>
-                            <td>{{ subject.name }}</td>
-                            {% for assignment in assignments %}
-                                <td>{{ grades[subject.id][assignment.type] }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                <tbody>
-            </table>
+                <table>
+                    <thead>
+                        <th></th>
+                        {% for assignment in assignments %}
+                            <th>{{ assignment.type }}</th>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                        {% for subject in subjects %}
+                            <tr>
+                                <td class="subject-name">{{ subject.name }}</td>
+                                {% for assignment in assignments %}
+                                    <td>{{ grades[subject.id][assignment.type] }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    <tbody>
+                </table>
+            </div>
         </div>
     </body>
 </html>

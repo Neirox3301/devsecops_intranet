@@ -1,54 +1,55 @@
+@import 'variables';
+
 .body-login {
+    align-items: center;
     background-image: url('/static/images/login_bg.jpg');
+    display: flex;
+    justify-content: center;
 
     .container {
-        background-color: rgba(0, 0, 0, 0.5);
-        border-radius: 5%;
-        color: white;
+        background-color: $opaque-background;
+        border-radius: $corner-radius-opaque-background;
+        color: $color-text-1;
         display: flex;
         flex-direction: column;
         font-weight: bold;
-        height: 350px;
         justify-content: space-around;
-        padding: 15% 5% 10% 5%;
+        padding: 50px 40px;
         text-align: center;
-        width: 325px;
-
-        h1 {
-            font-size: 2rem;
-            letter-spacing: 1px;
-        }
 
         form {
             display: flex;
             flex-direction: column;
-            height: 70%;
             justify-content: space-between;
+
+            h1 {
+                font-size: 2rem;
+                letter-spacing: 1px;
+                width: 100%;
+            }
 
             .choice-container {
                 align-items: center;
                 display: flex;
                 flex-direction: column;
-                height: 60%;
                 justify-content: center;
+                margin: 30px 0;
                 padding: 5%;
     
                 .input-container {
                     align-items: center;
-                    align-items: center;
-                    color: white;
+                    color: $color-text-1;
                     display: flex;
-                    height: 50%;
                     justify-content: center;
     
                     .input-field {
                         background: transparent;
                         border: none;
                         border-bottom: 2px solid #e4b622;
-                        color: #333;
-                        color: white;
+                        color: $color-text-1;
+                        font-size: 1rem;
+                        margin: 5px 0;
                         outline: none;
-                        padding: 1% 0;
                         text-align: center;
                         transition: border-color 0.3s ease;
                         transition: width 0.3s ease;
@@ -64,11 +65,11 @@
 
             .submit-container {
                 .submit-button {
-                    background: linear-gradient(90deg, orange, red);
+                    background: $button-gradient;
                     border-radius: 70px;
                     border: none;
                     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-                    color: white;
+                    color: $color-text-1;
                     cursor: pointer;
                     font-size: 1.2rem;
                     font-weight: bold;
