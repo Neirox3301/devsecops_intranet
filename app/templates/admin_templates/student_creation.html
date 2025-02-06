@@ -24,13 +24,17 @@
             <input type="text" placeholder="First Name" name="first_name">
             <input type="text" placeholder="Last Name" name="last_name">
 
-            <label for="class">Class</label>
-            <select name="class" id="class">
-                <option value="">-- Select a Class --</option>
+
+
+            <div class="class-container">
+                <h3>Select a Class for the stuent</h3>
                 {% for class in classes %}
-                    <option value="{{ class.id }}">{{ class['name'] }}</option>
+                    <div class="class-item">
+                        <input type="radio" id="class_{{ class.name }}" name="class" value="{{ class.name }}">
+                        <label for="class_{{ class.name }}">{{ class['name'] }}</label>
+                    </div>
                 {% endfor %}
-            </select>
+            </div>
 
             <button type="submit">Create</button>
         </form>

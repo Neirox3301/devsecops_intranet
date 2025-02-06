@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
+from werkzeug.security import generate_password_hash
 
-from models import User, Admin, Student, Teacher, Class, db
+from models import User, Admin, Student, Teacher, Class, Subject, TeacherClass, TeacherSubject, db
 
 admin_dashboard_blueprint = Blueprint('admin_dashboard', __name__)
 
@@ -76,7 +77,8 @@ def create_user():
 
     # Create the user
     try:
-        user = User(username=chosen_username, password=chosen_password, role=chosen_role)
+        pwhash = generate_password_hash(chosen_password, method='pbkdf2:sha256', salt_length=8)
+        user = User(username=chosen_username, password=pwhash, role=chosen_role)
         db.session.add(user)
         db.session.commit()
     except Exception as e:
@@ -153,7 +155,10 @@ def teacher_creation_form(error_message=None):
     class_objects = Class.query.all()
     classes = [{'id': class_.id, 'name': class_.class_name} for class_ in class_objects]
     
-    return render_template('admin_templates/teacher_creation.html', classes=classes, error_message=error_message)
+    subjects = Subject.query.all()
+    subjects_dict = [{'id': subject.id, 'name': subject.name} for subject in subjects]
+    
+    return render_template('admin_templates/teacher_creation.html', classes=classes, subjects=subjects_dict, error_message=error_message)
 
 
 # Teacher creation function
@@ -162,6 +167,23 @@ def teacher_creation_form(error_message=None):
 def create_teacher():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
+    
+    first_name: str = request.form.get('first_name')
+    last_name: str = request.form.get('last_name')
+    
+    selected_subjects = request.form.getlist('subjects')
+    
+    data = request.form
+    data.pop('first_name')
+    data.pop('last_name')
+    
+    for class_id, subject_id in data.items():
+        try:
+            db.session.add(teacher)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return teacher_creation_form(error_message=f'An error occurred : {e}')
     
     return redirect(url_for('admin_dashboard.teacher_creation_form'))
 
@@ -174,7 +196,13 @@ def admin_creation(error_message=None):
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
     
-    return render_template('admin_templates/admin_creation.html', error_message=error_message)
+    classes = Class.query.all()
+    classes_dict = [{'id': class_.id, 'name': class_.class_name} for class_ in classes]
+    
+    subjects = Subject.query.all()
+    subjects_dict = [{'id': subject.id, 'name': subject.subject_name} for subject in subjects]
+    
+    return render_template('admin_templates/admin_creation.html', error_message=error_message, classes=classes_dict, subjects=subjects_dict)
 
 # Admin creation function
 @admin_dashboard_blueprint.route('/admin_dashboard/create_admin', methods=['GET', 'POST'])

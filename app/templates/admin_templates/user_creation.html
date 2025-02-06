@@ -31,12 +31,15 @@
         <input type="password" placeholder="Password" name="password">
         <input type="password" placeholder="Confirm Password" name="confirm_password">
 
-        <select name="role" id="role">
-            <option value="">-- Select a Role --</option>
+        <h3>Select a Role</h3>
+        <div id="role-container">
             {% for role in roles %}
-                <option value="{{ role.name }}">{{ role['name'] }}</option>
+            <div class="role-item">
+            <input type="radio" id="role_{{ role.name }}" name="role" value="{{ role.name }}">
+            <label for="role_{{ role.name }}">{{ role['name'] }}</label>
+            </div>
             {% endfor %}
-        </select>
+        </div>
 
         <button type="submit">Display</button>
     </form>
