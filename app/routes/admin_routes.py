@@ -8,6 +8,20 @@ admin_dashboard_blueprint = Blueprint('admin_dashboard', __name__)
 
 
 
+# Helper function to check if a user has an associated account
+def user_has_associated_account(user_id):
+    student = Student.query.filter_by(user_id=user_id).first()
+    teacher = Teacher.query.filter_by(user_id=user_id).first()
+    admin = Admin.query.filter_by(user_id=user_id).first()
+    return student or teacher or admin
+
+# Helper function to delete a user if they don't have an associated account
+def delete_user_if_no_associated_account(user):
+    if not user_has_associated_account(user.id):
+        db.session.delete(user)
+        db.session.commit()
+
+
 # Display the admin dashboard
 @admin_dashboard_blueprint.route('/admin_dashboard/user_creation', methods=['GET', 'POST'])
 @login_required
@@ -28,6 +42,10 @@ def user_creation_form(error_message=None):
 def create_user():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
+    
+    # Clear the db session from a previous unfinished user creation
+    last_user = User.query.order_by(User.id.desc()).first()
+    delete_user_if_no_associated_account(last_user)
     
     # Get the information from the form
     chosen_username: str = request.form.get('username')
@@ -93,6 +111,7 @@ def create_user():
     elif chosen_role == 'admin':
         return redirect(url_for('admin_dashboard.admin_creation_form'))
     else:
+        delete_user_if_no_associated_account(user)
         return user_creation_form(error_message='Invalid role')
 
 
@@ -170,22 +189,47 @@ def create_teacher():
     
     first_name: str = request.form.get('first_name')
     last_name: str = request.form.get('last_name')
+    subjects = request.form.getlist('subjects')
     
-    selected_subjects = request.form.getlist('subjects')
+    class_subjects = {}
+    for key in request.form:
+        if '|' in key:  # Détecter les entrées des classes (ex: "class_id|subject_id")
+            class_id, subject_id = key.split('|')
+            if class_id not in class_subjects:
+                class_subjects[class_id] = []
+            class_subjects[class_id].append(subject_id)
     
-    data = request.form
-    data.pop('first_name')
-    data.pop('last_name')
+    if not all([first_name, last_name, subjects, class_subjects]):
+        return teacher_creation_form(error_message='Please fill all the fields')
     
-    for class_id, subject_id in data.items():
-        try:
-            db.session.add(teacher)
+    # Create the teacher and the associated subjects and classes
+    try:
+        last_user_id = db.session.query(User).order_by(User.id.desc()).first().id
+        if not user_has_associated_account(last_user_id):
+            teacher = Teacher(first_name=first_name, last_name=last_name, user_id=last_user_id)
+            
+            try:
+                db.session.add(teacher)
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                return teacher_creation_form(error_message=f'An error occurred : {e}')
+            
+            teacher_subjects = [TeacherSubject(teacher_id=teacher.id, subject_id=subject_id) for subject_id in subjects]
+            teacher_classes = []
+            for class_id in class_subjects:
+                for subject_id in class_subjects[class_id]:
+                    teacher_classes.append(TeacherClass(teacher_id=teacher.id, class_id=class_id, subject_id=subject_id))
+
+            db.session.add_all(teacher_subjects)
+            db.session.add_all(teacher_classes)
             db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            return teacher_creation_form(error_message=f'An error occurred : {e}')
+            
+    except Exception as e:
+        db.session.rollback()
+        return teacher_creation_form(error_message=f'An error occurred : {e}')
     
-    return redirect(url_for('admin_dashboard.teacher_creation_form'))
+    return teacher_creation_form()
 
 
 
@@ -212,3 +256,5 @@ def create_admin():
         return redirect(url_for('auth.login'))
     
     return redirect(url_for('admin_dashboard.admin_creation'))
+
+
