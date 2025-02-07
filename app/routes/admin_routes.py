@@ -250,7 +250,7 @@ def student_modification():
     if request.method == 'POST':
         action = request.form.get('action')
         
-        if action == 'create':
+        if action == 'create' or action == 'create_save':
             new_student = True
         else:
             # Check if a student is chosen
@@ -284,11 +284,9 @@ def student_modification():
         chosen_last_name = request.form.get('last_name')
         chosen_class = request.form.get('selected_class')
         chosen_class = int(chosen_class) if chosen_class else None
-        
-        
-        
+                
         match action:
-            case 'create':
+            case 'create_save':
                 # Check if all the fields are filled
                 if not all([chosen_first_name, chosen_last_name, chosen_class]):
                     render_template('admin_templates/student_modification.html', user=user_dict, students=students_dict, classes=classes, 
@@ -296,6 +294,8 @@ def student_modification():
                             error_message='Please fill all the fields', success_message=success_message)
                 
                 user_created, message = create_user(username, password, confirmed_password, 'student')
+                
+                
                 if user_created:
                     try:
                         student = Student(first_name=chosen_first_name, last_name=chosen_last_name, class_id=chosen_class, user_id=user_created.id)
@@ -353,7 +353,6 @@ def student_modification():
 
 
 
-
 @admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['GET', 'POST'])
 @login_required
 def teacher_modification():
@@ -361,6 +360,9 @@ def teacher_modification():
         return redirect(url_for('auth.login'))
     
     # Get all the data from the database
+    users = User.query.all()
+    users_dict = [{'id': user.id, 'username': user.username, 'role': user.role} for user in users]
+    
     subjects = Subject.query.all()
     subjects_dict = [{'id': subject.id, 'name': subject.name} for subject in subjects]
     
@@ -377,6 +379,7 @@ def teacher_modification():
     teachers_dict = [{'id': teacher.id, 
                       'first_name': teacher.first_name, 
                       'last_name': teacher.last_name,
+                      'username': [user['username'] for user in users_dict if user['id'] == teacher.user_id][0],
                       'head_teacher_classes': [class_['id'] for class_ in classes_dict if class_['head_teacher_id'] == teacher.id],
                       'subjects': [subject['subject_id'] for subject in teacher_subjects_dict if subject['teacher_id'] == teacher.id]
                      } for teacher in teachers]
@@ -402,7 +405,7 @@ def teacher_modification():
     if request.method == 'POST':
         action = request.form.get('action')
         
-        if action == 'create':
+        if action == 'create' or action == 'create_save':
             new_teacher = True
         else:
             # Check if a teacher is chosen
@@ -437,20 +440,17 @@ def teacher_modification():
         chosen_first_name = request.form.get('first_name')
         chosen_last_name = request.form.get('last_name')
         head_teacher_classes = request.form.getlist('head_teacher_classes')
-        print(f'Head teacher classes: {head_teacher_classes}')
         
         print(f'ACTION: {action}')
         match action:
-            case 'create':
+            case 'create_save':
                 # Check if all the fields are filled
                 if not all([chosen_first_name, chosen_last_name, chosen_class]):
                     return render_template('admin_templates/teacher_modification.html', user=user_dict, teachers=teachers_dict, classes=classes, 
                                     classes_dict=classes_dict, subjects=subjects_dict, class_subjects=classes_subjects_dict, chosen_teacher=chosen_teacher, new_teacher=new_teacher,
                                     error_message=error_message, success_message=success_message)
                 
-                print(f'Username: {username}, password: {password}, confirmed_password: {confirmed_password}')
                 user_created, message = create_user(username, password, confirmed_password, 'teacher')
-                print(f'User created: {user_created}, message: {message}')
                 if user_created:
                     try:
                         teacher = Teacher(first_name=chosen_first_name, last_name=chosen_last_name, class_id=chosen_class, user_id=user_created.id)
