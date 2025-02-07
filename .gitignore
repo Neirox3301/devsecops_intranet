@@ -1,8 +1,7 @@
 .env
 .sql
 brouillon.txt
-projetPronote/model/db_connection.py
-db/
+app/db/
 __pycache__/
 *.pyc
 *.pyo
