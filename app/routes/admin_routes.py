@@ -28,13 +28,40 @@ def delete_student(student_id):
         try:
             user = User.query.get(student.user_id)
             grades = Grade.query.filter_by(student_id=student.id).all()
-            print(grades)
             
             for grade in grades:
                 db.session.delete(grade)
             db.session.delete(student)
             db.session.delete(user)
 
+            db.session.commit()
+            return True
+        
+        except:
+            db.session.rollback()
+            return False
+        
+    return False
+
+
+def delete_teacher(teacher_id):
+    teacher = Teacher.query.get(teacher_id)
+    if teacher:
+        try:
+            user = User.query.get(teacher.user_id)
+            teacher_classes = TeacherClass.query.filter_by(teacher_id=teacher.id).all()
+            teacher_subjects = TeacherSubject.query.filter_by(teacher_id=teacher.id).all()
+            
+            # TODO : Set the head teacher to None if the teacher is the head teacher of a class
+            
+            
+            for teacher_class in teacher_classes:
+                db.session.delete(teacher_class)
+            for teacher_subject in teacher_subjects:
+                db.session.delete(teacher_subject)
+            db.session.delete(teacher)
+            db.session.delete(user)
+            
             db.session.commit()
             return True
         
@@ -376,28 +403,108 @@ def student_modification():
 
 
 
-@admin_dashboard_blueprint.route('/admin_dashboard/teacher_subject_class_attribution', methods=['GET', 'POST'])
+@admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['GET', 'POST'])
 @login_required
-def teacher_subject_class_attribution(error_message=None):
+def teacher_modification():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
     
-    teachers = Teacher.query.all()
-    teachers_dict = [{'id': teacher.id, 'first_name': teacher.first_name, 'last_name': teacher.last_name} for teacher in teachers]
+    # Get all the teachers and classes from the database
+    teacher_classes = TeacherClass.query.all()
+    teacher_classes_dict = [{'teacher_id': teacher_class.teacher_id, 'class_id': teacher_class.class_id, 'subject_id': teacher_class.subject_id} for teacher_class in teacher_classes]
     
     classes = Class.query.all()
-    classes_dict = [{'id': class_.id, 'name': class_.class_name} for class_ in classes]
+    classes_dict = [{'id': class_.id, 'name': class_.class_name, 'head_teacher_id': class_.head_teacher_id} for class_ in classes]
+    classes = {class_.id: class_.class_name for class_ in classes}
     
-    subjects = Subject.query.all()
-    subjects_dict = [{'id': subject.id, 'name': subject.name} for subject in subjects]
+    teachers = Teacher.query.all()
+    teachers_dict = [{'id': teacher.id, 'first_name': teacher.first_name, 
+                      'last_name': teacher.last_name, 
+                      'head_teacher_classes': [class_['class_id'] for class_ in classes_dict if class_['head_teacher_id']] == teacher.id,
+                      'classes': [class_['class_id'] for class_ in teacher_classes_dict if class_['teacher_id'] == teacher.id]} for teacher in teachers]
     
-    return render_template('admin_templates/teacher_attribution.html', teachers=teachers_dict, classes=classes_dict, subjects=subjects_dict, error_message=error_message)
 
-
-@admin_dashboard_blueprint.route('/admin_dashboard/attribute_teacher_to_subject_class', methods=['GET', 'POST'])
-@login_required
-def attribute_teacher_to_subject_class():
-    if current_user.role != 'admin':
-        return redirect(url_for('auth.login'))
-
-    pass
+    
+    # Initialize the variables
+    chosen_teacher = None
+    teacher_id = None
+    chosen_first_name = None
+    chosen_last_name = None
+    chosen_class = None
+    error_message = None
+    success_message = None
+    teacher_classes = None
+    
+    # Once a teacher is chosen, display the form with the teacher's information
+    if request.method == 'POST':        
+        chosen_teacher_id = request.form.get('chosen_teacher_id')
+        if chosen_teacher_id:
+            chosen_teacher = [teacher for teacher in teachers_dict if teacher['id'] == int(chosen_teacher_id)][0] if chosen_teacher_id else None
+            
+        information_form_submitted = request.form.get('information_form_submitted')
+        if not information_form_submitted:
+            return render_template('admin_templates/teacher_modification.html', teachers=teachers_dict, classes=classes, 
+                                   classes_dict=classes_dict, chosen_teacher=chosen_teacher, 
+                                   error_message=error_message, success_message=success_message)
+        
+        # Get the user from the form
+        teacher = Teacher.query.get(chosen_teacher_id)
+        if not teacher:
+            error_message = 'teacher not found'
+            return render_template('admin_templates/teacher_modification.html', teachers=teachers_dict, classes=classes, 
+                                   classes_dict=classes_dict, chosen_teacher=chosen_teacher, 
+                                   error_message=error_message, success_message=success_message)
+        
+        action = request.form.get('action')
+        if action == 'delete':
+            try:
+                teacher_deleted = delete_teacher(teacher_id)
+                if teacher_deleted:
+                    success_message='Teacher deleted successfully'
+                    return redirect(url_for('admin_dashboard.teacher_modification'))
+                
+                else:
+                    error_message='An error occurred while deleting the teacher'
+                    return render_template('admin_templates/teacher_modification.html', teachers=teachers_dict, classes=classes, 
+                                   classes_dict=classes_dict, chosen_teacher=chosen_teacher, 
+                                   error_message=error_message, success_message=success_message)
+            except Exception as e:
+                db.session.rollback()
+                error_message=f'An error occurred: {e}'
+            
+        elif action == 'modify':
+            # Get the information from the form
+            chosen_first_name = request.form.get('first_name')
+            chosen_last_name = request.form.get('last_name')
+            chosen_classes = request.form.getlist('selected_classes')
+            chosen_classes = list(map(int, chosen_classes)) if chosen_classes else []
+            print(f'Chosen classes: {chosen_classes}')
+            
+            # Check if all the fields are filled
+            if not all([chosen_first_name, chosen_last_name, chosen_class]):
+                render_template('admin_templates/teacher_modification.html', teachers=teachers_dict, classes=classes, 
+                           classes_dict=classes_dict, chosen_teacher=chosen_teacher, 
+                           error_message=error_message, success_message=success_message)
+        
+            # Modify the teacher in the database
+            try:
+                teacher.first_name = chosen_first_name
+                teacher.last_name = chosen_last_name
+                
+                classes = Class.query.all()
+                for class_ in classes:
+                    if class_.id in chosen_classes:
+                        class_.head_teacher_id = teacher.id
+                        db.session.add(class_)
+                
+                db.session.commit()
+                print('Teacher modified successfully')  
+                return redirect(url_for('admin_dashboard.teacher_modification'))
+                
+            except Exception as e:
+                db.session.rollback()
+                error_message=f'An error occurred: {e}'
+    
+    return render_template('admin_templates/teacher_modification.html', teachers=teachers_dict, classes=classes, 
+                           classes_dict=classes_dict, chosen_teacher=chosen_teacher, 
+                           error_message=error_message, success_message=success_message)
