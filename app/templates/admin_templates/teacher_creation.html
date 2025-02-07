@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function toggleSubjects(classId) {
+            let element = document.getElementById('subjects-' + classId);
+            if (element.style.display === '' || element.style.display === 'none') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+    </script>
+    <style>
+        .class-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+        .subjects { 
+            display: none; 
+            margin-left: 20px; 
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .subject-label {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Espacement entre la case et le texte */
+            padding: 5px;
+            cursor: pointer; /* Rend tout le label cliquable */
+            border-radius: 5px;
+        }
+        .subject-label:hover {
+            background-color: #e0e0e0; /* Effet au survol */
+        }
+    </style>
+</head>
+<body>
+    {%if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    <form action="{{ url_for('.create_teacher') }}" method="POST">
+        <input type="text" placeholder="First Name" name="first_name">
+        <input type="text" placeholder="Last Name" name="last_name">
+        
+        <h1>Compétences</h1>
+        <ul>
+            {% for subject in subjects %}
+            <li class="class-box">
+                <label>
+                    <input type="checkbox" name="subjects" value="{{ subject.id }}"> {{ subject.name }}
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <h1>Liste des Classes</h1>
+        <ul>
+            {% for class in classes %}
+            <li class="class-box" onclick="toggleSubjects('{{ class.id }}', event)">
+                {{ class.name }}
+                <div id="subjects-{{ class.id }}" class="subjects">
+                    {% for subject in subjects %}
+                        <label class="subject-label">
+                            <input type="checkbox" name="{{ class.id }}|{{ subject.id }}"> {{ subject.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>
