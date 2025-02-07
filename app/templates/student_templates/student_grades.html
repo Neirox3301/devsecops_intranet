@@ -6,11 +6,14 @@
         <title>Notes de {{ student.first_name }} {{ student.last_name }}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
     </head>
+
     <body>
         <div class="dashboard">
-            <h1>Voici vos notes, {{ student.first_name }} {{ student.last_name }}</h1>
+            <div class="island">
+                <h1>Voici vos notes, {{ student.first_name }} {{ student.last_name }}</h1>
+            </div>
             
-            <div class="dashboard-part-1">
+            <div class="menu">
                 <h2>Classe : {{ student_class.class_name }}</h2>
 
                 <table>
@@ -20,6 +23,7 @@
                             <th>{{ assignment.type }}</th>
                         {% endfor %}
                     </thead>
+                    
                     <tbody>
                         {% for subject in subjects %}
                             <tr>

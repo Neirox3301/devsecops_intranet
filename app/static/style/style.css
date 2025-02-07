@@ -87,7 +87,7 @@ html, body {
 }
 .body-login .container form .submit-container .submit-button:hover {
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 .body-login .container form .submit-container .submit-button:active {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
@@ -100,22 +100,29 @@ html, body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  justify-content: space-around;
   padding: 5vh;
   width: 100%;
 }
-.dashboard h1 {
-  font-size: 4rem;
-  margin-top: 20px;
+.dashboard .island {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  color: white;
+  margin: 20px 0;
+  padding: 25px;
 }
-.dashboard h2 {
+.dashboard .island h1 {
+  font-size: 4rem;
+  text-align: center;
+}
+.dashboard .island h2 {
   font-size: 2rem;
 }
 .dashboard .menu {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 15px;
-  padding: 75px 0;
-  width: 80%;
+  color: white;
+  padding: 25px;
+  width: 75%;
 }
 .dashboard .menu .menu-part {
   display: flex;
@@ -145,28 +152,68 @@ html, body {
 }
 .dashboard .menu .menu-part a button h3 {
   color: white;
-  font-size: 1rem;
+  font-size: 1.25rem;
 }
 .dashboard .menu .menu-part a button:hover {
-  transform: scale(1.15);
+  transform: scale(1.05);
 }
-.dashboard table {
+.dashboard .menu h2 {
+  margin: auto;
+  text-align: center;
   width: 60%;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
 }
-.dashboard table thead {
+.dashboard .menu table {
+  border-radius: 15px;
+  margin: auto;
+  width: 60%;
+}
+.dashboard .menu table thead {
   font-size: 2rem;
 }
-.dashboard table tbody {
+.dashboard .menu table tbody {
   font-size: 1.5rem;
   text-align: center;
 }
-.dashboard table tbody td {
-  border-top: solid 2px black;
+.dashboard .menu table tbody td {
+  border-top: solid 2px white;
 }
-.dashboard table tbody .subject-name {
+.dashboard .menu table tbody .subject-name {
   text-align: left;
+}
+.dashboard .menu form {
+  background-color: blue;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 20px;
+}
+.dashboard .menu form div {
+  display: flex;
+  justify-content: space-around;
+}
+.dashboard .menu form button {
+  background: linear-gradient(90deg, orange, red);
+  border-radius: 70px;
+  border: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: auto;
+  margin-top: 20px;
+  padding: 12px 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 200px;
+}
+.dashboard .menu form button:hover {
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+.dashboard .menu form button:active {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
 }
 
 /*# sourceMappingURL=style.css.map */

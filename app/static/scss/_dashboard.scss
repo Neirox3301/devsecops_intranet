@@ -6,25 +6,33 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    justify-content: space-around;
     padding: 5vh;
     width: 100%;
 
-    h1 {
-        font-size: 4rem;
-        margin-top: 20px;
-    }
+    .island {
+        background-color: $opaque-background;
+        border-radius: $corner-radius-opaque-background;
+        color: white;
+        margin: 20px 0;
+        padding: 25px;
 
-    h2 {
-        font-size: 2rem;
+        h1 {
+            font-size: 4rem;
+            text-align: center;
+        }
+    
+        h2 {
+            font-size: 2rem;
+        }
     }
 
     // PAGE DASHBOARD
     .menu {
         background-color: $opaque-background;
         border-radius: $corner-radius-opaque-background;
-        padding: 75px 0;
-        width: 80%;
+        color: white;
+        padding: 25px;
+        width: 75%;
 
         .menu-part {
             display: flex;
@@ -54,37 +62,87 @@
 
                     h3 {
                         color: $color-text-1;
-                        font-size: 1rem;
+                        font-size: 1.25rem;
                     }
 
                     &:hover {
-                        transform: scale(1.15);
+                        transform: scale(1.05);
                     }
                 }
             }
         }
-    }
 
-    // PAGE SPECIFIQUES
-    // PAGE NOTES
-    table {
-        width: 60%;
-        background-color: $opaque-background;
-        border-radius: $corner-radius-opaque-background;
+        //////////////////////////////////PAGE SPECIFIQUES //////////////////////////////////
+        /// STUDENT
+        // PAGE NOTES
+        $table-size: 60%;
 
-        thead {
-            font-size: 2rem;
-        }
-        tbody {
-            font-size: 1.5rem;
+        h2 {
+            margin: auto;
             text-align: center;
+            width: $table-size;
+        }
 
-            td {
-                border-top: solid 2px black;
+        table {
+            border-radius: $corner-radius-opaque-background;
+            margin: auto;
+            width: $table-size;
+
+            thead {
+                font-size: 2rem;
+            }
+            tbody {
+                font-size: 1.5rem;
+                text-align: center;
+
+                td {
+                    border-top: solid 2px white;
+                }
+
+                .subject-name {
+                    text-align: left;
+                }
+            }
+        }
+
+        /// PROF
+        form {
+            background-color: blue;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 20px;
+
+            div {
+                display: flex;
+                justify-content: space-around;
             }
 
-            .subject-name {
-                text-align: left;
+            button {
+                background: $button-gradient;
+                border-radius: 70px;
+                border: none;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                color: $color-text-1;
+                cursor: pointer;
+                font-size: 1.2rem;
+                font-weight: bold;
+                margin: auto;
+                margin-top: 20px;
+                padding: 12px 24px;
+                transition: transform 0.2s, box-shadow 0.2s;
+                width: 200px;
+
+                &:hover {
+                    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+                    transform: scale(1.05);
+                }
+
+                &:active {
+                    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+                    transform: scale(0.95);
+                }
             }
         }
     }

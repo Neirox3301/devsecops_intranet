@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 
-from models import TeacherClass, Class, Student, Subject, Grade, Assignment, db
+from models import Teacher, TeacherClass, Class, Student, Subject, Grade, Assignment, db
 
 teacher_dashboard_blueprint = Blueprint('teacher_dashboard', __name__)
 
@@ -9,7 +9,9 @@ teacher_dashboard_blueprint = Blueprint('teacher_dashboard', __name__)
 @teacher_dashboard_blueprint.route('/teacher_dashboard/grades', methods=['GET', 'POST'])
 @login_required
 def grades():
+    teacher = Teacher.query.filter_by(user_id=current_user.id).first()
     teacherClasses = TeacherClass.query.filter_by(teacher_id=current_user.id).all()
+
     
     if not teacherClasses:
         # Put an error here
@@ -91,7 +93,7 @@ def grades():
             # Filter with the assignment
             grades = [grade for grade in grades if grade['assignment_type_id'] == chosen_assignment['id']]
 
-    return render_template('teacher_templates/teacher_grades.html', display_table=display_table, subjects=subjects_dict, classes=classes_dict, assignments=assignments_dict, students=students, grades=grades, 
+    return render_template('teacher_templates/teacher_grades.html', teacher=teacher, display_table=display_table, subjects=subjects_dict, classes=classes_dict, assignments=assignments_dict, students=students, grades=grades, 
                            chosen_classe=chosen_class, chosen_subject=chosen_subject, chosen_assignment=chosen_assignment, grade_attributed=False)
 
 
@@ -137,4 +139,25 @@ def update_grades():
 
     return grades()
 
+@teacher_dashboard_blueprint.route('/teacher_dashboard/bulletins')
+@login_required
+def display_bulletins():
+    return render_template('teacher_dashboard/teacher_bulletins.html')
 
+
+@teacher_dashboard_blueprint.route('/teacher_dashboard/messagerie')
+@login_required
+def display_messagerie():
+    return render_template('teacher_dashboard/messagerie.html')
+
+
+@teacher_dashboard_blueprint.route('/teacher_dashboard/eleves')
+@login_required
+def display_eleves():
+    return render_template('teacher_dashboard/eleves.html')
+
+
+@teacher_dashboard_blueprint.route('/teacher_dashboard/parametres')
+@login_required
+def display_parametres():
+    return render_template('teacher_dashboard/parametres.html')
