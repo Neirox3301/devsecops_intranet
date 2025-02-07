@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
 
-from models import User, Admin, Student, Teacher, Class, Subject, TeacherClass, TeacherSubject, db
+from models import User, Admin, Student, Teacher, Class, Subject, TeacherClass, TeacherSubject, Grade, db
 
 admin_dashboard_blueprint = Blueprint('admin_dashboard', __name__)
 
@@ -20,6 +20,30 @@ def delete_user_if_no_associated_account(user):
     if not user_has_associated_account(user.id):
         db.session.delete(user)
         db.session.commit()
+        
+        
+def delete_student(student_id):
+    student = Student.query.get(student_id)
+    if student:
+        try:
+            user = User.query.get(student.user_id)
+            grades = Grade.query.filter_by(student_id=student.id).all()
+            print(grades)
+            
+            for grade in grades:
+                db.session.delete(grade)
+            db.session.delete(student)
+            db.session.delete(user)
+
+            db.session.commit()
+            return True
+        
+        except:
+            db.session.rollback()
+            return False
+        
+    return False
+
 
 
 # Display the admin dashboard
@@ -260,61 +284,95 @@ def create_admin():
 
 @admin_dashboard_blueprint.route('/admin_dashboard/student_modification', methods=['GET', 'POST'])
 @login_required
-def student_modification(error_message=None, success_message=None, chosen_student=None):
+def student_modification():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
     
+    # Get all the students and classes from the database
     students = Student.query.all()
     students_dict = [{'id': student.id, 'first_name': student.first_name, 'last_name': student.last_name, 'class_id': int(student.class_id)} for student in students]
     
     classes = Class.query.all()
-    
     classes_dict = [{'id': class_.id, 'name': class_.class_name} for class_ in classes]
     classes = {class_.id: class_.class_name for class_ in classes}
+    
+    # Initialize the variables
+    chosen_student = None
+    student_id = None
+    chosen_first_name = None
+    chosen_last_name = None
+    chosen_class = None
+    error_message = None
+    success_message = None
+    
+    # Once a student is chosen, display the form with the student's information
+    if request.method == 'POST':
+        chosen_student_id = request.form.get('chosen_student_id')
+        if chosen_student_id:
+            chosen_student = [student for student in students_dict if student['id'] == int(chosen_student_id)][0] if chosen_student_id else None
+            
+        information_form_submitted = request.form.get('information_form_submitted')
+        if not information_form_submitted:
+            return render_template('admin_templates/student_modification.html', students=students_dict, classes=classes, 
+                                   classes_dict=classes_dict, chosen_student=chosen_student, 
+                                   error_message=error_message, success_message=success_message)
+        
+        
+        # Get the user from the form
+        student_id = int(request.form.get('chosen_student_id'))
+        student = Student.query.get(student_id)
+        
+        if not student:
+            error_message = 'Student not found'
+            return render_template('admin_templates/student_modification.html', students=students_dict, classes=classes, 
+                                   classes_dict=classes_dict, chosen_student=chosen_student, 
+                                   error_message=error_message, success_message=success_message)
+        
+        
+        action = request.form.get('action')
+        if action == 'delete':
+            try:
+                student_deleted = delete_student(student_id)
+                if student_deleted:
+                    success_message='Student deleted successfully'
+                    return redirect(url_for('admin_dashboard.student_modification'))
+                
+                else:
+                    error_message='An error occurred while deleting the student'
+                    return render_template('admin_templates/student_modification.html', students=students_dict, classes=classes, 
+                                   classes_dict=classes_dict, chosen_student=chosen_student, 
+                                   error_message=error_message, success_message=success_message)
+            except Exception as e:
+                db.session.rollback()
+                error_message=f'An error occurred: {e}'
+            
+        elif action == 'modify':
+            # Get the information from the form
+            chosen_first_name = request.form.get('first_name')
+            chosen_last_name = request.form.get('last_name')
+            chosen_class = int(request.form.get('selected_class'))
+            
+            # Check if all the fields are filled
+            if not all([chosen_first_name, chosen_last_name, chosen_class]):
+                render_template('admin_templates/student_modification.html', students=students_dict, classes=classes, 
+                           classes_dict=classes_dict, chosen_student=chosen_student, 
+                           error_message=error_message, success_message=success_message)
+        
+            # Modify the student in the database
+            try:
+                student.first_name = chosen_first_name
+                student.last_name = chosen_last_name
+                student.class_id = chosen_class
+                db.session.commit()
+                return redirect(url_for('admin_dashboard.student_modification'))
+                
+            except Exception as e:
+                db.session.rollback()
+                error_message=f'An error occurred: {e}'
     
     return render_template('admin_templates/student_modification.html', students=students_dict, classes=classes, 
                            classes_dict=classes_dict, chosen_student=chosen_student, 
                            error_message=error_message, success_message=success_message)
-
-
-@admin_dashboard_blueprint.route('/admin_dashboard/modfify_student', methods=['GET', 'POST'])
-@login_required
-def modify_student():
-    if current_user.role != 'admin':
-        return redirect(url_for('auth.login'))
-
-    chosen_student = None
-    if request.method == 'POST':
-        chosen_student = request.form.get('student')
-        if not chosen_student:
-            return student_modification(error_message='Please choose a student')
-        
-        chosen_student = dict(Student.query.get(chosen_student).__dict__)
-        print(f"Chosen student: {chosen_student}")
-        return student_modification(chosen_student=chosen_student)
-
-
-    student_id = request.form.get('student_id')
-    chosen_first_name = request.form.get('first_name')
-    chosen_last_name = request.form.get('last_name')
-    chosen_class = request.form.get('class')
-    
-    if not all([student_id, chosen_first_name, chosen_last_name, chosen_class]):
-        return student_modification(error_message='Please fill all the fields')
-    
-    try:
-        student = Student.query.get(student_id)
-        if student:
-            student.first_name = chosen_first_name
-            student.last_name = chosen_last_name
-            student.class_id = chosen_class
-            db.session.commit()
-            return student_modification(success_message='Student modified successfully')
-        else:
-            return student_modification(error_message='Student not found')
-    except Exception as e:
-        db.session.rollback()
-        return student_modification(error_message=f'An error occurred: {e}')
 
 
 
