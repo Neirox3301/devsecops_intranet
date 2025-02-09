@@ -9,7 +9,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.styles import getSampleStyleSheet
 from random import choice
-
+from datetime import datetime
 
 from models import Grade, Class, Student, Subject, Assignment
 
@@ -19,15 +19,12 @@ student_dashboard_blueprint = Blueprint('student_dashboard', __name__)
 @login_required
 def display_grades():
     student = Student.query.filter_by(user_id=current_user.id).first()
-
     if not student:
         return redirect(url_for('student_dashboard.no_grades'))
 
     student_grades = Grade.query.options(joinedload(Grade.subject)).filter_by(student_id=student.id).all()
-
-    subjects = [{'id': grade.subject.id, 'name': grade.subject.name, 'grade': grade.grade} for grade in student_grades]
-
     student_class = Class.query.filter_by(id=student.class_id).first()
+    subjects = [{'id': grade.subject.id, 'name': grade.subject.name, 'grade': grade.grade} for grade in student_grades]
 
     temp_grades = Grade.query.all()
     temp_subjects = Subject.query.all()
@@ -35,9 +32,8 @@ def display_grades():
 
     grades = [{'student_id': grade.student_id, 'subject_id': grade.subject_id, 'assignment_type_id': grade.assignment_type_id, 'grade': grade.grade} for grade in temp_grades if grade.student_id == student.id]
     assignments = [{'id': assignment.id, 'type': assignment.type} for assignment in temp_assignments]
-    from typing import Dict, Any
 
-    grade_dict: Dict[int, Dict[str, Any]] = {
+    grade_dict = {
         subject.id: {
             assignment['type']: grade['grade']
             for grade in grades
@@ -47,8 +43,8 @@ def display_grades():
         }
         for subject in temp_subjects
     }
-    # Fill empty values with default grades
-    for subject_id, assignments_dict in grade_dict.items():
+    # Ajout des notes manquantes
+    for _, assignments_dict in grade_dict.items():
         for assignment in assignments:
             if assignment['type'] not in assignments_dict:
                 assignments_dict[assignment['type']] = '--'
@@ -92,22 +88,20 @@ def generate_report_card():
     story.append(title)
     story.append(Spacer(1, 20))
     
-    # Parcours des matières
     for sub in subjects:
-        
         # Construction des données du tableau
         table_data = [
-            [sub.name, "", ""],   # Ligne 0 : titre (fusionné sur 3 colonnes)
-            [assignment.type for assignment in assignments],  # Ligne 1 : en-tête (3 colonnes si assignments contient 3 éléments)
+            [sub.name, "", ""],   # Ligne 0 : titre de la matière
+            [assignment.type for assignment in assignments],  # Ligne 1 : en-tête des colonnes
             [student_grades_dict[sub.id][assignment.id] for assignment in assignments],  # Ligne 2 : notes
-            [f"Moyenne élève : {student_averages[sub.id]}", "", ""]  # Ligne 3 : contenu ultérieur (fusionné sur 3 colonnes)
+            [f"Moyenne élève : {student_averages[sub.id]}", "", ""]  # Ligne 3 : moyenne de l'élève
         ]
         
         col_width = doc.width / 3.0
         table = Table(table_data, colWidths=[col_width]*3)
         
         table_style = TableStyle([
-            # Ligne 0 : Fusionner toutes les colonnes pour le titre
+            # Ligne 0 : Titre
             ('SPAN', (0,0), (2,0)),
             ('BACKGROUND', (0,0), (2,0), colors.lightblue),
             ('ALIGN', (0,0), (2,0), 'CENTER'),
@@ -125,7 +119,7 @@ def generate_report_card():
             ('FONTSIZE', (0,2), (2,2), 10),
             ('BOTTOMPADDING', (0,2), (2,2), 8),
             
-            # Ligne 3 : Fusionner toutes les colonnes pour le contenu ultérieur
+            # Ligne 3 : Moyenne de l'élève
             ('SPAN', (0,3), (2,3)),
             ('ALIGN', (0,3), (2,3), 'LEFT'),
             ('FONTSIZE', (0,3), (2,3), 10),
@@ -179,20 +173,31 @@ def generate_report_card():
     story.append(comment_title)
     story.append(Spacer(1, 5))
     
-    head_teacher_comments = [
-        "Excellent travail tout au long de l'année.",
+    # Commentaire du professeur principal
+    negative_head_teacher_comments = [
+        "Des efforts insuffisants, il faut travailler plus dur.",
+        "Comportement perturbateur en classe.",
+        "Participation insuffisante aux activités scolaires.",
+        "Manque de motivation et de concentration.",
+        "Doit améliorer son attitude en classe.",
+        "Des résultats en dessous des attentes."
+    ]
+    
+    positive_head_teacher_comments = [
         "Des progrès remarquables dans toutes les matières.",
         "Continuez à travailler dur et à rester concentré.",
         "Un élève modèle avec une attitude positive.",
         "Des efforts constants et une participation active.",
         "Très bon comportement en classe.",
         "Des compétences académiques solides et une grande curiosité.",
-        "Toujours prêt à aider ses camarades.",
-        "Un exemple pour les autres élèves."
     ]
-    head_teacher_comment = choice(head_teacher_comments)
-    
-    # Création d'une grande case pour le commentaire (fusionnée sur toute la largeur)
+
+    if overall_average == '--' or overall_average < 10:
+        head_teacher_comment = choice(negative_head_teacher_comments)
+    else:
+        head_teacher_comment = choice(positive_head_teacher_comments)
+
+    # Création d'une grande case pour le commentaire du professeur principal
     comment_box_data = [[head_teacher_comment]]
     comment_box = Table(comment_box_data, colWidths=[doc.width], rowHeights=80)
     comment_box.setStyle(TableStyle([
@@ -209,15 +214,13 @@ def generate_report_card():
     # --- Ajout d'un espace avant la section finale ---
     story.append(Spacer(1, 40))
 
-    # 1. Date et Lieu
-    from datetime import datetime
-    # Remplacez "[Ville]" par le nom de votre ville ou établissement si nécessaire.
-    date_str = datetime.now().strftime("Fait à [Ville], le %d/%m/%Y")
+    # Date et Lieu
+    date_str = datetime.now().strftime("Fait à Lyon, le %d/%m/%Y")
     date_paragraph = Paragraph(date_str, styles["Normal"])
     story.append(date_paragraph)
     story.append(Spacer(1, 10))
 
-    # 2. Zone de signature
+    # Zone de signature 
     signature_data = [["Signature du Directeur / Professeur Principal"]]
     signature_table = Table(signature_data, colWidths=[doc.width])
     signature_table.setStyle(TableStyle([
@@ -229,9 +232,7 @@ def generate_report_card():
     story.append(signature_table)
     story.append(Spacer(1, 20))
 
-    # 3. Cachet officiel de l'école (image)
-    # Veillez à avoir une image (ex: "seal.png") accessible dans le répertoire
-
+    # Cachet officiel de l'école
     seal_path = os.path.join(os.path.dirname(__file__), '..', 'static', 'images', 'seal.png')
     try:
         seal = Image(seal_path, width=80, height=80)
@@ -240,7 +241,7 @@ def generate_report_card():
     except Exception as e:
         pass
 
-    # 5. Mentions légales / Confidentialité
+    # Mentions légales / Confidentialité
     legal_text = ("Ce document est confidentiel et destiné uniquement à l'élève concerné. "
                   "Toute diffusion ou reproduction sans autorisation est interdite.")
     legal_paragraph = Paragraph(legal_text, styles["Italic"])
