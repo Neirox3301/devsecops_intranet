@@ -58,7 +58,7 @@
                 <input type="password" name="confirmed_password">
             </div>
 
-            <button type="submit" name="action" value="modify">Sauvegarder</button>
+            <button type="submit" name="action" value="{% if new_entity %}create_save{% else %}modify{% endif %}">Sauvegarder</button>
             <button type="submit" name="action" value="delete" onclick="return confirmDelete()">Supprimer</button>
         </form>
     {% endif %}

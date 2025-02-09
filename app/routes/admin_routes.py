@@ -54,6 +54,10 @@ def modify_student(request, context):
     student.last_name = request.form.get('last_name')
     student.class_id = int(request.form.get('selected_class'))
 
+    user = User.query.get(student.user_id)
+    user.username = request.form.get('username')
+    user.password = generate_password_hash(request.form.get('password')) if request.form.get('password') else user.password
+
     db.session.commit()
     return redirect(url_for('admin_dashboard.student_modification'))
 
@@ -138,6 +142,11 @@ def modify_teacher(request, context):
             class_id, subject_id = key.split("|")
             db.session.add(TeacherClass(teacher_id=teacher.id, class_id=int(class_id), subject_id=int(subject_id)))
 
+    user = User.query.get(teacher.user_id)
+    user.username = request.form.get('username')
+    user.password = generate_password_hash(request.form.get('password')) if request.form.get('password') else user.password
+
+
     db.session.commit()
     return redirect(url_for('admin_dashboard.teacher_modification'))
 
@@ -184,6 +193,10 @@ def modify_admin(request, context):
 
     admin.first_name = request.form.get('first_name')
     admin.last_name = request.form.get('last_name')
+    
+    user = User.query.get(admin.user_id)
+    user.username = request.form.get('username')
+    user.password = generate_password_hash(request.form.get('password')) if request.form.get('password') else user.password
 
     db.session.commit()
     return redirect(url_for('admin_dashboard.admin_modification'))
@@ -203,6 +216,7 @@ def get_common_context(model, template):
             'first_name': entity.first_name,
             'last_name': entity.last_name,
             'username': users_dict.get(entity.user_id, ''),
+            'class_id': entity.class_id if model == Student else None,
             'head_teacher_classes': [class_.id for class_ in Class.query.filter_by(head_teacher_id=entity.id)],
             'subjects': [ts.subject_id for ts in TeacherSubject.query.filter_by(teacher_id=entity.id)]
         }
