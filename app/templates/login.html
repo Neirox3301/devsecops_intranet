@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
         <title>Login</title>
     </head>
+    
     <body class="body-login">
         <div class="container">
             <form form method="POST" action="{{ url_for('auth.login') }}">
@@ -13,7 +14,7 @@
 
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
-                        <ul>
+                        <ul style="list-style-type: none;">
                             {% for category, message in messages %}
                                 <li>{{ message }}</li>
                             {% endfor %}

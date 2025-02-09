@@ -13,7 +13,7 @@ def login():
 
         # Chercher l'utilisateur dans la base de données
         user = User.query.filter_by(username=username).first()
-        pwhash = user.password
+        pwhash = user.password if user else None
         if user and check_password_hash(pwhash, password):
             login_user(user)
             if user.role == 'student':

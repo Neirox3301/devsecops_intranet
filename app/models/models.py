@@ -91,7 +91,7 @@ class Assignment(db.Model):
     __tablename__ = 'assignments'
 
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.Enum('oral', 'test', 'homework', name='type_enum'), nullable=False)  # Définir le type ENUM
+    type = db.Column(db.Enum('Oral', 'DS', 'DM', name='type_enum'), nullable=False)  # Définir le type ENUM
 
 
 # Modèle pour les notes
