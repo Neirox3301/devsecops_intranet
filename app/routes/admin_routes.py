@@ -396,7 +396,6 @@ def teacher_modification():
     
     chosen_first_name = None
     chosen_last_name = None
-    chosen_class = None
     
     error_message = None
     success_message = None
@@ -440,12 +439,25 @@ def teacher_modification():
         chosen_first_name = request.form.get('first_name')
         chosen_last_name = request.form.get('last_name')
         head_teacher_classes = request.form.getlist('head_teacher_classes')
+        teacher_subjects = request.form.getlist('teacher_subjects')
         
+        
+        class_subjects = {}
+        for key in request.form:
+            if '|' in key:  # Détecter les entrées des classes (ex: "class_id|subject_id")
+                class_id, subject_id = key.split('|')
+                if class_id not in class_subjects:
+                    class_subjects[class_id] = []
+                class_subjects[class_id].append(subject_id)
+
+
+        
+        print((username, password, confirmed_password, chosen_first_name, chosen_last_name, head_teacher_classes, teacher_subjects, teacher_classes))
         print(f'ACTION: {action}')
         match action:
             case 'create_save':
                 # Check if all the fields are filled
-                if not all([chosen_first_name, chosen_last_name, chosen_class]):
+                if not all([chosen_first_name, chosen_last_name]):
                     return render_template('admin_templates/teacher_modification.html', user=user_dict, teachers=teachers_dict, classes=classes, 
                                     classes_dict=classes_dict, subjects=subjects_dict, class_subjects=classes_subjects_dict, chosen_teacher=chosen_teacher, new_teacher=new_teacher,
                                     error_message=error_message, success_message=success_message)
@@ -453,8 +465,25 @@ def teacher_modification():
                 user_created, message = create_user(username, password, confirmed_password, 'teacher')
                 if user_created:
                     try:
-                        teacher = Teacher(first_name=chosen_first_name, last_name=chosen_last_name, class_id=chosen_class, user_id=user_created.id)
+                        teacher = Teacher(first_name=chosen_first_name, last_name=chosen_last_name, user_id=user_created.id)
                         db.session.add(teacher)
+                        db.session.flush()
+                        
+                        teacher_subjects_objects = [
+                            TeacherSubject(teacher_id=teacher.id, subject_id=subject_id) 
+                            for subject_id in teacher_subjects
+                        ]
+                        
+                        teacher_classes = []
+                        for class_id in class_subjects:
+                            for subject_id in class_subjects[class_id]:
+                                teacher_classes.append(
+                                    TeacherClass(teacher_id=teacher.id, class_id=class_id, subject_id=subject_id)
+                                )
+                        
+                        db.session.add_all(teacher_subjects_objects)
+                        db.session.add_all(teacher_classes)
+                        
                         db.session.commit()
                         return redirect(url_for('admin_dashboard.teacher_modification'))
                     except Exception as e:
@@ -478,10 +507,9 @@ def teacher_modification():
             case 'modify':
                 try:
                     teacher.first_name = chosen_first_name
-                    teacher.last_name = chosen_last_name
-                    teacher.class_id = chosen_class
-                    
+                    teacher.last_name = chosen_last_name                    
                     head_teacher_classes = list(map(int, head_teacher_classes))
+                    
                     # Update the head teacher classes
                     for class_ in classes:
                         if class_.id in head_teacher_classes:

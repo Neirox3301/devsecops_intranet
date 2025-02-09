@@ -71,7 +71,7 @@
 
             <div>
                 <label for="last_name">Confirm Password</label>
-                <input type="password" name="confirm_password" placeholder="Confirm Password">
+                <input type="password" name="confirmed_password" placeholder="Confirm Password">
             </div>
 
             <input type="hidden" name="new_chosen_teacher_id" value="{{ chosen_teacher['id'] }}">
@@ -102,7 +102,7 @@
                     <li class="class-box">
                         <label>
                         <!-- La valeur correspond à l'id de la compétence -->
-                        <input type="checkbox" name="subjects" value="{{ subject.id }}"
+                        <input type="checkbox" name="teacher_subjects" value="{{ subject.id }}"
                         {% if subject.id in chosen_teacher.subjects %}checked{% endif %}> 
                         {{ subject.name }}
                         </label>
@@ -149,7 +149,7 @@
 
         <div>
             <label for="last_name">Confirm Password</label>
-            <input type="password" name="confirm_password" placeholder="Confirmez le mot de passe">
+            <input type="password" name="confirmed_password" placeholder="Confirmez le mot de passe">
         </div>
 
         <div>
@@ -178,7 +178,7 @@
                 <li class="class-box">
                     <label>
                     <!-- La valeur correspond à l'id de la compétence -->
-                    <input type="checkbox" name="subjects" value="{{ subject.id }}"> 
+                    <input type="checkbox" name="teacher_subjects" value="{{ subject.id }}"> 
                     {{ subject.name }}
                     </label>
                 </li>
@@ -205,8 +205,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <button type="submit" name="action" value="delete" onclick="return confirmDelete()">Supprimer professeur</button>
-        <button type="submit" name="action" value="modify">Sauvegarder</button>
+        <button type="submit" name="action" value="create_save">Sauvegarder</button>
     </form>
     </div>
   {% endif %}
