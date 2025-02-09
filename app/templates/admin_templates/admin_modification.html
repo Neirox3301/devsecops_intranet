@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Élèves</title>
+    <title>Gestion des Administrateurs</title>
 </head>
 
 <body>
@@ -15,25 +15,23 @@
         <div style="color: green;">{{ success_message }}</div>
     {% endif %}
 
-    <!-- Sélection d'un élève -->
-    <form action="{{ url_for('.student_modification') }}" method="POST">
+    <!-- Sélection d'un administrateur -->
+    <form action="{{ url_for('.admin_modification') }}" method="POST">
         <div>
             <select name="chosen_entity_id" size="10">
-                {% for student in entities_dict %}
-                    <option value="{{ student['id'] }}">
-                        [{{ classes_dict[student['class_id']] }}] {{ student['first_name'] }} {{ student['last_name'] }}
-                    </option>
+                {% for admin in entities_dict %}
+                    <option value="{{ admin['id'] }}">{{ admin['first_name'] }} {{ admin['last_name'] }}</option>
                 {% endfor %}
             </select>
         </div>
         <button name="action" value="display" type="submit">Afficher</button>
-        <button name="action" value="create" type="submit">Créer un nouvel élève</button>
+        <button name="action" value="create" type="submit">Créer un nouvel administrateur</button>
     </form>
 
     {% if chosen_entity or new_entity %}
         <!-- Formulaire de modification / création -->
-        <form action="{{ url_for('.student_modification') }}" method="POST">
-            <input type="hidden" name="new_chosen_student_id" value="{{ chosen_entity.id if chosen_entity else '' }}">
+        <form action="{{ url_for('.admin_modification') }}" method="POST">
+            <input type="hidden" name="new_chosen_admin_id" value="{{ chosen_entity.id if chosen_entity else '' }}">
 
             <div>
                 <label>Prénom</label>
@@ -60,17 +58,6 @@
                 <input type="password" name="confirmed_password">
             </div>
 
-            <div>
-                <label>Classe</label>
-                <select name="selected_class">
-                    {% for class_id, class_name in classes_dict.items() %}
-                        <option value="{{ class_id }}" {% if chosen_entity and class_id == chosen_entity.class_id %}selected{% endif %}>
-                            {{ class_name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-
             <button type="submit" name="action" value="modify">Sauvegarder</button>
             <button type="submit" name="action" value="delete" onclick="return confirmDelete()">Supprimer</button>
         </form>
@@ -78,7 +65,7 @@
 
     <script>
         function confirmDelete() {
-            return confirm("Êtes-vous sûr de vouloir supprimer cet élève définitivement ?");
+            return confirm("Êtes-vous sûr de vouloir supprimer cet administrateur définitivement ?");
         }
     </script>
 </body>
