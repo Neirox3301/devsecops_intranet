@@ -5,7 +5,7 @@ from flask import Flask, redirect, url_for
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 from models.hashing_machine import hash_user_passwords
-from models import db
+from cryptography.fernet import Fernet
 
 # Importation des blueprints
 from routes.auth_routes import auth_blueprint
@@ -13,16 +13,43 @@ from routes.dashboard_routes import dashboard_blueprint
 from routes.teacher_routes import teacher_dashboard_blueprint
 from routes.student_routes import student_dashboard_blueprint
 from routes.admin_routes import admin_dashboard_blueprint
-from models import User  # Importation du modèle User
+from models import User, db
+
+
+def load_secret_key():
+    """Charge et déchiffre la clé secrète Flask avec Fernet."""
+    try:
+        # Charger la clé de chiffrement
+        with open(".venv/.flask_secret_key", "rb") as key_file:
+            encryption_key = key_file.read()
+
+        cipher = Fernet(encryption_key)
+
+        # Charger et déchiffrer la clé secrète Flask
+        with open(".venv/flask_secret.enc", "rb") as secret_file:
+            encrypted_secret = secret_file.read()
+
+        decrypted_secret = cipher.decrypt(encrypted_secret)
+        return decrypted_secret.decode()
+
+    except Exception as e:
+        print(f"Erreur lors du chargement de la clé secrète : {e}")
+        return None
 
 def create_app():
+    """Crée une instance de l'application Flask."""
     app = Flask(__name__)
 
     # Configuration de l'application
     load_dotenv()
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.secret_key = 'a'
+    
+    secret_key = load_secret_key()
+    if secret_key:
+        app.secret_key = secret_key
+    else:
+        raise ValueError("Impossible d'utiliser la clé secrète Flask.")
 
     # Initialisation des extensions avec l'application
     db.init_app(app)  # Initialisation de SQLAlchemy
