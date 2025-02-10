@@ -20,7 +20,7 @@
             <div class="menu">
                 <h2>Modifiez des notes</h2>
 
-                <form action="{{ url_for('.grades') }}" method="POST">
+                <form class="prof-notes-table" action="{{ url_for('.grades') }}" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="">
                         <div>
@@ -58,7 +58,7 @@
                 </form>
 
                 <!-- Grade display section-->
-                <form action="{{ url_for('.update_grades') }}" method="POST">
+                <form class="prof-notes-table" action="{{ url_for('.update_grades') }}" method="POST">
                     {% if display_table %}
                     <table>
                         <thead>

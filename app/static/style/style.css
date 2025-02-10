@@ -1,5 +1,216 @@
+.dashboard {
+  align-items: center;
+  background-image: url("/static/images/login_bg.jpg");
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 5vh;
+  width: 100%;
+}
+.dashboard .island {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  margin: 20px 0;
+  padding: 25px;
+}
+.dashboard .island h1 {
+  font-size: 4rem;
+  text-align: center;
+}
+.dashboard .island h2 {
+  font-size: 2rem;
+}
+.dashboard .menu {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  padding: 25px;
+  width: 75%;
+}
+.dashboard .menu .menu-part {
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
+  padding: 50px 0;
+  width: 100%;
+}
+.dashboard .menu .menu-part a {
+  border-radius: 7.5px;
+  box-shadow: 5px 10px 5px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  text-decoration: none;
+  width: 20%;
+}
+.dashboard .menu .menu-part a button {
+  align-items: center;
+  background: linear-gradient(90deg, orange, red);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  padding: 50px;
+  transition: transform 0.1s ease-in;
+  width: 100%;
+}
+.dashboard .menu .menu-part a button h3 {
+  color: white;
+  font-size: 1.25rem;
+}
+.dashboard .menu .menu-part a button:hover {
+  transform: scale(1.05);
+}
+.dashboard .menu h2 {
+  margin: auto;
+  text-align: center;
+  width: 60%;
+}
+.dashboard .menu table {
+  border-radius: 15px;
+  margin: auto;
+  width: 60%;
+}
+.dashboard .menu table thead {
+  font-size: 2rem;
+}
+.dashboard .menu table tbody {
+  font-size: 1.5rem;
+  text-align: center;
+}
+.dashboard .menu table tbody td {
+  border-top: solid 2px white;
+}
+.dashboard .menu table tbody .subject-name {
+  text-align: left;
+}
+.dashboard .menu .prof-notes-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 0 50px;
+}
+.dashboard .menu .prof-notes-table div {
+  display: flex;
+  justify-content: space-between;
+}
+.dashboard .menu .prof-notes-table div div {
+  display: flex;
+  flex-direction: column;
+  padding: 0 100px;
+  width: 33%;
+}
+.dashboard .menu .prof-notes-table div div label {
+  font-size: 1.25rem;
+  text-align: center;
+  margin: 10px 0;
+}
+.dashboard .menu .prof-notes-table div div select {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 7.5px;
+  padding: 5px;
+}
+.dashboard .menu .prof-notes-table div div select option {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.dashboard .menu .prof-notes-table button {
+  background: linear-gradient(90deg, orange, red);
+  border-radius: 70px;
+  border: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: auto;
+  margin-top: 120px;
+  padding: 12px 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 200px;
+}
+.dashboard .menu .prof-notes-table button:hover {
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+.dashboard .menu .prof-notes-table button:active {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
+}
+.dashboard .menu .prof-notes-table table {
+  margin: 50px 0;
+  width: 100%;
+}
+.dashboard .menu .prof-notes-table table thead th {
+  font-size: 1.5rem;
+}
+.dashboard .menu .prof-notes-table table tbody tr th {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+.dashboard .menu .prof-notes-table #save-button {
+  margin-top: 20px;
+}
+.dashboard .menu .display-people {
+  width: 50%;
+}
+.dashboard .menu .display-people select {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 7.5px;
+  font-size: 1rem;
+  width: 100%;
+}
+.dashboard .menu .display-people div {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  width: 100%;
+}
+.dashboard .menu .display-people div button {
+  background: linear-gradient(90deg, orange, red);
+  border: none;
+  border-radius: 7.5px;
+  color: white;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 5px 15px;
+  transition: transform 0.1s ease-in;
+}
+.dashboard .menu .display-people div button:hover {
+  transform: scale(1.05);
+}
+.dashboard .menu .modify-people {
+  width: 35%;
+}
+.dashboard .menu .modify-people div {
+  font-size: 1rem;
+  margin: 5px 0;
+  position: relative;
+}
+.dashboard .menu .modify-people div input {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 7.5px;
+  font-size: 1rem;
+  position: absolute;
+  right: 0;
+}
+.dashboard .menu .modify-people div select {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 7.5px;
+}
+.dashboard .menu-admin {
+  width: 50%;
+}
+.dashboard .menu-admin .menu-part a {
+  width: 40%;
+}
+.dashboard .editer-admin {
+  display: flex;
+  justify-content: space-around;
+  padding: 50px 25px;
+}
+
 *, ::before, ::after {
   box-sizing: border-box;
+  color: white;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin: 0;
   padding: 0;
@@ -12,6 +223,27 @@ html, body {
   background-size: cover;
   height: 100%;
   width: 100%;
+}
+
+.return-button {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  display: flex;
+  height: 65px;
+  justify-content: center;
+  left: 20px;
+  position: absolute;
+  top: 20px;
+  width: 65px;
+}
+.return-button img {
+  height: 80%;
+  transition: transform 0.1s ease-in;
+  width: 80%;
+}
+.return-button img:hover {
+  transform: scale(1.05);
 }
 
 .body-login {
@@ -92,190 +324,6 @@ html, body {
 .body-login .container form .submit-container .submit-button:active {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   transform: scale(0.95);
-}
-
-.return-button {
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
-  display: flex;
-  height: 65px;
-  justify-content: center;
-  left: 20px;
-  position: absolute;
-  top: 20px;
-  width: 65px;
-}
-.return-button img {
-  height: 80%;
-  transition: transform 0.1s ease-in;
-  width: 80%;
-}
-.return-button img:hover {
-  transform: scale(1.05);
-}
-
-.dashboard {
-  align-items: center;
-  background-image: url("/static/images/login_bg.jpg");
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 5vh;
-  width: 100%;
-}
-.dashboard .island {
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
-  color: white;
-  margin: 20px 0;
-  padding: 25px;
-}
-.dashboard .island h1 {
-  font-size: 4rem;
-  text-align: center;
-}
-.dashboard .island h2 {
-  font-size: 2rem;
-}
-.dashboard .menu {
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
-  color: white;
-  padding: 25px;
-  width: 75%;
-}
-.dashboard .menu .menu-part {
-  display: flex;
-  justify-content: space-around;
-  margin: auto;
-  padding: 50px 0;
-  width: 100%;
-}
-.dashboard .menu .menu-part a {
-  border-radius: 7.5px;
-  box-shadow: 5px 10px 5px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  text-decoration: none;
-  width: 20%;
-}
-.dashboard .menu .menu-part a button {
-  align-items: center;
-  background: linear-gradient(90deg, orange, red);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-around;
-  height: 100%;
-  padding: 50px;
-  transition: transform 0.1s ease-in;
-  width: 100%;
-}
-.dashboard .menu .menu-part a button h3 {
-  color: white;
-  font-size: 1.25rem;
-}
-.dashboard .menu .menu-part a button:hover {
-  transform: scale(1.05);
-}
-.dashboard .menu h2 {
-  margin: auto;
-  text-align: center;
-  width: 60%;
-}
-.dashboard .menu table {
-  border-radius: 15px;
-  margin: auto;
-  width: 60%;
-}
-.dashboard .menu table thead {
-  font-size: 2rem;
-}
-.dashboard .menu table tbody {
-  font-size: 1.5rem;
-  text-align: center;
-}
-.dashboard .menu table tbody td {
-  border-top: solid 2px white;
-}
-.dashboard .menu table tbody .subject-name {
-  text-align: left;
-}
-.dashboard .menu form {
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 20px;
-  padding: 0 50px;
-}
-.dashboard .menu form div {
-  display: flex;
-  justify-content: space-between;
-}
-.dashboard .menu form div div {
-  display: flex;
-  flex-direction: column;
-  padding: 0 100px;
-  width: 33%;
-}
-.dashboard .menu form div div label {
-  font-size: 1.25rem;
-  text-align: center;
-  margin: 10px 0;
-}
-.dashboard .menu form div div select {
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  color: white;
-  padding: 5px;
-}
-.dashboard .menu form div div select option {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-}
-.dashboard .menu form button {
-  background: linear-gradient(90deg, orange, red);
-  border-radius: 70px;
-  border: none;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  color: white;
-  cursor: pointer;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: auto;
-  margin-top: 120px;
-  padding: 12px 24px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  width: 200px;
-}
-.dashboard .menu form button:hover {
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
-  transform: scale(1.05);
-}
-.dashboard .menu form button:active {
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  transform: scale(0.95);
-}
-.dashboard .menu form table {
-  margin: 50px 0;
-  width: 100%;
-}
-.dashboard .menu form table thead th {
-  font-size: 1.5rem;
-}
-.dashboard .menu form table tbody tr th {
-  font-size: 1.25rem;
-  font-weight: 400;
-}
-.dashboard .menu form #save-button {
-  margin-top: 20px;
-}
-.dashboard .menu-admin {
-  width: 50%;
-}
-.dashboard .menu-admin .menu-part a {
-  width: 40%;
 }
 
 /*# sourceMappingURL=style.css.map */
