@@ -99,12 +99,12 @@ html, body {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 15px;
   display: flex;
-  height: 75px;
+  height: 65px;
   justify-content: center;
   left: 20px;
   position: absolute;
   top: 20px;
-  width: 75px;
+  width: 65px;
 }
 .return-button img {
   height: 80%;
