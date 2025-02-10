@@ -10,6 +10,7 @@
     <body class="body-login">
         <div class="container">
             <form form method="POST" action="{{ url_for('auth.login') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <h1>Academis</h1>
 
                 {% with messages = get_flashed_messages(with_categories=true) %}
