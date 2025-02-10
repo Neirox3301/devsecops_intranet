@@ -18,11 +18,12 @@ def student_modification():
         return redirect(url_for('auth.login'))
 
     context = get_common_context(Student, 'admin_templates/student_modification.html')
+    if request.method == 'GET':
+        return render_page(context)
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         return handle_post_request(request, context, create_student, modify_student, delete_student)
 
-    return render_page(context)
 
 def create_student(request, context):
     """Crée un étudiant."""
@@ -71,10 +72,11 @@ def teacher_modification():
 
     context = get_common_context(Teacher, 'admin_templates/teacher_modification.html')
 
-    if request.method == 'POST':
-        return handle_post_request(request, context, create_teacher, modify_teacher, delete_teacher)
+    if request.method == 'GET':
+        return render_page(context)
 
-    return render_page(context)
+    elif request.method == 'POST':
+        return handle_post_request(request, context, create_teacher, modify_teacher, delete_teacher)
 
 def create_teacher(request, context):
     """Crée un enseignant."""
@@ -160,10 +162,11 @@ def admin_modification():
 
     context = get_common_context(Admin, 'admin_templates/admin_modification.html')
 
-    if request.method == 'POST':
-        return handle_post_request(request, context, create_admin, modify_admin, delete_admin)
+    if request.method == 'GET':
+        return render_page(context)
 
-    return render_page(context)
+    elif request.method == 'POST':
+        return handle_post_request(request, context, create_admin, modify_admin, delete_admin)
 
 def create_admin(request, context):
     """Crée un administrateur."""
