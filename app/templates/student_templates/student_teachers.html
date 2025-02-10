@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vos Professeurs</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    </head>
+
+    <body>
+        <a class="return-button" href="{{ url_for('dashboard.student_dashboard') }}">
+            <img src="{{ url_for('static', filename='svg/arrow_back.svg') }}" alt="-> Dashboard">
+        </a>
+
+        <div class="dashboard">
+            <div class="island">
+                <h1>Voici vos professeurs</h1>
+            </div>
+            
+            <div class="menu">
+                <table>
+                    <tr>
+                        <th>Professeur</th>
+                        <th>Matière</th>
+                    </tr>
+                    {% for subject in subjects %}
+                        <tr>
+                            <td>{{ subject.teacher }}</td>
+                            <td>{{ subject.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

@@ -12,7 +12,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 
-from models import Grade, Class, Student, Subject, Assignment
+from models import Grade, Class, Student, Subject, Assignment, TeacherClass, Teacher
 
 student_dashboard_blueprint = Blueprint('student_dashboard', __name__)
 
@@ -264,16 +264,39 @@ def display_messagerie():
     return render_template('student_templates/messagerie.html', csrf_token=generate_csrf())
 
 
-@student_dashboard_blueprint.route('/student_dashboard/professeurs')
+@student_dashboard_blueprint.route('/student_dashboard/teachers')
 @login_required
-def display_professeurs():
-    return render_template('student_templates/professeurs.html', csrf_token=generate_csrf())
+def display_teachers():
+    if current_user.role != 'student':
+        return redirect(url_for('auth.login'))
+    
+    class_ = Class.query.filter_by(id=current_user.student.class_id).first()
+    subjects = Subject.query.all()
+    teacherClasses = TeacherClass.query.filter_by(class_id=class_.id).all()
+    teachers = Teacher.query.all()
+
+    subject_dict = []
+    for sub in subjects:
+        teacher_found = False
+        for tc in teacherClasses:
+            if tc.subject_id == sub.id and tc.class_id == class_.id:
+                for teacher in teachers:
+                    if teacher.id == tc.teacher_id:
+                        subject_dict.append({'name': sub.name, 'teacher': f"{teacher.first_name} {teacher.last_name}"})
+                        teacher_found = True
+                        break
+            if teacher_found:
+                break
+        if not teacher_found:
+            subject_dict.append({'name': sub.name, 'teacher': '--'})
+
+    return render_template('student_templates/student_teachers.html', csrf_token=generate_csrf(), subjects=subject_dict)
 
 
-@student_dashboard_blueprint.route('/student_dashboard/parametres')
+@student_dashboard_blueprint.route('/student_dashboard/parameters')
 @login_required
-def display_parametres():
-    return render_template('student_templates/parametres.html', csrf_token=generate_csrf())
+def display_parameters():
+    return render_template('student_templates/student_parameters.html', csrf_token=generate_csrf())
 
 
 # Fonction pour gérer l'absence de notes
