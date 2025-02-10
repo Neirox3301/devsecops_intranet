@@ -12,7 +12,7 @@ def login():
 
 
 @auth_blueprint.route('/login', methods=['POST'])
-def login():
+def login_form():
     username = request.form['username']
     password = request.form['password']
 

@@ -23,7 +23,7 @@ def student_modification():
 
 @admin_dashboard_blueprint.route('/admin_dashboard/student_modification', methods=['POST'])
 @login_required
-def student_modification():
+def student_modification_form():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 
@@ -81,7 +81,7 @@ def teacher_modification():
     
 @admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['POST'])
 @login_required
-def teacher_modification():
+def teacher_modification_form():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 
@@ -176,7 +176,7 @@ def admin_modification():
 
 @admin_dashboard_blueprint.route('/admin_dashboard/admin_modification', methods=['POST'])
 @login_required
-def admin_modification():
+def admin_modification_form():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 

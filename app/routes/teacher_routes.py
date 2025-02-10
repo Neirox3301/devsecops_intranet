@@ -48,7 +48,7 @@ def grades():
     
 @teacher_dashboard_blueprint.route('/teacher_dashboard/grades', methods=['POST'])
 @login_required
-def grades():
+def grades_form():
     teacher = Teacher.query.filter_by(user_id=current_user.id).first()
     teacherClasses = TeacherClass.query.filter_by(teacher_id=current_user.id).all()
 
