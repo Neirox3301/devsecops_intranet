@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres</title>
+    <style>
+        .settings-container {
+            opacity: 0.6; /* Effet visuel de désactivation */
+            pointer-events: none; /* Désactive l'interaction */
+        }
+        .disabled-message {
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<body>
+    <div class="settings-container">
+        <h2>Paramètres</h2>
+        <div class="disabled-message">Ces paramètres sont bloqués par l'administrateur.</div>
+        <div class="setting">
+            <span>Mode sombre</span>
+            <input type="checkbox" disabled>
+        </div>
+        <div class="setting">
+            <span>Notifications</span>
+            <input type="checkbox" disabled>
+        </div>
+        <div class="setting">
+            <span>Langue</span>
+            <select disabled>
+                <option>Français</option>
+                <option>Anglais</option>
+            </select>
+        </div>
+    </div>
+</body>
+</html>

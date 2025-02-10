@@ -183,22 +183,32 @@ def update_grades():
 @teacher_dashboard_blueprint.route('/teacher_dashboard/bulletins')
 @login_required
 def display_bulletins():
-    return render_template('teacher_dashboard/teacher_bulletins.html', csrf_token=generate_csrf())
+    return render_template('teacher_templates/teacher_bulletins.html', csrf_token=generate_csrf())
 
 
-@teacher_dashboard_blueprint.route('/teacher_dashboard/messagerie')
+@teacher_dashboard_blueprint.route('/teacher_dashboard/calendar')
 @login_required
-def display_messagerie():
-    return render_template('teacher_dashboard/messagerie.html',csrf_token=generate_csrf())
+def display_calendar():
+    return render_template('teacher_templates/teacher_calendar.html',csrf_token=generate_csrf())
 
 
-@teacher_dashboard_blueprint.route('/teacher_dashboard/eleves')
+@teacher_dashboard_blueprint.route('/teacher_dashboard/students')
 @login_required
-def display_eleves():
-    return render_template('teacher_dashboard/eleves.html', csrf_token=generate_csrf())
+def display_students():
+    
+    teacherclasses = TeacherClass.query.filter_by(teacher_id=current_user.id).all()
+    classes = [Class.query.filter_by(id=tc.class_id).first() for tc in teacherclasses]
+    
+    students = []
+    for class_ in classes:
+        students.extend(Student.query.filter_by(class_id=class_.id).all())
+        
+    student_dict = [{'id': student.id, 'name': f'{student.last_name} {student.first_name}', 'class_name': Class.query.filter_by(id=student.class_id).first().class_name} for student in students]
+    
+    return render_template('teacher_templates/teacher_students.html', students=student_dict)
 
 
-@teacher_dashboard_blueprint.route('/teacher_dashboard/parametres')
+@teacher_dashboard_blueprint.route('/teacher_dashboard/settings')
 @login_required
-def display_parametres():
-    return render_template('teacher_dashboard/parametres.html', csrf_token=generate_csrf())
+def display_settings():
+    return render_template('teacher_templates/teacher_settings.html')
