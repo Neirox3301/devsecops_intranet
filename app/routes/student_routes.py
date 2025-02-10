@@ -1,4 +1,5 @@
 import os
+import secrets
 from flask import Blueprint, render_template, redirect, url_for, send_file
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
@@ -9,7 +10,6 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.styles import getSampleStyleSheet
-from random import choice
 from datetime import datetime
 
 from models import Grade, Class, Student, Subject, Assignment
@@ -195,9 +195,9 @@ def generate_report_card():
     ]
 
     if overall_average == '--' or overall_average < 10:
-        head_teacher_comment = choice(negative_head_teacher_comments)
+        head_teacher_comment = secrets.choice(negative_head_teacher_comments)
     else:
-        head_teacher_comment = choice(positive_head_teacher_comments)
+        head_teacher_comment = secrets.choice(positive_head_teacher_comments)
 
     # Création d'une grande case pour le commentaire du professeur principal
     comment_box_data = [[head_teacher_comment]]
