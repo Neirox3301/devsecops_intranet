@@ -27,10 +27,10 @@
                             <h3>Bulletins</h3>
                         </button>
                     </a>
-                    <a>
+                    <a href="{{ url_for('teacher_dashboard.display_calendar') }}">
                         <button>
-                            <img src="{{ url_for('static', filename='svg/message.svg') }}" alt="Messagerie">
-                            <h3>Messages</h3>
+                            <img src="{{ url_for('static', filename='svg/agenda.svg') }}" alt="Messagerie">
+                            <h3>Agenda</h3>
                         </button>
                     </a>
                 </div>

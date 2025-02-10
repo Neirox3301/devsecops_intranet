@@ -258,10 +258,10 @@ def generate_report_card():
 
 
 
-@student_dashboard_blueprint.route('/student_dashboard/messagerie')
+@student_dashboard_blueprint.route('/student_dashboard/calendar')
 @login_required
-def display_messagerie():
-    return render_template('student_templates/messagerie.html', csrf_token=generate_csrf())
+def display_calendar():
+    return render_template('student_templates/student_calendar.html', csrf_token=generate_csrf())
 
 
 @student_dashboard_blueprint.route('/student_dashboard/teachers')

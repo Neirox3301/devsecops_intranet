@@ -186,10 +186,10 @@ def display_bulletins():
     return render_template('teacher_templates/teacher_bulletins.html', csrf_token=generate_csrf())
 
 
-@teacher_dashboard_blueprint.route('/teacher_dashboard/messagerie')
+@teacher_dashboard_blueprint.route('/teacher_dashboard/calendar')
 @login_required
-def display_messagerie():
-    return render_template('teacher_templates/messagerie.html',csrf_token=generate_csrf())
+def display_calendar():
+    return render_template('teacher_templates/teacher_calendar.html',csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/students')
