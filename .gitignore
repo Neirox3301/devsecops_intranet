@@ -1,7 +1,8 @@
 .env
+app/.env
+app/db/
 .sql
 brouillon.txt
-app/db/
 __pycache__/
 *.pyc
 *.pyo

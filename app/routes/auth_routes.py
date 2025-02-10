@@ -34,7 +34,7 @@ def login_form():
             flash('Role inconnu', 'danger')
     else:
         flash(f'Username or password incorrect ', 'danger')
-    return render_template('login.html')
+    return render_template('login.html', csrf_token=generate_csrf())
 
 @auth_blueprint.route('/logout')
 @login_required
