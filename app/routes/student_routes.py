@@ -2,6 +2,7 @@ import os
 from flask import Blueprint, render_template, redirect, url_for, send_file
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
+from flask_wtf.csrf import generate_csrf
 
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
@@ -50,7 +51,8 @@ def display_grades():
                 assignments_dict[assignment['type']] = '--'
     
 
-    return render_template('student_templates/student_grades.html', subjects=subjects, student_class=student_class, student=student, grades=grade_dict, assignments=assignments)
+    return render_template('student_templates/student_grades.html', subjects=subjects, student_class=student_class, 
+                           student=student, grades=grade_dict, assignments=assignments, csrf_token=generate_csrf())
 
 
 @student_dashboard_blueprint.route('/student_dashboard/genereate_report_card')
@@ -259,19 +261,19 @@ def generate_report_card():
 @student_dashboard_blueprint.route('/student_dashboard/messagerie')
 @login_required
 def display_messagerie():
-    return render_template('student_templates/messagerie.html')
+    return render_template('student_templates/messagerie.html', csrf_token=generate_csrf())
 
 
 @student_dashboard_blueprint.route('/student_dashboard/professeurs')
 @login_required
 def display_professeurs():
-    return render_template('student_templates/professeurs.html')
+    return render_template('student_templates/professeurs.html', csrf_token=generate_csrf())
 
 
 @student_dashboard_blueprint.route('/student_dashboard/parametres')
 @login_required
 def display_parametres():
-    return render_template('student_templates/parametres.html')
+    return render_template('student_templates/parametres.html', csrf_token=generate_csrf())
 
 
 # Fonction pour gérer l'absence de notes

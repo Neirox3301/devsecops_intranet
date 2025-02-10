@@ -1,10 +1,8 @@
 from flask import Flask, redirect, url_for
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from models.hashing_machine import hash_user_passwords
 from models import db
-
-# Création de l'instance de LoginManager
-login_manager = LoginManager()
 
 # Importation des blueprints
 from routes.auth_routes import auth_blueprint
@@ -35,7 +33,10 @@ def create_app():
 
     return app
 
+login_manager = LoginManager()
+
 app = create_app()
+csrf = CSRFProtect(app) 
 
 # Hashage des mots de passe
 with app.app_context():

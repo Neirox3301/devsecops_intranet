@@ -17,6 +17,7 @@
 
     <!-- Sélection d'un administrateur -->
     <form action="{{ url_for('.admin_modification') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <div>
             <select name="chosen_entity_id" size="10">
                 {% for admin in entities_dict %}
@@ -31,6 +32,7 @@
     {% if chosen_entity or new_entity %}
         <!-- Formulaire de modification / création -->
         <form action="{{ url_for('.admin_modification') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <input type="hidden" name="new_chosen_admin_id" value="{{ chosen_entity.id if chosen_entity else '' }}">
 
             <div>

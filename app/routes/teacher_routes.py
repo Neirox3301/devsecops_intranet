@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
+from flask_wtf.csrf import generate_csrf
 
 from models import Teacher, TeacherClass, Class, Student, Subject, Grade, Assignment, db
 
@@ -93,8 +94,10 @@ def grades():
             # Filter with the assignment
             grades = [grade for grade in grades if grade['assignment_type_id'] == chosen_assignment['id']]
 
-    return render_template('teacher_templates/teacher_grades.html', teacher=teacher, display_table=display_table, subjects=subjects_dict, classes=classes_dict, assignments=assignments_dict, students=students, grades=grades, 
-                           chosen_classe=chosen_class, chosen_subject=chosen_subject, chosen_assignment=chosen_assignment, grade_attributed=False)
+    return render_template('teacher_templates/teacher_grades.html', teacher=teacher, display_table=display_table, subjects=subjects_dict, 
+                           classes=classes_dict, assignments=assignments_dict, students=students, grades=grades, 
+                           chosen_classe=chosen_class, chosen_subject=chosen_subject, chosen_assignment=chosen_assignment, 
+                           grade_attributed=False, csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/update_grades', methods=['GET', 'POST'])
@@ -142,22 +145,22 @@ def update_grades():
 @teacher_dashboard_blueprint.route('/teacher_dashboard/bulletins')
 @login_required
 def display_bulletins():
-    return render_template('teacher_dashboard/teacher_bulletins.html')
+    return render_template('teacher_dashboard/teacher_bulletins.html', csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/messagerie')
 @login_required
 def display_messagerie():
-    return render_template('teacher_dashboard/messagerie.html')
+    return render_template('teacher_dashboard/messagerie.html',csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/eleves')
 @login_required
 def display_eleves():
-    return render_template('teacher_dashboard/eleves.html')
+    return render_template('teacher_dashboard/eleves.html', csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/parametres')
 @login_required
 def display_parametres():
-    return render_template('teacher_dashboard/parametres.html')
+    return render_template('teacher_dashboard/parametres.html', csrf_token=generate_csrf())

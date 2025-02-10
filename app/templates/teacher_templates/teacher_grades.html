@@ -17,6 +17,7 @@
                 <h2>Modifiez des notes</h2>
 
                 <form action="{{ url_for('.grades') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <div class="">
                         <div>
                             <label for="subject">Subject</label>
