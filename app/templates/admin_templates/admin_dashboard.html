@@ -7,28 +7,33 @@
     </head>
     <body>
         <div class="dashboard">
-            <div class="menu">
+            <div class="island">
+                <h1>Bienvenue</h1>
+                <h2>Sélectionnez une option dans le menu</h2>
+            </div>
+
+            <div class="menu menu-admin">
                 <div class="menu-part">
                     <a href="{{ url_for('admin_dashboard.student_modification') }}">
                         <button>
-                            <img src="{{ url_for('static', filename='svg/notes.svg') }}" alt="Notes">
+                            <img src="{{ url_for('static', filename='svg/students.svg') }}" alt="Notes">
                             <h3>Elèves</h3>
                         </button>
                     </a>
                     <a href="{{ url_for('admin_dashboard.teacher_modification') }}">
                         <button>
-                            <img src="{{ url_for('static', filename='svg/bulletin.svg') }}" alt="Bulletins">
+                            <img src="{{ url_for('static', filename='svg/teachers.svg') }}" alt="Bulletins">
                             <h3>Professeurs</h3>
                         </button>
                     </a>
+                </div>
+                <div class="menu-part">
                     <a href="{{ url_for('admin_dashboard.admin_modification') }}">
                         <button>
                             <img src="{{ url_for('static', filename='svg/message.svg') }}" alt="Messagerie">
                             <h3>Administrateurs</h3>
                         </button>
                     </a>
-                </div>
-                <div class="menu-part">
                     <a href="{{ url_for('auth.logout') }}">
                         <button>
                             <img src="{{ url_for('static', filename='svg/logout.svg') }}" alt="Déconnexion">

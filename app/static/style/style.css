@@ -271,5 +271,11 @@ html, body {
 .dashboard .menu form #save-button {
   margin-top: 20px;
 }
+.dashboard .menu-admin {
+  width: 50%;
+}
+.dashboard .menu-admin .menu-part a {
+  width: 40%;
+}
 
 /*# sourceMappingURL=style.css.map */
