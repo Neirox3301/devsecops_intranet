@@ -11,19 +11,24 @@ admin_dashboard_blueprint = Blueprint('admin_dashboard', __name__)
 # ---- Routes principales ----
 
 # --- Gestion des Étudiants ---
-@admin_dashboard_blueprint.route('/admin_dashboard/student_modification', methods=['GET', 'POST'])
+@admin_dashboard_blueprint.route('/admin_dashboard/student_modification', methods=['GET'])
 @login_required
 def student_modification():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 
     context = get_common_context(Student, 'admin_templates/student_modification.html')
-    if request.method == 'GET':
-        return render_page(context)
+    return render_page(context)
 
-    elif request.method == 'POST':
-        return handle_post_request(request, context, create_student, modify_student, delete_student)
 
+@admin_dashboard_blueprint.route('/admin_dashboard/student_modification', methods=['POST'])
+@login_required
+def student_modification():
+    if current_user.role != 'admin':
+        return redirect(url_for('auth.login'))
+
+    context = get_common_context(Student, 'admin_templates/student_modification.html')
+    return handle_post_request(request, context, create_student, modify_student, delete_student)
 
 def create_student(request, context):
     """Crée un étudiant."""
@@ -64,19 +69,24 @@ def modify_student(request, context):
     return redirect(url_for('admin_dashboard.student_modification'), csrf_token=generate_csrf())
 
 # --- Gestion des Enseignants ---
-@admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['GET', 'POST'])
+@admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['GET'])
 @login_required
 def teacher_modification():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 
     context = get_common_context(Teacher, 'admin_templates/teacher_modification.html')
+    return render_page(context)
 
-    if request.method == 'GET':
-        return render_page(context)
+    
+@admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['POST'])
+@login_required
+def teacher_modification():
+    if current_user.role != 'admin':
+        return redirect(url_for('auth.login'))
 
-    elif request.method == 'POST':
-        return handle_post_request(request, context, create_teacher, modify_teacher, delete_teacher)
+    context = get_common_context(Teacher, 'admin_templates/teacher_modification.html')
+    return handle_post_request(request, context, create_teacher, modify_teacher, delete_teacher)
 
 def create_teacher(request, context):
     """Crée un enseignant."""
@@ -154,19 +164,24 @@ def modify_teacher(request, context):
     return redirect(url_for('admin_dashboard.teacher_modification'), csrf_token=generate_csrf())
 
 # --- Gestion des Administrateurs ---
-@admin_dashboard_blueprint.route('/admin_dashboard/admin_modification', methods=['GET', 'POST'])
+@admin_dashboard_blueprint.route('/admin_dashboard/admin_modification', methods=['GET'])
 @login_required
 def admin_modification():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 
     context = get_common_context(Admin, 'admin_templates/admin_modification.html')
+    return render_page(context)
 
-    if request.method == 'GET':
-        return render_page(context)
 
-    elif request.method == 'POST':
-        return handle_post_request(request, context, create_admin, modify_admin, delete_admin)
+@admin_dashboard_blueprint.route('/admin_dashboard/admin_modification', methods=['POST'])
+@login_required
+def admin_modification():
+    if current_user.role != 'admin':
+        return redirect(url_for('auth.login'))
+
+    context = get_common_context(Admin, 'admin_templates/admin_modification.html')
+    return handle_post_request(request, context, create_admin, modify_admin, delete_admin)
 
 def create_admin(request, context):
     """Crée un administrateur."""
