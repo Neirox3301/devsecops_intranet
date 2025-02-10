@@ -1,5 +1,31 @@
 @import 'variables';
 
+.return-button {
+    $margin: 20px;
+    $size: 75px;
+
+    align-items: center;
+    background-color: $opaque-background;
+    border-radius: $corner-radius-opaque-background;
+    display: flex;
+    height: $size;
+    justify-content: center;
+    left: $margin;
+    position: absolute;
+    top: $margin;
+    width: $size;
+
+    img {
+        height: 80%;
+        transition: transform 0.1s ease-in;
+        width: 80%;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+}
+
 .dashboard {
     align-items: center;
     background-image: url('/static/images/login_bg.jpg');
@@ -107,16 +133,42 @@
 
         /// PROF
         form {
-            background-color: blue;
             color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
             margin-top: 20px;
+            padding: 0 50px;
 
+            // PARTIE HAUTE
             div {
                 display: flex;
-                justify-content: space-around;
+                justify-content: space-between;
+
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 0 100px;
+                    width: 33%;
+
+                    label {
+                        font-size: 1.25rem;
+                        text-align: center;
+                        margin: 10px 0;
+                    }
+
+                    select {
+                        background-color: $opaque-background;
+                        border-radius: 5px;
+                        color: white;
+                        padding: 5px;
+                    
+                        option {
+                            background-color: $opaque-background;
+                            color: white;
+                        }
+                    }
+                }
             }
 
             button {
@@ -129,7 +181,7 @@
                 font-size: 1.2rem;
                 font-weight: bold;
                 margin: auto;
-                margin-top: 20px;
+                margin-top: 120px;
                 padding: 12px 24px;
                 transition: transform 0.2s, box-shadow 0.2s;
                 width: 200px;
@@ -143,6 +195,32 @@
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
                     transform: scale(0.95);
                 }
+            }
+
+
+            // PARTIE BASSE
+            table {
+                margin: 50px 0;
+                width: 100%;
+
+                thead {
+                    th {
+                        font-size: 1.5rem;
+                    }
+                }
+
+                tbody {
+                    tr {
+                        th {
+                            font-size: 1.25rem;
+                            font-weight: 400;
+                        }
+                    }
+                }
+            }
+
+            #save-button {
+                margin-top: 20px;
             }
         }
     }
