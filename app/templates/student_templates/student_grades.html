@@ -8,6 +8,10 @@
     </head>
 
     <body>
+        <a class="return-button" href="{{ url_for('dashboard.teacher_dashboard') }}">
+            <img src="{{ url_for('static', filename='svg/arrow_back.svg') }}" alt="-> Dashboard">
+        </a>
+
         <div class="dashboard">
             <div class="island">
                 <h1>Voici vos notes, {{ student.first_name }} {{ student.last_name }}</h1>

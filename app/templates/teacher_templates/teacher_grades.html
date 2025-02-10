@@ -7,6 +7,10 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
     </head>
     <body>
+        <a class="return-button" href="{{ url_for('dashboard.teacher_dashboard') }}">
+            <img src="{{ url_for('static', filename='svg/arrow_back.svg') }}" alt="-> Dashboard">
+        </a>
+
         <!-- Grade filter section-->
         <div class="dashboard">
             <div class="island">
@@ -59,20 +63,19 @@
                         <thead>
                             <th>Last name</th>
                             <th>First name</th>
-                            <th class="header">{{ chosen_subject['name'] }}</th>
-                            <th class="header">{{ chosen_assignment['type'] }}</th>
+                            <th>{{ chosen_subject['name'] }} - {{ chosen_assignment['type'] }}</th>
                         </thead>
                 
                         <tbody>
                             {% for student in students %}
                                 {% set grade_attributed = False %}
                                 <tr>
-                                    <th class="content">{{ student.last_name }}</th>
-                                    <th class="content">{{ student.first_name }}</th>
-                                    <th class="content">
+                                    <th>{{ student.last_name }}</th>
+                                    <th>{{ student.first_name }}</th>
+                                    <th>
                                         {% for grade in grades %}
                                             {% if grade.student_id == student.id and grade.subject_id == chosen_subject['id'] %}
-                                                <input type="text" class="grade" placeholder="{{ grade.grade }}" maxlength="2" name="{{ student.id }}|{{ chosen_subject.id }}">
+                                                <input type="text" placeholder="{{ grade.grade }}" maxlength="2" name="{{ student.id }}|{{ chosen_subject.id }}">
                                                 {% set grade_attributed = True %}
                                             {% endif %}
                                         {% endfor %}
@@ -81,7 +84,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <button type="submit">Save</button>
+                    <button type="submit" id="save-button">Save</button>
                 </form>
                 {% endif %}
             </div>
