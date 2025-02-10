@@ -13,7 +13,7 @@ from routes.admin_routes import admin_dashboard_blueprint
 from models import User  # Importation du modèle User
 
 def create_app():
-    app = CSRFProtect(Flask(__name__))
+    app = Flask(__name__)
 
     # Configuration de l'application
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/academis' # Changer root:mdp par son propre mdp
@@ -30,7 +30,10 @@ def create_app():
     app.register_blueprint(teacher_dashboard_blueprint)
     app.register_blueprint(student_dashboard_blueprint)
     app.register_blueprint(admin_dashboard_blueprint)
-
+    
+    # Protection CSRF
+    csrf = CSRFProtect(app)
+    
     return app
 
 login_manager = LoginManager()
