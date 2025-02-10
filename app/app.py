@@ -1,10 +1,8 @@
 from flask import Flask, redirect, url_for
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from models.hashing_machine import hash_user_passwords
 from models import db
-
-# Création de l'instance de LoginManager
-login_manager = LoginManager()
 
 # Importation des blueprints
 from routes.auth_routes import auth_blueprint
@@ -15,7 +13,7 @@ from routes.admin_routes import admin_dashboard_blueprint
 from models import User  # Importation du modèle User
 
 def create_app():
-    app = Flask(__name__)
+    app = CSRFProtect(Flask(__name__))
 
     # Configuration de l'application
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/academis' # Changer root:mdp par son propre mdp
@@ -34,6 +32,8 @@ def create_app():
     app.register_blueprint(admin_dashboard_blueprint)
 
     return app
+
+login_manager = LoginManager()
 
 app = create_app()
 

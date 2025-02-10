@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
+from flask_wtf.csrf import generate_csrf
 
 from models import User, Admin, Student, Teacher, Class, TeacherClass, TeacherSubject, Grade, Subject, db
 
@@ -10,18 +11,24 @@ admin_dashboard_blueprint = Blueprint('admin_dashboard', __name__)
 # ---- Routes principales ----
 
 # --- Gestion des Étudiants ---
-@admin_dashboard_blueprint.route('/admin_dashboard/student_modification', methods=['GET', 'POST'])
+@admin_dashboard_blueprint.route('/admin_dashboard/student_modification', methods=['GET'])
 @login_required
 def student_modification():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 
     context = get_common_context(Student, 'admin_templates/student_modification.html')
-
-    if request.method == 'POST':
-        return handle_post_request(request, context, create_student, modify_student, delete_student)
-
     return render_page(context)
+
+
+@admin_dashboard_blueprint.route('/admin_dashboard/student_modification', methods=['POST'])
+@login_required
+def student_modification():
+    if current_user.role != 'admin':
+        return redirect(url_for('auth.login'))
+
+    context = get_common_context(Student, 'admin_templates/student_modification.html')
+    return handle_post_request(request, context, create_student, modify_student, delete_student)
 
 def create_student(request, context):
     """Crée un étudiant."""
@@ -40,7 +47,7 @@ def create_student(request, context):
     student = Student(first_name=first_name, last_name=last_name, class_id=int(class_id), user_id=user.id)
     db.session.add(student)
     db.session.commit()
-    return redirect(url_for('admin_dashboard.student_modification'))
+    return redirect(url_for('admin_dashboard.student_modification'), csrf_token=generate_csrf())
 
 def modify_student(request, context):
     """Modifie un étudiant."""
@@ -59,21 +66,27 @@ def modify_student(request, context):
     user.password = generate_password_hash(request.form.get('password')) if request.form.get('password') else user.password
 
     db.session.commit()
-    return redirect(url_for('admin_dashboard.student_modification'))
+    return redirect(url_for('admin_dashboard.student_modification'), csrf_token=generate_csrf())
 
 # --- Gestion des Enseignants ---
-@admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['GET', 'POST'])
+@admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['GET'])
 @login_required
 def teacher_modification():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 
     context = get_common_context(Teacher, 'admin_templates/teacher_modification.html')
-
-    if request.method == 'POST':
-        return handle_post_request(request, context, create_teacher, modify_teacher, delete_teacher)
-
     return render_page(context)
+
+    
+@admin_dashboard_blueprint.route('/admin_dashboard/teacher_modification', methods=['POST'])
+@login_required
+def teacher_modification():
+    if current_user.role != 'admin':
+        return redirect(url_for('auth.login'))
+
+    context = get_common_context(Teacher, 'admin_templates/teacher_modification.html')
+    return handle_post_request(request, context, create_teacher, modify_teacher, delete_teacher)
 
 def create_teacher(request, context):
     """Crée un enseignant."""
@@ -112,7 +125,7 @@ def create_teacher(request, context):
             db.session.add(TeacherClass(teacher_id=teacher.id, class_id=int(class_id), subject_id=int(subject_id)))
     
     db.session.commit()
-    return redirect(url_for('admin_dashboard.teacher_modification'))
+    return redirect(url_for('admin_dashboard.teacher_modification'), csrf_token=generate_csrf())
 
 def modify_teacher(request, context):
     """Modifie un enseignant et met à jour ses matières et classes."""
@@ -148,21 +161,27 @@ def modify_teacher(request, context):
 
 
     db.session.commit()
-    return redirect(url_for('admin_dashboard.teacher_modification'))
+    return redirect(url_for('admin_dashboard.teacher_modification'), csrf_token=generate_csrf())
 
 # --- Gestion des Administrateurs ---
-@admin_dashboard_blueprint.route('/admin_dashboard/admin_modification', methods=['GET', 'POST'])
+@admin_dashboard_blueprint.route('/admin_dashboard/admin_modification', methods=['GET'])
 @login_required
 def admin_modification():
     if current_user.role != 'admin':
         return redirect(url_for('auth.login'))
 
     context = get_common_context(Admin, 'admin_templates/admin_modification.html')
-
-    if request.method == 'POST':
-        return handle_post_request(request, context, create_admin, modify_admin, delete_admin)
-
     return render_page(context)
+
+
+@admin_dashboard_blueprint.route('/admin_dashboard/admin_modification', methods=['POST'])
+@login_required
+def admin_modification():
+    if current_user.role != 'admin':
+        return redirect(url_for('auth.login'))
+
+    context = get_common_context(Admin, 'admin_templates/admin_modification.html')
+    return handle_post_request(request, context, create_admin, modify_admin, delete_admin)
 
 def create_admin(request, context):
     """Crée un administrateur."""
@@ -181,7 +200,7 @@ def create_admin(request, context):
     admin = Admin(first_name=first_name, last_name=last_name, user_id=user.id)
     db.session.add(admin)
     db.session.commit()
-    return redirect(url_for('admin_dashboard.admin_modification'))
+    return redirect(url_for('admin_dashboard.admin_modification'), csrf_token=generate_csrf())
 
 def modify_admin(request, context):
     """Modifie un administrateur."""
@@ -199,7 +218,7 @@ def modify_admin(request, context):
     user.password = generate_password_hash(request.form.get('password')) if request.form.get('password') else user.password
 
     db.session.commit()
-    return redirect(url_for('admin_dashboard.admin_modification'))
+    return redirect(url_for('admin_dashboard.admin_modification'), csrf_token=generate_csrf())
 
 
 
@@ -249,7 +268,7 @@ def get_common_context(model, template):
 
 def render_page(context):
     """Rend le template avec le contexte."""
-    return render_template(context['template'], **context)
+    return render_template(context['template'], **context, csrf_token=generate_csrf())
 
 def handle_post_request(request, context, create_func, modify_func, delete_func):
     """Gère les actions POST pour modification, création et suppression."""
@@ -273,7 +292,7 @@ def handle_post_request(request, context, create_func, modify_func, delete_func)
 def create_user(username, password, confirmed_password, role):
     """Crée un utilisateur en vérifiant les contraintes de validation."""
     if current_user.role != 'admin':
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('auth.login'), csrf_token=generate_csrf())
 
     if not all([username, password, confirmed_password, role]):
         return False, 'Veuillez remplir tous les champs.'

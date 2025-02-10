@@ -1,14 +1,15 @@
 import os
+import secrets
 from flask import Blueprint, render_template, redirect, url_for, send_file
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
+from flask_wtf.csrf import generate_csrf
 
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.styles import getSampleStyleSheet
-from random import choice
 from datetime import datetime
 
 from models import Grade, Class, Student, Subject, Assignment
@@ -50,7 +51,8 @@ def display_grades():
                 assignments_dict[assignment['type']] = '--'
     
 
-    return render_template('student_templates/student_grades.html', subjects=subjects, student_class=student_class, student=student, grades=grade_dict, assignments=assignments)
+    return render_template('student_templates/student_grades.html', subjects=subjects, student_class=student_class, 
+                           student=student, grades=grade_dict, assignments=assignments, csrf_token=generate_csrf())
 
 
 @student_dashboard_blueprint.route('/student_dashboard/genereate_report_card')
@@ -193,9 +195,9 @@ def generate_report_card():
     ]
 
     if overall_average == '--' or overall_average < 10:
-        head_teacher_comment = choice(negative_head_teacher_comments)
+        head_teacher_comment = secrets.choice(negative_head_teacher_comments)
     else:
-        head_teacher_comment = choice(positive_head_teacher_comments)
+        head_teacher_comment = secrets.choice(positive_head_teacher_comments)
 
     # Création d'une grande case pour le commentaire du professeur principal
     comment_box_data = [[head_teacher_comment]]
@@ -259,19 +261,19 @@ def generate_report_card():
 @student_dashboard_blueprint.route('/student_dashboard/messagerie')
 @login_required
 def display_messagerie():
-    return render_template('student_templates/messagerie.html')
+    return render_template('student_templates/messagerie.html', csrf_token=generate_csrf())
 
 
 @student_dashboard_blueprint.route('/student_dashboard/professeurs')
 @login_required
 def display_professeurs():
-    return render_template('student_templates/professeurs.html')
+    return render_template('student_templates/professeurs.html', csrf_token=generate_csrf())
 
 
 @student_dashboard_blueprint.route('/student_dashboard/parametres')
 @login_required
 def display_parametres():
-    return render_template('student_templates/parametres.html')
+    return render_template('student_templates/parametres.html', csrf_token=generate_csrf())
 
 
 # Fonction pour gérer l'absence de notes
