@@ -293,10 +293,10 @@ def display_teachers():
     return render_template('student_templates/student_teachers.html', csrf_token=generate_csrf(), subjects=subject_dict)
 
 
-@student_dashboard_blueprint.route('/student_dashboard/parameters')
+@student_dashboard_blueprint.route('/student_dashboard/settings')
 @login_required
-def display_parameters():
-    return render_template('student_templates/student_parameters.html', csrf_token=generate_csrf())
+def display_settings():
+    return render_template('student_templates/student_settings.html')
 
 
 # Fonction pour gérer l'absence de notes

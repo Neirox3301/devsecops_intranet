@@ -183,22 +183,22 @@ def update_grades():
 @teacher_dashboard_blueprint.route('/teacher_dashboard/bulletins')
 @login_required
 def display_bulletins():
-    return render_template('teacher_dashboard/teacher_bulletins.html', csrf_token=generate_csrf())
+    return render_template('teacher_templates/teacher_bulletins.html', csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/messagerie')
 @login_required
 def display_messagerie():
-    return render_template('teacher_dashboard/messagerie.html',csrf_token=generate_csrf())
+    return render_template('teacher_templates/messagerie.html',csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/eleves')
 @login_required
 def display_eleves():
-    return render_template('teacher_dashboard/eleves.html', csrf_token=generate_csrf())
+    return render_template('teacher_templates/eleves.html', csrf_token=generate_csrf())
 
 
-@teacher_dashboard_blueprint.route('/teacher_dashboard/parametres')
+@teacher_dashboard_blueprint.route('/teacher_dashboard/settings')
 @login_required
-def display_parametres():
-    return render_template('teacher_dashboard/parametres.html', csrf_token=generate_csrf())
+def display_settings():
+    return render_template('teacher_templates/teacher_settings.html')
