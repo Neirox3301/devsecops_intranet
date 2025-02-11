@@ -16,12 +16,21 @@ from models import Grade, Class, Student, Subject, Assignment, TeacherClass, Tea
 
 student_dashboard_blueprint = Blueprint('student_dashboard', __name__)
 
+
+# ----- Routes pour l'espace étudiant -----
+
 @student_dashboard_blueprint.route('/student_dashboard/grades')
 @login_required
 def display_grades():
+    """Affiche les notes de l'étudiant"""
+    
+    # Vérifier si l'utilisateur est conecté et est un étudiant
+    if current_user.role != 'student':
+        return redirect(url_for('auth.login', csrf_token=generate_csrf()))
+    
     student = Student.query.filter_by(user_id=current_user.id).first()
-    if not student:
-        return redirect(url_for('student_dashboard.no_grades'))
+    # if not student:
+    #     return redirect(url_for('student_dashboard.no_grades'))
 
     student_grades = Grade.query.options(joinedload(Grade.subject)).filter_by(student_id=student.id).all()
     student_class = Class.query.filter_by(id=student.class_id).first()
@@ -58,12 +67,13 @@ def display_grades():
 @student_dashboard_blueprint.route('/student_dashboard/genereate_report_card')
 @login_required
 def generate_report_card():
-    # Création d'un buffer mémoire pour le PDF
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=60, bottomMargin=40)
-    styles = getSampleStyleSheet()
-    story = []
+    """Génère un bulletin de notes pour l'étudiant"""
     
+    # Vérifier si l'utilisateur est conecté et est un étudiant
+    if current_user.role != 'student':
+        return redirect(url_for('auth.login', csrf_token=generate_csrf()))
+    
+
     # Récupération des données de l'élève
     student = Student.query.filter_by(user_id=current_user.id).first()
     grades = Grade.query.filter_by(student_id=student.id).all()
@@ -84,6 +94,85 @@ def generate_report_card():
         else:
             student_averages[subject.id] = round(sum([grade.grade for grade in grades if grade.subject_id == subject.id]) / grade_number, 1)
 
+    report_card = generate_report_card_function(student, subjects, assignments, student_grades_dict, student_averages)
+    
+    return report_card
+
+
+@student_dashboard_blueprint.route('/student_dashboard/calendar')
+@login_required
+def display_calendar():
+    """Affiche le calendrier de l'étudiant"""
+    
+    # Vérifier si l'utilisateur est conecté et est un étudiant
+    if current_user.role != 'student':
+        return redirect(url_for('auth.login', csrf_token=generate_csrf()))
+    
+    return render_template('student_templates/student_calendar.html', csrf_token=generate_csrf())
+
+
+@student_dashboard_blueprint.route('/student_dashboard/teachers')
+@login_required
+def display_teachers():
+    """Affiche les enseignants de l'étudiant pour chaque matière"""
+    
+    # Vérifier si l'utilisateur est conecté et est un étudiant
+    if current_user.role != 'student':
+        return redirect(url_for('auth.login', csrf_token=generate_csrf()))
+    
+    class_ = Class.query.filter_by(id=current_user.student.class_id).first()
+    subjects = Subject.query.all()
+    teacherClasses = TeacherClass.query.filter_by(class_id=class_.id).all()
+    teachers = Teacher.query.all()
+
+    subject_dict = []
+    for sub in subjects:
+        teacher_found = False
+        for tc in teacherClasses:
+            if tc.subject_id == sub.id and tc.class_id == class_.id:
+                for teacher in teachers:
+                    if teacher.id == tc.teacher_id:
+                        subject_dict.append({'name': sub.name, 'teacher': f"{teacher.first_name} {teacher.last_name}"})
+                        teacher_found = True
+                        break
+            if teacher_found:
+                break
+        if not teacher_found:
+            subject_dict.append({'name': sub.name, 'teacher': '--'})
+
+    return render_template('student_templates/student_teachers.html', csrf_token=generate_csrf(), subjects=subject_dict)
+
+
+@student_dashboard_blueprint.route('/student_dashboard/settings')
+@login_required
+def display_settings():
+    """Affiche les paramètres de l'étudiant"""
+    
+    # Vérifier si l'utilisateur est conecté et est un étudiant
+    if current_user.role != 'student':
+        return redirect(url_for('auth.login', csrf_token=generate_csrf()))
+    
+    return render_template('student_templates/student_settings.html')
+
+
+# Fonction pour gérer l'absence de notes
+# @student_dashboard_blueprint.route('/student_dashboard/no_grades')
+# @login_required
+# def no_grades():
+#     return render_template('student_templates/no_grades.html', message="Aucune note disponible pour le moment.")
+
+
+
+# ----- Fonctions utilitaires -----
+
+def generate_report_card_function(student: Student, subjects: list, assignments: list, student_grades_dict: dict, student_averages: dict):
+    """Génère un bulletin de notes pour un étudiant"""
+    
+    # Création d'un buffer mémoire pour le PDF
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=60, bottomMargin=40)
+    styles = getSampleStyleSheet()
+    story = []
     
     # Titre général du bulletin
     title = Paragraph(f"Bulletin de {student.last_name} {student.first_name}", styles["Title"])
@@ -255,55 +344,4 @@ def generate_report_card():
     doc.build(story)
     buffer.seek(0)
     return send_file(buffer, as_attachment=True, download_name="bulletin.pdf", mimetype='application/pdf')
-
-
-
-@student_dashboard_blueprint.route('/student_dashboard/calendar')
-@login_required
-def display_calendar():
-    return render_template('student_templates/student_calendar.html', csrf_token=generate_csrf())
-
-
-@student_dashboard_blueprint.route('/student_dashboard/teachers')
-@login_required
-def display_teachers():
-    if current_user.role != 'student':
-        return redirect(url_for('auth.login'))
     
-    class_ = Class.query.filter_by(id=current_user.student.class_id).first()
-    subjects = Subject.query.all()
-    teacherClasses = TeacherClass.query.filter_by(class_id=class_.id).all()
-    teachers = Teacher.query.all()
-
-    subject_dict = []
-    for sub in subjects:
-        teacher_found = False
-        for tc in teacherClasses:
-            if tc.subject_id == sub.id and tc.class_id == class_.id:
-                for teacher in teachers:
-                    if teacher.id == tc.teacher_id:
-                        subject_dict.append({'name': sub.name, 'teacher': f"{teacher.first_name} {teacher.last_name}"})
-                        teacher_found = True
-                        break
-            if teacher_found:
-                break
-        if not teacher_found:
-            subject_dict.append({'name': sub.name, 'teacher': '--'})
-
-    return render_template('student_templates/student_teachers.html', csrf_token=generate_csrf(), subjects=subject_dict)
-
-
-@student_dashboard_blueprint.route('/student_dashboard/settings')
-@login_required
-def display_settings():
-    return render_template('student_templates/student_settings.html')
-
-
-# Fonction pour gérer l'absence de notes
-@student_dashboard_blueprint.route('/student_dashboard/no_grades')
-@login_required
-def no_grades():
-    return render_template('student_templates/no_grades.html', message="Aucune note disponible pour le moment.")
-
-
-

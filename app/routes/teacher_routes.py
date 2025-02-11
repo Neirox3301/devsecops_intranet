@@ -7,9 +7,17 @@ from models import Teacher, TeacherClass, Class, Student, Subject, Grade, Assign
 teacher_dashboard_blueprint = Blueprint('teacher_dashboard', __name__)
 
 
+# ----- Routes pour l'espace enseignant ----- 
+
 @teacher_dashboard_blueprint.route('/teacher_dashboard/grades', methods=['GET'])
 @login_required
 def grades():
+    """Affiche les notes des élèves"""
+    
+    # Vérifier si l'utilisateur est connecté et est un enseignant
+    if current_user.role != 'teacher':
+        return redirect(url_for('home', csrf_token=generate_csrf()))
+    
     teacher = Teacher.query.filter_by(user_id=current_user.id).first()
     teacherClasses = TeacherClass.query.filter_by(teacher_id=current_user.id).all()
 
@@ -23,16 +31,16 @@ def grades():
     classes = tuple(set([Class.query.filter_by(id=id).first() for id in classes_id]))
     classes_dict = sorted([{'id': class_.id, 'name': class_.class_name} for class_ in classes], key=lambda x: x['name'])
 
-    # Subjects
+    # Matières
     subjects_id = tuple(set([tc.subject_id for tc in teacherClasses]))
     subjects = tuple(set([Subject.query.filter_by(id=id).first() for id in subjects_id]))
     subjects_dict = sorted([{'id': subject.id, 'name': subject.name} for subject in subjects], key=lambda x: x['name'])
     
-    # Assignments
+    # Types de devoirs
     assignments = Assignment.query.all()
     assignments_dict = sorted([{'id': assignment.id, 'type': assignment.type} for assignment in assignments], key=lambda x: x['id'])
     
-    # Initialize variables
+    # Initialiser les variables
     display_table = False
     students = []
     grades = []
@@ -49,31 +57,36 @@ def grades():
 @teacher_dashboard_blueprint.route('/teacher_dashboard/grades', methods=['POST'])
 @login_required
 def grades_form():
+    """Affiche les notes des élèves en fonction des filtres"""
+    
+    # Vérifier si l'utilisateur est connecté et est un enseignant
+    if current_user.role != 'teacher':
+        return redirect(url_for('home', csrf_token=generate_csrf()))
+    
+    # Récupérer la table de liaison entre les classes et les matières
     teacher = Teacher.query.filter_by(user_id=current_user.id).first()
     teacherClasses = TeacherClass.query.filter_by(teacher_id=current_user.id).all()
 
-    
     if not teacherClasses:
-        # Put an error here
+        # Put an error here TODO
         return redirect(url_for('teacher_dashboard.'))
     
-    # Classes
+    # Récupérer les classes
     classes_id: tuple[int] = tuple(set([tc.class_id for tc in teacherClasses]))
     classes_id = (1, 2, 3)
     classes = tuple(set([Class.query.filter_by(id=id).first() for id in classes_id]))
     classes_dict = sorted([{'id': class_.id, 'name': class_.class_name} for class_ in classes], key=lambda x: x['name'])
 
-    # Subjects
+    # Récupérer les matières
     subjects_id = tuple(set([tc.subject_id for tc in teacherClasses]))
     subjects = tuple(set([Subject.query.filter_by(id=id).first() for id in subjects_id]))
     subjects_dict = sorted([{'id': subject.id, 'name': subject.name} for subject in subjects], key=lambda x: x['name'])
     
-    # Assignments
+    # Récupérer les types de devoirs
     assignments = Assignment.query.all()
     assignments_dict = sorted([{'id': assignment.id, 'type': assignment.type} for assignment in assignments], key=lambda x: x['id'])
     
-    
-    # Initialize variables
+    # Initialiser les variables
     display_table = False
     students = []
     grades = []
@@ -81,12 +94,12 @@ def grades_form():
     chosen_subject = None
     chosen_assignment = None
 
-    
+    # Récupérer les valeurs du formulaire
     requested_class = request.form.get('class')
     requested_subject = request.form.get('subject')
     requested_assignment = request.form.get('assignment')
     
-    # If the "filter" form is submitted
+    # Si le formulaire "filtres" a été soumis
     if requested_class and requested_subject and requested_assignment:
         for class_dict in classes_dict:
             if class_dict['id'] == int(requested_class):
@@ -105,10 +118,10 @@ def grades_form():
             
         display_table = True
 
-        # Students
+        # Récupérer les étudiants
         students.extend(Student.query.filter_by(class_id=chosen_class['id']).all())
 
-        # Grades
+        # Récupérer les notes
         grades_list = []
         for student in students:
             grades_list.extend(Grade.query.filter_by(student_id=student.id).all())
@@ -119,7 +132,7 @@ def grades_form():
                             'assignment_type_id': grade.assignment_type_id
                             })
 
-        # Add missing grades
+        # Rajouter les notes manquantes
         for student in students:
             grade_found = False
             for grade in grades:
@@ -129,7 +142,7 @@ def grades_form():
             if not grade_found:
                 grades.append({'grade': '--', 'student_id': student.id, 'subject_id': chosen_subject['id'], 'assignment_type_id': chosen_assignment['id']})
                 
-        # Filter with the assignment
+        # Trier les notes selon les types de devoirs
         grades = [grade for grade in grades if grade['assignment_type_id'] == chosen_assignment['id']]
 
     return render_template('teacher_templates/teacher_grades.html', teacher=teacher, display_table=display_table, subjects=subjects_dict, 
@@ -141,7 +154,13 @@ def grades_form():
 @teacher_dashboard_blueprint.route('/teacher_dashboard/update_grades', methods=['POST'])
 @login_required
 def update_grades():
-    # Récupérer les grades envoyés par le formulaire
+    """Mets à jour les notes des élèves"""
+    
+    # Vérifier si l'utilisateur est connecté et est un enseignant
+    if current_user.role != 'teacher':
+        return redirect(url_for('home', csrf_token=generate_csrf()))
+    
+    # Récupérer les notes envoyés par le formulaire
     grades = request.form
 
     to_add = []  
@@ -152,7 +171,7 @@ def update_grades():
         if grade_value == '':
             continue
         
-        # grade_key aura la forme "student_id|subject_id"
+        # grade_key a la forme "student_id|subject_id"
         student_id, subject_id = map(int, grade_key.split('|'))  # Séparer et convertir en int
         
         # Vérifier si une note existe déjà pour cet étudiant et cette matière
@@ -167,38 +186,54 @@ def update_grades():
             new_grade = Grade(student_id=student_id, subject_id=subject_id, grade=grade_value)
             to_add.append(new_grade)
 
-    # Utiliser bulk_save_objects pour insérer de manière performante les nouvelles notes
     if to_add:
         db.session.bulk_save_objects(to_add)
     
-    # Utiliser bulk_update_mappings pour mettre à jour les notes existantes
     if to_update:
         db.session.bulk_update_mappings(Grade, [{'grade': grade.grade, 'student_id': grade.student_id, 'subject_id': grade.subject_id} for grade in to_update])
 
-    # Commit les modifications dans la base de données
     db.session.commit()
-
+    
     return grades()
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/bulletins')
 @login_required
 def display_bulletins():
+    """""" # TODO
+    
+    # Vérifier si l'utilisateur est connecté et est un enseignant
+    if current_user.role != 'teacher':
+        return redirect(url_for('home', csrf_token=generate_csrf()))
+    
     return render_template('teacher_templates/teacher_bulletins.html', csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/calendar')
 @login_required
 def display_calendar():
+    """Affiche le calendrier de l'enseignant"""
+    
+    # Vérifier si l'utilisateur est connecté et est un enseignant
+    if current_user.role != 'teacher':
+        return redirect(url_for('home', csrf_token=generate_csrf()))
+    
     return render_template('teacher_templates/teacher_calendar.html',csrf_token=generate_csrf())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/students')
 @login_required
 def display_students():
+    """Affiche les élèves de l'enseignant et leur classe"""
     
+    # Vérifier si l'utilisateur est connecté et est un enseignant
+    if current_user.role != 'teacher':
+        return redirect(url_for('home', csrf_token=generate_csrf()))
+    
+    # Récupérer les classes de l'enseignant
     teacherclasses = TeacherClass.query.filter_by(teacher_id=current_user.id).all()
     classes = [Class.query.filter_by(id=tc.class_id).first() for tc in teacherclasses]
     
+    # Récupérer les élèves de chaque classe
     students = []
     for class_ in classes:
         students.extend(Student.query.filter_by(class_id=class_.id).all())
@@ -211,4 +246,10 @@ def display_students():
 @teacher_dashboard_blueprint.route('/teacher_dashboard/settings')
 @login_required
 def display_settings():
+    """Affiche les paramètres de l'enseignant"""
+    
+    # Vérifier si l'utilisateur est connecté et est un enseignant
+    if current_user.role != 'teacher':
+        return redirect(url_for('home', csrf_token=generate_csrf()))
+    
     return render_template('teacher_templates/teacher_settings.html')
