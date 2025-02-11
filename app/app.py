@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from flask import Flask, redirect, url_for
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
-from models.hashing_machine import hash_user_passwords
+from models.hash_passwords import hash_user_passwords
 from cryptography.fernet import Fernet
 
 # Importation des blueprints
@@ -36,6 +36,7 @@ def load_secret_key():
         print(f"Erreur lors du chargement de la clé secrète : {e}")
         return None
 
+
 def create_app():
     """Crée une instance de l'application Flask."""
     app = Flask(__name__)
@@ -64,11 +65,36 @@ def create_app():
     
     # Protection CSRF
     csrf = CSRFProtect(app)
-    
+
+    # Sécurisation des en-têtes HTTP
+    @app.after_request
+    def set_security_headers(response):
+        """Ajoute des en-têtes de sécurité pour protéger contre XSS, Clickjacking et autres attaques."""
+        
+        # Protection XSS avec Content Security Policy (CSP)
+        response.headers['Content-Security-Policy'] = (
+            "default-src 'self'; "
+            "script-src 'self' https://trusted-cdn.com; "
+            "style-src 'self' https://trusted-cdn.com; "
+            "img-src 'self' data:; "
+            "frame-ancestors 'none';"  # Protection contre Clickjacking aussi
+        )
+
+        # Protection Clickjacking
+        response.headers['X-Frame-Options'] = 'DENY'
+
+        # Protection XSS avec X-XSS-Protection (utile pour vieux navigateurs)
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+
+        # Protection contre sniffing MIME type
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+
+        return response
+
     return app
 
-login_manager = LoginManager()
 
+login_manager = LoginManager()
 app = create_app()
 
 # Hashage des mots de passe
@@ -80,9 +106,11 @@ with app.app_context():
 def load_user(user_id):
     return User.query.get(int(user_id))  # Charge l'utilisateur depuis la base de données
 
+
 @app.route('/')
 def home():
     return redirect(url_for('auth.login'))  # Redirige vers la page de login
+
 
 if __name__ == '__main__':
     app.run(debug=True)

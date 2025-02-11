@@ -158,7 +158,7 @@ def update_grades():
     
     # Vérifier si l'utilisateur est connecté et est un enseignant
     if current_user.role != 'teacher':
-        return redirect(url_for('home', csrf_token=generate_csrf()))
+        return redirect(url_for('auth.login', csrf_token=generate_csrf()))
     
     # Récupérer les notes envoyés par le formulaire
     grades = request.form
