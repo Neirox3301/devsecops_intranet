@@ -247,11 +247,13 @@ def display_students():
     classes = [Class.query.filter_by(id=tc.class_id).first() for tc in teacherclasses]
     
     # Récupérer les élèves de chaque classe
-    students = []
+    students = set()
     for class_ in classes:
-        students.extend(Student.query.filter_by(class_id=class_.id).all())
+        students.update(Student.query.filter_by(class_id=class_.id).all())
+    students = list(students)
         
     student_dict = [{'id': student.id, 'name': f'{student.last_name} {student.first_name}', 'class_name': Class.query.filter_by(id=student.class_id).first().class_name} for student in students]
+    print(student_dict)
     
     return render_template('teacher_templates/teacher_students.html', students=student_dict)
 
