@@ -195,102 +195,123 @@
         }
 
         // ADMIN
-        // DISPLPAYER
-        .display-people {
-            width: 50%;
-            
-            select {
-                background-color: $opaque-background;
-                border-radius: calc($corner-radius-opaque-background / 2);
-                font-size: 1rem;
-                width: 100%;
+        // DISPLPAYER & MODIFYER
+        .top-div-modifyer, .bottom-div-modifyer {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            .display-people {
+                width: 50%;
+                
+                select {
+                    background-color: $opaque-background;
+                    border-radius: calc($corner-radius-opaque-background / 2);
+                    font-size: 1rem;
+                    width: 100%;
+                }
+
+                div {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 10px;
+                    width: 100%;
+
+                    button {
+                        background: $button-gradient;
+                        border: none;
+                        border-radius: calc($corner-radius-opaque-background / 2);
+                        color: $color-text-1;
+                        cursor: pointer;
+                        font-size: 1.25rem;
+                        padding: 5px 15px;
+                        transition: transform 0.1s ease-in;
+
+                        &:hover {
+                            transform: scale(1.05);
+                        }
+                    }
+                }
             }
 
-            div {
-                display: flex;
-                justify-content: space-between;
-                padding: 10px;
-                width: 100%;
+            .modify-people {
+                position: relative;
+                width: 35%;
 
-                button {
-                    background: $button-gradient;
-                    border: none;
-                    border-radius: calc($corner-radius-opaque-background / 2);
-                    color: $color-text-1;
-                    cursor: pointer;
-                    font-size: 1.25rem;
-                    padding: 5px 15px;
-                    transition: transform 0.1s ease-in;
+                div {
+                    font-size: 1rem;
+                    margin: 5px 0;
+                    position: relative;
 
-                    &:hover {
-                        transform: scale(1.05);
+                    input {
+                        background-color: $opaque-background;
+                        border-radius: calc($corner-radius-opaque-background / 2);
+                        font-size: 1rem;
+                        position: absolute;
+                        right: 0;
+                    }
+
+                    select {
+                        background-color: $opaque-background;
+                        border-radius: calc($corner-radius-opaque-background / 2);
+                        padding: 0 10px;
+                    }
+                }
+
+                table {
+                    margin: 20px 0;
+                    width: 100%;
+
+                    thead {
+                        font-size: 1rem;
+                        
+                        th {
+                            padding: 0;
+                        }
+                    }
+
+                    tbody {
+                        font-size: 1rem;
+                    }
+                }
+
+                .buttons-validate {
+                    display: flex;
+                    justify-content: space-around;
+                    margin-top: 20px;
+                    position: absolute;
+                    right: 0;
+                    width: 50%;
+
+                    button {
+                        background: $button-gradient;
+                        border: none;
+                        border-radius: calc($corner-radius-opaque-background / 2);
+                        color: $color-text-1;
+                        cursor: pointer;
+                        font-size: 1rem;
+                        padding: 2px 5px;
+                        transition: transform 0.1s ease-in;
+
+                        &:hover {
+                            transform: scale(1.05);
+                        }
                     }
                 }
             }
         }
 
-        .modify-people {
-            position: relative;
-            width: 35%;
-
-            div {
-                font-size: 1rem;
-                margin: 5px 0;
-                position: relative;
-
-                input {
-                    background-color: $opaque-background;
-                    border-radius: calc($corner-radius-opaque-background / 2);
-                    font-size: 1rem;
-                    position: absolute;
-                    right: 0;
-                }
-
-                select {
-                    background-color: $opaque-background;
-                    border-radius: calc($corner-radius-opaque-background / 2);
-                    padding: 0 10px;
-                }
-            }
-
-            table {
-                margin: 20px 0;
+        .bottom-div-modifyer {
+            .modify-people {
                 width: 100%;
 
-                thead {
-                    font-size: 1rem;
-                    
-                    th {
-                        padding: 0;
-                    }
+                table {
+                    margin-top: 50px;
                 }
 
-                tbody {
-                    font-size: 1rem;
-                }
-            }
-
-            .buttons-validate {
-                display: flex;
-                justify-content: space-around;
-                margin-top: 20px;
-                position: absolute;
-                right: 0;
-                width: 50%;
-
-                button {
-                    background: $button-gradient;
-                    border: none;
-                    border-radius: calc($corner-radius-opaque-background / 2);
-                    color: $color-text-1;
-                    cursor: pointer;
-                    font-size: 1rem;
-                    padding: 2px 5px;
-                    transition: transform 0.1s ease-in;
-
-                    &:hover {
-                        transform: scale(1.05);
-                    }
+                .buttons-validate {
+                    padding-bottom: 50px;
+                    width: 20%;
                 }
             }
         }
@@ -308,8 +329,6 @@
     }
 
     .editer-admin {
-        display: flex;
-        justify-content: space-around;
-        padding: 50px 25px;
+        padding: 50px;
     }
 }
