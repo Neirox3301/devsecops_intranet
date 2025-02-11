@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 from models.hash_passwords import hash_user_passwords
 from cryptography.fernet import Fernet
+from models.generate_key import generate_flask_secret_key
 
 # Importation des blueprints
 from routes.auth_routes import auth_blueprint
@@ -17,7 +18,7 @@ from models import User, db
 
 
 def load_secret_key():
-    """Charge et déchiffre la clé secrète Flask avec Fernet."""
+    """Charge et déchiffre la clé secrète Flask avec Fernet. Si la clé n'existe pas, elle est générée."""
     try:
         # Charger la clé de chiffrement
         with open(".venv/.flask_secret_key", "rb") as key_file:
@@ -34,7 +35,28 @@ def load_secret_key():
 
     except Exception as e:
         print(f"Erreur lors du chargement de la clé secrète : {e}")
-        return None
+        print("Génération d'une nouvelle clé secrète...")
+
+        # Générer une nouvelle clé secrète
+        generate_flask_secret_key()
+
+        try:
+            # Réessayer de charger la clé de chiffrement
+            with open(".venv/.flask_secret_key", "rb") as key_file:
+                encryption_key = key_file.read()
+
+            cipher = Fernet(encryption_key)
+
+            # Réessayer de charger et déchiffrer la clé secrète Flask
+            with open(".venv/flask_secret.enc", "rb") as secret_file:
+                encrypted_secret = secret_file.read()
+
+            decrypted_secret = cipher.decrypt(encrypted_secret)
+            return decrypted_secret.decode()
+
+        except Exception as e:
+            print(f"Erreur lors de la génération et du chargement de la nouvelle clé secrète : {e}")
+            return None
 
 
 def create_app():
