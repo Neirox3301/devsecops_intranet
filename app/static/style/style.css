@@ -317,6 +317,8 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin: auto;
+  width: 80%;
 }
 .body-login .container form h1 {
   font-size: 2rem;
