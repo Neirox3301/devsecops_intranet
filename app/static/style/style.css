@@ -149,22 +149,27 @@
 .dashboard .menu .prof-notes-table #save-button {
   margin-top: 20px;
 }
-.dashboard .menu .display-people {
+.dashboard .menu .top-div-modifyer, .dashboard .menu .bottom-div-modifyer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.dashboard .menu .top-div-modifyer .display-people, .dashboard .menu .bottom-div-modifyer .display-people {
   width: 50%;
 }
-.dashboard .menu .display-people select {
+.dashboard .menu .top-div-modifyer .display-people select, .dashboard .menu .bottom-div-modifyer .display-people select {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 7.5px;
   font-size: 1rem;
   width: 100%;
 }
-.dashboard .menu .display-people div {
+.dashboard .menu .top-div-modifyer .display-people div, .dashboard .menu .bottom-div-modifyer .display-people div {
   display: flex;
   justify-content: space-between;
   padding: 10px;
   width: 100%;
 }
-.dashboard .menu .display-people div button {
+.dashboard .menu .top-div-modifyer .display-people div button, .dashboard .menu .bottom-div-modifyer .display-people div button {
   background: linear-gradient(90deg, orange, red);
   border: none;
   border-radius: 7.5px;
@@ -174,44 +179,44 @@
   padding: 5px 15px;
   transition: transform 0.1s ease-in;
 }
-.dashboard .menu .display-people div button:hover {
+.dashboard .menu .top-div-modifyer .display-people div button:hover, .dashboard .menu .bottom-div-modifyer .display-people div button:hover {
   transform: scale(1.05);
 }
-.dashboard .menu .modify-people {
+.dashboard .menu .top-div-modifyer .modify-people, .dashboard .menu .bottom-div-modifyer .modify-people {
   position: relative;
   width: 35%;
 }
-.dashboard .menu .modify-people div {
+.dashboard .menu .top-div-modifyer .modify-people div, .dashboard .menu .bottom-div-modifyer .modify-people div {
   font-size: 1rem;
   margin: 5px 0;
   position: relative;
 }
-.dashboard .menu .modify-people div input {
+.dashboard .menu .top-div-modifyer .modify-people div input, .dashboard .menu .bottom-div-modifyer .modify-people div input {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 7.5px;
   font-size: 1rem;
   position: absolute;
   right: 0;
 }
-.dashboard .menu .modify-people div select {
+.dashboard .menu .top-div-modifyer .modify-people div select, .dashboard .menu .bottom-div-modifyer .modify-people div select {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 7.5px;
   padding: 0 10px;
 }
-.dashboard .menu .modify-people table {
+.dashboard .menu .top-div-modifyer .modify-people table, .dashboard .menu .bottom-div-modifyer .modify-people table {
   margin: 20px 0;
   width: 100%;
 }
-.dashboard .menu .modify-people table thead {
+.dashboard .menu .top-div-modifyer .modify-people table thead, .dashboard .menu .bottom-div-modifyer .modify-people table thead {
   font-size: 1rem;
 }
-.dashboard .menu .modify-people table thead th {
+.dashboard .menu .top-div-modifyer .modify-people table thead th, .dashboard .menu .bottom-div-modifyer .modify-people table thead th {
   padding: 0;
 }
-.dashboard .menu .modify-people table tbody {
+.dashboard .menu .top-div-modifyer .modify-people table tbody, .dashboard .menu .bottom-div-modifyer .modify-people table tbody {
   font-size: 1rem;
 }
-.dashboard .menu .modify-people .buttons-validate {
+.dashboard .menu .top-div-modifyer .modify-people .buttons-validate, .dashboard .menu .bottom-div-modifyer .modify-people .buttons-validate {
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
@@ -219,7 +224,7 @@
   right: 0;
   width: 50%;
 }
-.dashboard .menu .modify-people .buttons-validate button {
+.dashboard .menu .top-div-modifyer .modify-people .buttons-validate button, .dashboard .menu .bottom-div-modifyer .modify-people .buttons-validate button {
   background: linear-gradient(90deg, orange, red);
   border: none;
   border-radius: 7.5px;
@@ -229,8 +234,18 @@
   padding: 2px 5px;
   transition: transform 0.1s ease-in;
 }
-.dashboard .menu .modify-people .buttons-validate button:hover {
+.dashboard .menu .top-div-modifyer .modify-people .buttons-validate button:hover, .dashboard .menu .bottom-div-modifyer .modify-people .buttons-validate button:hover {
   transform: scale(1.05);
+}
+.dashboard .menu .bottom-div-modifyer .modify-people {
+  width: 100%;
+}
+.dashboard .menu .bottom-div-modifyer .modify-people table {
+  margin-top: 50px;
+}
+.dashboard .menu .bottom-div-modifyer .modify-people .buttons-validate {
+  padding-bottom: 50px;
+  width: 20%;
 }
 .dashboard .menu-admin {
   width: 50%;
@@ -239,9 +254,7 @@
   width: 40%;
 }
 .dashboard .editer-admin {
-  display: flex;
-  justify-content: space-around;
-  padding: 50px 25px;
+  padding: 50px;
 }
 
 *, ::before, ::after {
