@@ -125,7 +125,7 @@ def create_teacher(request, context):
             db.session.add(TeacherClass(teacher_id=teacher.id, class_id=int(class_id), subject_id=int(subject_id)))
     
     db.session.commit()
-    return redirect(url_for('admin_dashboard.teacher_modification'), csrf_token=generate_csrf())
+    return redirect(url_for('admin_dashboard.teacher_modification', csrf_token=generate_csrf()))
 
 def modify_teacher(request, context):
     """Modifie un enseignant et met à jour ses matières et classes."""
@@ -161,7 +161,7 @@ def modify_teacher(request, context):
 
 
     db.session.commit()
-    return redirect(url_for('admin_dashboard.teacher_modification'), csrf_token=generate_csrf())
+    return redirect(url_for('admin_dashboard.teacher_modification', csrf_token=generate_csrf()))
 
 # --- Gestion des Administrateurs ---
 @admin_dashboard_blueprint.route('/admin_dashboard/admin_modification', methods=['GET'])
@@ -218,7 +218,7 @@ def modify_admin(request, context):
     user.password = generate_password_hash(request.form.get('password')) if request.form.get('password') else user.password
 
     db.session.commit()
-    return redirect(url_for('admin_dashboard.admin_modification'), csrf_token=generate_csrf())
+    return redirect(url_for('admin_dashboard.admin_modification', csrf_token=generate_csrf()))
 
 
 
