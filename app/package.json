@@ -5,8 +5,7 @@
   "scripts": {
     "sass": "sass --watch static/scss/style.scss:static/style/style.css",
     "flask": "flask run",
-    "dev": "concurrently \"npm run sass\" \"flask run\"",
-    "start": "gunicorn -w 4 -b 0.0.0.0:8000 app:app"
+    "dev": "concurrently \"npm run sass\" \"npm run flask\""
   },
   "keywords": [],
   "author": "",
@@ -14,7 +13,6 @@
   "description": "",
   "devDependencies": {
     "concurrently": "^9.1.2",
-    "sass": "^1.83.4",
-    "node-sass": "^8.0.0"
+    "sass": "^1.83.4"
   }
 }
