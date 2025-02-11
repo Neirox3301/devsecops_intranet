@@ -4,6 +4,7 @@ from models import db, User
 
 def hash_user_passwords():
     # Récupérer tous les utilisateurs
+    print("[*] Hachage des mots de passe des utilisateurs...")
     users = User.query.all()
 
     for user in users:
@@ -14,4 +15,4 @@ def hash_user_passwords():
             user.password = hashed_password  # Mettre à jour le mot de passe haché
             db.session.commit()
 
-    print("Tous les mots de passe ont été hachés.")
+    print("[+] Tous les mots de passe ont été hachés.")

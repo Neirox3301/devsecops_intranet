@@ -20,42 +20,50 @@ from models import User, db
 def load_secret_key():
     """Charge et déchiffre la clé secrète Flask avec Fernet. Si la clé n'existe pas, elle est générée."""
     try:
+        print("[*] Chargement de la clé de chiffrement...")
         # Charger la clé de chiffrement
         with open(".venv/.flask_secret_key", "rb") as key_file:
             encryption_key = key_file.read()
 
         cipher = Fernet(encryption_key)
+        print("[+] Clé de chiffrement chargée avec succès.")
 
+        print("[*] Chargement et déchiffrement de la clé secrète Flask...")
         # Charger et déchiffrer la clé secrète Flask
         with open(".venv/flask_secret.enc", "rb") as secret_file:
             encrypted_secret = secret_file.read()
 
         decrypted_secret = cipher.decrypt(encrypted_secret)
+        print("[+] Clé secrète Flask déchiffrée avec succès.")
         return decrypted_secret.decode()
 
     except Exception as e:
-        print(f"Erreur lors du chargement de la clé secrète : {e}")
-        print("Génération d'une nouvelle clé secrète...")
+        print(f"[!] Erreur lors du chargement de la clé secrète : {e}")
+        print("[*] Génération d'une nouvelle clé secrète...")
 
         # Générer une nouvelle clé secrète
         generate_flask_secret_key()
 
         try:
+            print("[*] Réessayer de charger la clé de chiffrement...")
             # Réessayer de charger la clé de chiffrement
             with open(".venv/.flask_secret_key", "rb") as key_file:
                 encryption_key = key_file.read()
 
             cipher = Fernet(encryption_key)
+            print("[+] Clé de chiffrement chargée avec succès.")
 
+            print("[*] Réessayer de charger et déchiffrer la clé secrète Flask...")
             # Réessayer de charger et déchiffrer la clé secrète Flask
             with open(".venv/flask_secret.enc", "rb") as secret_file:
                 encrypted_secret = secret_file.read()
 
             decrypted_secret = cipher.decrypt(encrypted_secret)
+            print("[+] Nouvelle clé secrète Flask déchiffrée avec succès.")
             return decrypted_secret.decode()
 
         except Exception as e:
-            print(f"Erreur lors de la génération et du chargement de la nouvelle clé secrète : {e}")
+            print(f"[!] Erreur lors de la génération et du chargement de la nouvelle clé secrète : {e}")
             return None
 
 
@@ -72,7 +80,7 @@ def create_app():
     if secret_key:
         app.secret_key = secret_key
     else:
-        raise ValueError("Impossible d'utiliser la clé secrète Flask.")
+        raise ValueError("[!] Impossible d'utiliser la clé secrète Flask.")
 
     # Initialisation des extensions avec l'application
     db.init_app(app)  # Initialisation de SQLAlchemy

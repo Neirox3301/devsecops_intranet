@@ -1,6 +1,11 @@
+import os
+from dotenv import load_dotenv
 from cryptography.fernet import Fernet
 
 def generate_flask_secret_key(url=''):
+    """Génère une clé de chiffrement et chiffre la clé secrète Flask."""
+    
+    print("[*] Génération d'une nouvelle clé de chiffrement...")
     # Générer une clé de chiffrement
     encryption_key = Fernet.generate_key()
 
@@ -8,7 +13,7 @@ def generate_flask_secret_key(url=''):
     with open(url + ".venv/.flask_secret_key", "wb") as key_file:
         key_file.write(encryption_key)
 
-    print("Clé de chiffrement générée et sauvegardée dans .flask_secret_key.")
+    print("[+] Clé de chiffrement générée et sauvegardée.")
 
     # Charger la clé de chiffrement
     with open(url + ".venv/.flask_secret_key", "rb") as key_file:
@@ -16,17 +21,21 @@ def generate_flask_secret_key(url=''):
 
     cipher = Fernet(encryption_key)
 
-    # Clé secrète Flask (modifie-la selon ton besoin)
-    flask_secret = b"ma_super_cle_secrete_123"
-
+    # Charger la clé secrète Flask
+    print("[*] Chargement de la clé secrète Flask...")
+    load_dotenv(url + ".env")
+    flask_secret = os.getenv("FLASK_SECRET_KEY").encode( )
+    print("[+] Clé secrète Flask chargée.")
+    
     # Chiffrer la clé secrète Flask
+    print("[*] Chiffrement de la clé secrète Flask...")
     encrypted_secret = cipher.encrypt(flask_secret)
 
     # Sauvegarde dans un fichier sécurisé
     with open(url + ".venv/flask_secret.enc", "wb") as secret_file:
         secret_file.write(encrypted_secret)
 
-    print("Clé secrète Flask chiffrée et sauvegardée dans flask_secret.enc.")
+    print("[+] Clé secrète Flask chiffrée et sauvegardée.")
     
 
 if __name__ == "__main__":
