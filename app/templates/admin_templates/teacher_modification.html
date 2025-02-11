@@ -74,24 +74,22 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Professeur principal de :</th> 
-                                    {% for class_id, class_name in classes_dict.items() %}
-                                        <th>{{ class_name }}</th>
-                                    {% endfor %}
+                                    <th>Professeur principal de :</th>
+                                    <th>Attribuer</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for class_id, class_name in classes_dict.items() %}
                                 <tr>
-                                    <td>Attribuer</td>
-                                    {% for class_id, class_name in classes_dict.items() %}
-                                        <td>
-                                            <input type="checkbox" name="head_teacher_classes" value="{{ class_id }}"
-                                                {% if chosen_entity and class_id in chosen_entity.head_teacher_classes %}checked{% endif %}>
-                                        </td>
-                                    {% endfor %}
+                                    <td>{{ class_name }}</td>
+                                    <td>
+                                        <input type="checkbox" name="head_teacher_classes" value="{{ class_id }}"
+                                            {% if chosen_entity and class_id in chosen_entity.head_teacher_classes %}checked{% endif %}>
+                                    </td>
                                 </tr>
+                                {% endfor %}
                             </tbody>
-                        </table>                        
+                        </table>                                          
                         
                         <div>
                             <p>Compétences (Matières qu'il peut enseigner) :</p>
