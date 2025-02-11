@@ -8,11 +8,13 @@ auth_blueprint = Blueprint('auth', __name__)
 
 @auth_blueprint.route('/login', methods=['GET'])
 def login():
+    """Route pour afficher le formulaire de connexion"""
     return render_template('login.html', csrf_token=generate_csrf())
 
 
 @auth_blueprint.route('/login', methods=['POST'])
 def login_form():
+    """Route pour la connexion d'un utilisateur"""
     username = request.form['username']
     password = request.form['password']
 
@@ -39,5 +41,6 @@ def login_form():
 @auth_blueprint.route('/logout')
 @login_required
 def logout():
+    """Route pour la déconnexion d'un utilisateur"""
     logout_user()
     return redirect(url_for('auth.login'))
