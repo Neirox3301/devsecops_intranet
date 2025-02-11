@@ -108,7 +108,7 @@ def display_calendar():
     if current_user.role != 'student':
         return redirect(url_for('auth.login', csrf_token=generate_csrf()))
     
-    return render_template('student_templates/student_calendar.html', csrf_token=generate_csrf())
+    return render_template('student_templates/student_calendar.html', csrf_token=generate_csrf(), student = Student.query.filter_by(user_id=current_user.id).first())
 
 
 @student_dashboard_blueprint.route('/student_dashboard/teachers')
@@ -152,7 +152,7 @@ def display_settings():
     if current_user.role != 'student':
         return redirect(url_for('auth.login', csrf_token=generate_csrf()))
     
-    return render_template('student_templates/student_settings.html')
+    return render_template('student_templates/student_settings.html', student=Student.query.filter_by(user_id=current_user.id).first())
 
 
 # Fonction pour gérer l'absence de notes

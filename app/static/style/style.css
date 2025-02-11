@@ -60,6 +60,7 @@
   transform: scale(1.05);
 }
 .dashboard .menu h2 {
+  font-size: 2rem;
   margin: auto;
   text-align: center;
   width: 60%;
@@ -81,6 +82,15 @@
 }
 .dashboard .menu table tbody .subject-name {
   text-align: left;
+}
+.dashboard .menu .calendar {
+  border: solid 2px white;
+}
+.dashboard .menu .calendar thead th {
+  border: solid 2px white;
+}
+.dashboard .menu .calendar tbody td {
+  border: solid 2px white;
 }
 .dashboard .menu .prof-notes-table {
   display: flex;
@@ -145,6 +155,11 @@
 .dashboard .menu .prof-notes-table table tbody tr th {
   font-size: 1.25rem;
   font-weight: 400;
+}
+.dashboard .menu .prof-notes-table table tbody tr th input {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 7.5px;
+  font-size: 1rem;
 }
 .dashboard .menu .prof-notes-table #save-button {
   margin-top: 20px;
@@ -376,6 +391,24 @@ html, body {
 .body-login .container form .submit-container .submit-button:active {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   transform: scale(0.95);
+}
+
+.settings {
+  width: 100%;
+  padding: 50px 0;
+}
+.settings .disabled-message {
+  color: red;
+  font-size: 1.5rem;
+  font-style: italic;
+  text-align: center;
+  width: 100%;
+}
+.settings .setting-list {
+  font-size: 1.5rem;
+}
+.settings .setting-list div {
+  margin: 10px 0;
 }
 
 /*# sourceMappingURL=style.css.map */

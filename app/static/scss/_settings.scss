@@ -1,0 +1,20 @@
+.settings {
+    width: 100%;
+    padding: 50px 0;
+
+    .disabled-message {
+        color: red;
+        font-size: 1.5rem;
+        font-style: italic;
+        text-align: center;
+        width: 100%;
+    }
+
+    .setting-list {
+        font-size: 1.5rem;
+
+        div {
+            margin: 10px 0;
+        }
+    }
+}

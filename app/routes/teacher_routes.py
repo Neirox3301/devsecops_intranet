@@ -217,7 +217,7 @@ def display_calendar():
     if current_user.role != 'teacher':
         return redirect(url_for('home', csrf_token=generate_csrf()))
     
-    return render_template('teacher_templates/teacher_calendar.html',csrf_token=generate_csrf())
+    return render_template('teacher_templates/teacher_calendar.html',csrf_token=generate_csrf(), teacher = Teacher.query.filter_by(user_id=current_user.id).first())
 
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/students')
@@ -252,4 +252,4 @@ def display_settings():
     if current_user.role != 'teacher':
         return redirect(url_for('home', csrf_token=generate_csrf()))
     
-    return render_template('teacher_templates/teacher_settings.html')
+    return render_template('teacher_templates/teacher_settings.html',  teacher=Teacher.query.filter_by(user_id=current_user.id).first())

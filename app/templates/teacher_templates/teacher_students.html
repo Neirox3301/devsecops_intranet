@@ -1,35 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elèves</title>
-</head>
-<body>
-    <a class="return-button" href="{{ url_for('dashboard.student_dashboard') }}">
-        <img src="{{ url_for('static', filename='svg/arrow_back.svg') }}" alt="-> Dashboard">
-    </a>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vos Élèves</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    </head>
 
-    <div class="dashboard">
-        <div class="island">
-            <h1>Voici vos élèves</h1>
+    <body>
+        <a class="return-button" href="{{ url_for('dashboard.teacher_dashboard') }}">
+            <img src="{{ url_for('static', filename='svg/arrow_back.svg') }}" alt="-> Dashboard">
+        </a>
+
+        <div class="dashboard">
+            <div class="island">
+                <h1>Voici vos élèves</h1>
+            </div>
+
+            <div class="menu">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Élève</th>
+                            <th>Classe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>{{ student.name }}</td>
+                                <td>{{ student.class_name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        
-        <div class="menu">
-            <table>
-                <tr>
-                    <th>Elèves</th>
-                    <th>Classe</th>
-                </tr>
-                {% for student in students %}
-                    <tr>
-                        <td>{{ student.name }}</td>
-                        <td>{{ student.class_name }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
-    
-</body>
+    </body>
 </html>

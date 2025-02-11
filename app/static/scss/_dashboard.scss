@@ -76,6 +76,7 @@
         $table-size: 60%;
 
         h2 {
+            font-size: 2rem;
             margin: auto;
             text-align: center;
             width: $table-size;
@@ -94,11 +95,27 @@
                 text-align: center;
 
                 td {
-                    border-top: solid 2px white;
+                    border-top: solid 2px $color-text-1;
                 }
 
                 .subject-name {
                     text-align: left;
+                }
+            }
+        }
+
+        .calendar {
+            border: solid 2px $color-text-1;
+
+            thead {
+                th {
+                    border: solid 2px $color-text-1;
+                }
+            }
+
+            tbody {
+                td {
+                    border: solid 2px $color-text-1;
                 }
             }
         }
@@ -184,6 +201,12 @@
                         th {
                             font-size: 1.25rem;
                             font-weight: 400;
+
+                            input {
+                                background-color: $opaque-background;
+                                border-radius: calc($corner-radius-opaque-background / 2);
+                                font-size: 1rem;
+                            }
                         }
                     }
                 }

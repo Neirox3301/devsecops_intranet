@@ -1,11 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda</title>
-</head>
-<body>
-    Votre agenda... (à faire)
-</body>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Agenda Hebdomadaire de {{ student.first_name }} {{ student.last_name }}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    </head>
+
+    <body>
+        <a class="return-button" href="{{ url_for('dashboard.student_dashboard') }}">
+            <img src="{{ url_for('static', filename='svg/arrow_back.svg') }}" alt="-> Dashboard">
+        </a>
+
+        <div class="dashboard">
+            <div class="island">
+                <h1>Agenda Hebdomadaire de {{ student.first_name }} {{ student.last_name }}</h1>
+            </div>
+
+            <div class="menu">
+                <table class="calendar">
+                    <thead>
+                        <tr>
+                            <th>Heure</th>
+                            <th>Lundi</th>
+                            <th>Mardi</th>
+                            <th>Mercredi</th>
+                            <th>Jeudi</th>
+                            <th>Vendredi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>08:00 - 09:00</td>
+                            <td>Cours de Maths</td>
+                            <td></td>
+                            <td>Réunion Projet</td>
+                            <td></td>
+                            <td>Cours d'Anglais</td>
+                        </tr>
+                        <tr>
+                            <td>09:00 - 10:00</td>
+                            <td>Cours de Physique</td>
+                            <td>Sport</td>
+                            <td></td>
+                            <td>Cours d'Histoire</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>10:00 - 11:00</td>
+                            <td></td>
+                            <td>Cours de Français</td>
+                            <td>Travail en groupe</td>
+                            <td>Cours de Chimie</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>11:00 - 12:00</td>
+                            <td>Pause</td>
+                            <td>Pause</td>
+                            <td>Pause</td>
+                            <td>Pause</td>
+                            <td>Pause</td>
+                        </tr>
+                        <tr>
+                            <td>14:00 - 15:00</td>
+                            <td></td>
+                            <td>Présentation</td>
+                            <td>Cours de Philo</td>
+                            <td></td>
+                            <td>Sortie pédagogique</td>
+                        </tr>
+                        <tr>
+                            <td>15:00 - 16:00</td>
+                            <td>Cours de Programmation</td>
+                            <td></td>
+                            <td></td>
+                            <td>Travaux pratiques</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
 </html>
