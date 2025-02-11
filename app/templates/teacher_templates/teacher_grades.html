@@ -54,11 +54,12 @@
                         </div>
                     </div>
 
-                    <button type="submit">Display</button>
+                    <button type="submit" name="action" value="display">Display</button>
                 </form>
 
                 <!-- Grade display section-->
-                <form class="prof-notes-table" action="{{ url_for('.update_grades') }}" method="POST">
+                <form class="prof-notes-table" action="{{ url_for('.grades') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     {% if display_table %}
                     <table>
                         <thead>
@@ -85,7 +86,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <button type="submit" id="save-button">Save</button>
+                    <button type="submit" name="action" value="update" id="save-button">Save</button>
                 </form>
                 {% endif %}
             </div>

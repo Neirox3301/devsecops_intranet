@@ -63,6 +63,7 @@ def grades_form():
     if current_user.role != 'teacher':
         return redirect(url_for('home', csrf_token=generate_csrf()))
     
+    
     # Récupérer la table de liaison entre les classes et les matières
     teacher = Teacher.query.filter_by(user_id=current_user.id).first()
     teacherClasses = TeacherClass.query.filter_by(teacher_id=current_user.id).all()
@@ -93,7 +94,16 @@ def grades_form():
     chosen_class = None
     chosen_subject = None
     chosen_assignment = None
+    
+    action = request.form.get('action')
+    if action == 'display':
+        return display_grades(teacher, display_table, subjects_dict, classes_dict, assignments_dict, students, grades, chosen_class, chosen_subject, chosen_assignment)
+    
+    if action == 'update':
+        return update_grades(teacher, display_table, subjects_dict, classes_dict, assignments_dict, students, grades, chosen_class, chosen_subject, chosen_assignment)
 
+
+def display_grades(teacher, display_table, subjects_dict, classes_dict, assignments_dict, students, grades, chosen_class, chosen_subject, chosen_assignment):
     # Récupérer les valeurs du formulaire
     requested_class = request.form.get('class')
     requested_subject = request.form.get('subject')
@@ -144,16 +154,14 @@ def grades_form():
                 
         # Trier les notes selon les types de devoirs
         grades = [grade for grade in grades if grade['assignment_type_id'] == chosen_assignment['id']]
-
+    
     return render_template('teacher_templates/teacher_grades.html', teacher=teacher, display_table=display_table, subjects=subjects_dict, 
-                           classes=classes_dict, assignments=assignments_dict, students=students, grades=grades, 
-                           chosen_classe=chosen_class, chosen_subject=chosen_subject, chosen_assignment=chosen_assignment, 
-                           grade_attributed=False, csrf_token=generate_csrf())
+                        classes=classes_dict, assignments=assignments_dict, students=students, grades=grades, 
+                        chosen_classe=chosen_class, chosen_subject=chosen_subject, chosen_assignment=chosen_assignment, 
+                        grade_attributed=False, csrf_token=generate_csrf())
+    
 
-
-@teacher_dashboard_blueprint.route('/teacher_dashboard/update_grades', methods=['POST'])
-@login_required
-def update_grades():
+def update_grades(teacher, display_table, subjects_dict, classes_dict, assignments_dict, students, grades, chosen_class, chosen_subject, chosen_assignment):
     """Mets à jour les notes des élèves"""
     
     # Vérifier si l'utilisateur est connecté et est un enseignant
@@ -170,6 +178,8 @@ def update_grades():
     for grade_key, grade_value in grades.items():
         if grade_value == '':
             continue
+        if grade_key == 'csrf_token' or grade_key == 'action':
+            continue
         
         # grade_key a la forme "student_id|subject_id"
         student_id, subject_id = map(int, grade_key.split('|'))  # Séparer et convertir en int
@@ -183,18 +193,21 @@ def update_grades():
             to_update.append(existing_grade)
         else:
             # Si la note n'existe pas, créer une nouvelle entrée
-            new_grade = Grade(student_id=student_id, subject_id=subject_id, grade=grade_value)
+            new_grade = Grade(student_id=student_id, subject_id=subject_id, grade=grade_value, assignment_type_id=chosen_assignment['id'])
             to_add.append(new_grade)
 
     if to_add:
         db.session.bulk_save_objects(to_add)
     
     if to_update:
-        db.session.bulk_update_mappings(Grade, [{'grade': grade.grade, 'student_id': grade.student_id, 'subject_id': grade.subject_id} for grade in to_update])
+        db.session.bulk_update_mappings(Grade, [{'grade': grade.grade, 'student_id': grade.student_id, 'subject_id': grade.subject_id, 'assignment_type_id': grade.assignment_type_id} for grade in to_update])
 
     db.session.commit()
     
-    return grades()
+    return render_template('teacher_templates/teacher_grades.html', teacher=teacher, display_table=display_table, subjects=subjects_dict, 
+                    classes=classes_dict, assignments=assignments_dict, students=students, grades=grades, 
+                    chosen_classe=chosen_class, chosen_subject=chosen_subject, chosen_assignment=chosen_assignment, 
+                    grade_attributed=False, csrf_token=generate_csrf())
 
 @teacher_dashboard_blueprint.route('/teacher_dashboard/bulletins')
 @login_required
