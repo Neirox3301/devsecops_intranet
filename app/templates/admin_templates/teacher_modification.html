@@ -1,114 +1,142 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Professeurs</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gestion des Professeurs</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    </head>
 
-<body>
-    {% if error_message %}
-        <div style="color: red;">{{ error_message }}</div>
-    {% endif %}
+    <body>
+        <a class="return-button" href="{{ url_for('dashboard.admin_dashboard') }}">
+            <img src="{{ url_for('static', filename='svg/arrow_back.svg') }}" alt="-> Dashboard">
+        </a>
 
-    {% if success_message %}
-        <div style="color: green;">{{ success_message }}</div>
-    {% endif %}
+        {% if error_message %}
+            <div style="color: red;">{{ error_message }}</div>
+        {% endif %}
 
-    <!-- Sélection d'un professeur -->
-    <form action="{{ url_for('.teacher_modification') }}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <div>
-            <select name="chosen_entity_id" size="10">
-                {% for teacher in entities_dict %}
-                    <option value="{{ teacher['id'] }}">{{ teacher['first_name'] }} {{ teacher['last_name'] }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <button name="action" value="display" type="submit">Afficher</button>
-        <button name="action" value="create" type="submit">Créer un nouveau professeur</button>
-    </form>
+        {% if success_message %}
+            <div style="color: green;">{{ success_message }}</div>
+        {% endif %}
 
-    {% if chosen_entity or new_entity %}
-        <form action="{{ url_for('.teacher_modification') }}" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <input type="hidden" name="new_chosen_teacher_id" value="{{ chosen_entity.id if chosen_entity else '' }}">
-
-            <div>
-                <label>Prénom</label>
-                <input type="text" name="first_name" value="{{ chosen_entity.first_name if chosen_entity else '' }}">
+        <!-- Sélection d'un professeur -->
+        <div class="dashboard">
+            <div class="island">
+                <h1>Vous pouvez modifier la liste des professeurs</h1>
             </div>
 
-            <div>
-                <label>Nom</label>
-                <input type="text" name="last_name" value="{{ chosen_entity.last_name if chosen_entity else '' }}">
-            </div>
-
-            <div>
-              <label>Nom d'utilisateur</label>
-              <input type="text" name="username" value="{{ chosen_entity.username if chosen_entity else '' }}">
-            </div>
-
-            <div>
-                <label>Mot de passe</label>
-                <input type="password" name="password">
-            </div>
-
-            <div>
-                <label>Confirmer Mot de passe</label>
-                <input type="password" name="confirmed_password">
-            </div>
-
-            <div>
-                <p>Professeur principal de :</p>
-                {% for class_id, class_name in classes_dict.items() %}
+            <div class="menu editer-admin">
+                <form class="display-people" action="{{ url_for('.teacher_modification') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <select name="chosen_entity_id" size="10">
+                        {% for teacher in entities_dict %}
+                            <option value="{{ teacher['id'] }}">{{ teacher['first_name'] }} {{ teacher['last_name'] }}</option>
+                        {% endfor %}
+                    </select>
                     <div>
-                        <input type="checkbox" name="head_teacher_classes" value="{{ class_id }}"
-                            {% if chosen_entity and class_id in chosen_entity.head_teacher_classes %}checked{% endif %}>
-                        <label>{{ class_name }}</label>
+                        <button name="action" value="display" type="submit">Afficher</button>
+                        <button name="action" value="create" type="submit">Créer un nouveau professeur</button>
                     </div>
-                {% endfor %}
-            </div>
+                </form>
 
-            <div>
-                <p>Compétences (Matières qu'il peut enseigner) :</p>
-                {% for subject_id, subject_name in subjects_dict.items() %}
-                    <div>
-                        <input type="checkbox" name="teacher_subjects" value="{{ subject_id }}"
-                            {% if chosen_entity and subject_id in chosen_entity.subjects %}checked{% endif %}>
-                        <label>{{ subject_name }}</label>
-                    </div>
-                {% endfor %}
-            </div>
+                {% if chosen_entity or new_entity %}
+                    <!-- Formulaire de modification / création -->
+                    <form class="modify-people" action="{{ url_for('.teacher_modification') }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="new_chosen_teacher_id" value="{{ chosen_entity.id if chosen_entity else '' }}">
 
-            <div>
-                <p>Enseignement par classe :</p>
-                {% for class_id, class_name in classes_dict.items() %}
-                    <div>
-                        <strong>{{ class_name }}</strong>
                         <div>
+                            <label>Prénom</label>
+                            <input type="text" name="first_name" value="{{ chosen_entity.first_name if chosen_entity else '' }}">
+                        </div>
+
+                        <div>
+                            <label>Nom</label>
+                            <input type="text" name="last_name" value="{{ chosen_entity.last_name if chosen_entity else '' }}">
+                        </div>
+
+                        <div>
+                            <label>Nom d'utilisateur</label>
+                            <input type="text" name="username" value="{{ chosen_entity.username if chosen_entity else '' }}">
+                        </div>
+
+                        <div>
+                            <label>Mot de passe</label>
+                            <input type="password" name="password">
+                        </div>
+
+                        <div>
+                            <label>Confirmer Mot de passe</label>
+                            <input type="password" name="confirmed_password">
+                        </div>
+
+                        <table>
+                            <caption>Professeurs principaux par classe</caption>
+                            <thead>
+                                <tr>
+                                    <th>Professeur principal de :</th> 
+                                    {% for class_id, class_name in classes_dict.items() %}
+                                        <th>{{ class_name }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Attribuer</td>
+                                    {% for class_id, class_name in classes_dict.items() %}
+                                        <td>
+                                            <input type="checkbox" name="head_teacher_classes" value="{{ class_id }}"
+                                                {% if chosen_entity and class_id in chosen_entity.head_teacher_classes %}checked{% endif %}>
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>                        
+                        
+                        <div>
+                            <p>Compétences (Matières qu'il peut enseigner) :</p>
                             {% for subject_id, subject_name in subjects_dict.items() %}
-                                <label>
-                                    <input type="checkbox" name="{{ class_id }}|{{ subject_id }}"
-                                        {% if chosen_entity.id and (chosen_entity.id, class_id) in teacher_classes_dict and 
-                                              subject_id in teacher_classes_dict[(chosen_entity.id, class_id)] %}checked{% endif %}>
-                                    {{ subject_name }}
-                                </label>
+                                <div>
+                                    <input type="checkbox" name="teacher_subjects" value="{{ subject_id }}"
+                                        {% if chosen_entity and subject_id in chosen_entity.subjects %}checked{% endif %}>
+                                    <label>{{ subject_name }}</label>
+                                </div>
                             {% endfor %}
                         </div>
-                    </div>
-                {% endfor %}
+
+                        <div>
+                            <p>Enseignement par classe :</p>
+                            {% for class_id, class_name in classes_dict.items() %}
+                                <div>
+                                    <strong>{{ class_name }}</strong>
+                                    <div>
+                                        {% for subject_id, subject_name in subjects_dict.items() %}
+                                            <label>
+                                                <input type="checkbox" name="{{ class_id }}|{{ subject_id }}"
+                                                    {% if chosen_entity.id and (chosen_entity.id, class_id) in teacher_classes_dict and 
+                                                        subject_id in teacher_classes_dict[(chosen_entity.id, class_id)] %}checked{% endif %}>
+                                                {{ subject_name }}
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="buttons-validate">
+                            <button type="submit" name="action" value="{% if new_entity %}create_save{% else %}modify{% endif %}">Sauvegarder</button>
+                            <button type="submit" name="action" value="delete" onclick="return confirmDelete()">Supprimer</button>
+                        </div>
+                    </form>
+                {% endif %}
             </div>
+        </div>
 
-            <button type="submit" name="action" value="{% if new_entity %}create_save{% else %}modify{% endif %}">Sauvegarder</button>
-            <button type="submit" name="action" value="delete" onclick="return confirmDelete()">Supprimer</button>
-        </form>
-    {% endif %}
-
-    <script>
-        function confirmDelete() {
-            return confirm("Êtes-vous sûr de vouloir supprimer ce professeur définitivement ?");
-        }
-    </script>
-</body>
+        <script>
+            function confirmDelete() {
+                return confirm("Êtes-vous sûr de vouloir supprimer ce professeur définitivement ?");
+            }
+        </script>
+    </body>
 </html>

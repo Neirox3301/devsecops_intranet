@@ -4,66 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Administrateurs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 </head>
 
 <body>
+    <a class="return-button" href="{{ url_for('dashboard.admin_dashboard') }}">
+        <img src="{{ url_for('static', filename='svg/arrow_back.svg') }}" alt="-> Dashboard">
+    </a>
+
     {% if error_message %}
-        <div style="color: red;">{{ error_message }}</div>
+        <div class="error-message">{{ error_message }}</div>
     {% endif %}
 
     {% if success_message %}
-        <div style="color: green;">{{ success_message }}</div>
+        <div class="success-message">{{ success_message }}</div>
     {% endif %}
 
     <!-- Sélection d'un administrateur -->
-    <form action="{{ url_for('.admin_modification') }}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <div>
-            <select name="chosen_entity_id" size="10">
-                {% for admin in entities_dict %}
-                    <option value="{{ admin['id'] }}">{{ admin['first_name'] }} {{ admin['last_name'] }}</option>
-                {% endfor %}
-            </select>
+    <div class="dashboard">
+        <div class="island">
+            <h1>Modifier la liste des admins</h1>
         </div>
-        <button name="action" value="display" type="submit">Afficher</button>
-        <button name="action" value="create" type="submit">Créer un nouvel administrateur</button>
-    </form>
 
-    {% if chosen_entity or new_entity %}
-        <!-- Formulaire de modification / création -->
-        <form action="{{ url_for('.admin_modification') }}" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <input type="hidden" name="new_chosen_admin_id" value="{{ chosen_entity.id if chosen_entity else '' }}">
+        <div class="menu editer-admin">
+            <form class="display-people" action="{{ url_for('.admin_modification') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <select name="chosen_entity_id" size="10">
+                    {% for admin in entities_dict %}
+                        <option value="{{ admin['id'] }}">{{ admin['first_name'] }} {{ admin['last_name'] }}</option>
+                    {% endfor %}
+                </select>
+                <div>
+                    <button name="action" value="display" type="submit">Afficher</button>
+                    <button name="action" value="create" type="submit">Créer un nouvel administrateur</button>
+                </div>
+            </form>
 
-            <div>
-                <label>Prénom</label>
-                <input type="text" name="first_name" value="{{ chosen_entity.first_name if chosen_entity else '' }}">
-            </div>
+            {% if chosen_entity or new_entity %}
+                <!-- Formulaire de modification / création -->
+                <form class="modify-people" action="{{ url_for('.admin_modification') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="new_chosen_admin_id" value="{{ chosen_entity.id if chosen_entity else '' }}">
 
-            <div>
-                <label>Nom</label>
-                <input type="text" name="last_name" value="{{ chosen_entity.last_name if chosen_entity else '' }}">
-            </div>
+                    <div>
+                        <label>Prénom</label>
+                        <input type="text" name="first_name" value="{{ chosen_entity.first_name if chosen_entity else '' }}">
+                    </div>
 
-            <div>
-                <label>Nom d'utilisateur</label>
-                <input type="text" name="username" value="{{ chosen_entity.username if chosen_entity else '' }}">
-            </div>
+                    <div>
+                        <label>Nom</label>
+                        <input type="text" name="last_name" value="{{ chosen_entity.last_name if chosen_entity else '' }}">
+                    </div>
 
-            <div>
-                <label>Mot de passe</label>
-                <input type="password" name="password">
-            </div>
+                    <div>
+                        <label>Nom d'utilisateur</label>
+                        <input type="text" name="username" value="{{ chosen_entity.username if chosen_entity else '' }}">
+                    </div>
 
-            <div>
-                <label>Confirmer Mot de passe</label>
-                <input type="password" name="confirmed_password">
-            </div>
+                    <div>
+                        <label>Mot de passe</label>
+                        <input type="password" name="password">
+                    </div>
 
-            <button type="submit" name="action" value="{% if new_entity %}create_save{% else %}modify{% endif %}">Sauvegarder</button>
-            <button type="submit" name="action" value="delete" onclick="return confirmDelete()">Supprimer</button>
-        </form>
-    {% endif %}
+                    <div>
+                        <label>Confirmer Mot de passe</label>
+                        <input type="password" name="confirmed_password">
+                    </div>
+
+                    <div class="buttons-validate">
+                        <button type="submit" name="action" value="{% if new_entity %}create_save{% else %}modify{% endif %}">Sauvegarder</button>
+                        <button type="submit" name="action" value="delete" onclick="return confirmDelete()">Supprimer</button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
 
     <script>
         function confirmDelete() {
