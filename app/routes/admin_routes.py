@@ -387,20 +387,21 @@ def delete_entity(model, entity_id):
     return False
 
 
-def delete_student(student_id):
+def delete_student(student_id, context):
     """Supprime un étudiant, ses notes et son utilisateur si applicable."""
     student = Student.query.get(student_id)
     if student:
         try:
             Grade.query.filter_by(student_id=student.id).delete()
-            return delete_entity(Student, student_id)
+            delete_entity(Student, student_id)
+            return render_page(context)
         except Exception:
             db.session.rollback()
             return False
     return False
 
 
-def delete_teacher(teacher_id):
+def delete_teacher(teacher_id, context):
     """Supprime un enseignant et dissocie les classes dont il est responsable."""
     teacher = Teacher.query.get(teacher_id)
     if teacher:
@@ -409,7 +410,8 @@ def delete_teacher(teacher_id):
             Class.query.filter(Class.head_teacher_id == teacher.id).update({'head_teacher_id': None})
             TeacherClass.query.filter_by(teacher_id=teacher.id).delete()
             TeacherSubject.query.filter_by(teacher_id=teacher.id).delete()
-            return delete_entity(Teacher, teacher_id)
+            delete_entity(Teacher, teacher_id)
+            return render_page(context)
         except Exception:
             db.session.rollback()
             return False
@@ -418,6 +420,7 @@ def delete_teacher(teacher_id):
 
 def delete_admin(admin_id):
     """Supprime un administrateur et son utilisateur associé."""
-    return delete_entity(Admin, admin_id)
+    delete_entity(Admin, admin_id)
+    return render_page(context)
 
 
