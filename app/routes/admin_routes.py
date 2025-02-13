@@ -418,7 +418,7 @@ def delete_teacher(teacher_id, context):
     return False
 
 
-def delete_admin(admin_id):
+def delete_admin(admin_id, context):
     """Supprime un administrateur et son utilisateur associé."""
     delete_entity(Admin, admin_id)
     return render_page(context)
